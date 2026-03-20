@@ -1,4 +1,4 @@
-package com.matildaerenius.bookmap.ui.theme
+package com.matildaerenius.bookmap.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
