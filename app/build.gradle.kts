@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.secrets)
 }
 
 android {
@@ -39,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
 }
@@ -62,4 +64,9 @@ dependencies {
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+    implementation(libs.google.maps.compose)
+}
+
+secrets {
+    propertiesFileName = "local.properties"
 }
