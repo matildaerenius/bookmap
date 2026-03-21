@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap.di
 
+import com.matildaerenius.bookmap.BuildConfig
 import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import dagger.Module
 import dagger.Provides
@@ -29,7 +30,7 @@ object NetworkModule {
     fun provideRetrofit(json: Json): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl("https://api.bookbeat.com/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
