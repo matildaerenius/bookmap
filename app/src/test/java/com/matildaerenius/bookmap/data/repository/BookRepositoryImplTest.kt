@@ -29,7 +29,7 @@ class BookRepositoryImplTest {
             id = 1765311,
             title = "Hell",
             author = "Test testsson",
-            image = "url"
+            cover = "url"
         )
 
         coEvery { api.getBookById(1765311) } returns mockDto
