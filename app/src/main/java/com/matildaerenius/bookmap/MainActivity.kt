@@ -10,8 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import com.matildaerenius.bookmap.domain.repository.BookRepository
-import com.matildaerenius.bookmap.domain.repository.LocationRepository
+import com.matildaerenius.bookmap.domain.usecase.GetBookMarkersUseCase
 import com.matildaerenius.bookmap.presentation.theme.BookmapTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,16 +20,12 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var bookRepository: BookRepository
-
-    @Inject
-    lateinit var locationRepository: LocationRepository
+    lateinit var getBookMarkersUseCase: GetBookMarkersUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        testFetchBooks()
-        testFetchLocations()
+        testFetchCombinedData()
 
         setContent {
             BookmapTheme {
@@ -44,24 +39,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun testFetchBooks() {
+    private fun testFetchCombinedData() {
         lifecycleScope.launch {
-            val bookIds = listOf(1759530)
+            Log.d("UseCaseTest", "Börjar hämta och kombinera data...")
 
-            Log.d("BookTest", "Hämtar böcker...")
-            val result = bookRepository.getBooksByIds(bookIds)
+            val result = getBookMarkersUseCase()
 
-            Log.d("BookTest", "Resultat: $result")
-        }
-    }
-
-    private fun testFetchLocations() {
-        lifecycleScope.launch {
-            Log.d("LocationTest", "Hämta platser från GitHub Gist...")
-
-            val result = locationRepository.getLocations()
-
-            Log.d("LocationTest", "Resultat: $result")
+            Log.d("UseCaseTest", "Resultat: $result")
         }
     }
 }
