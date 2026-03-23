@@ -47,6 +47,6 @@ class LocationRepositoryImplTest {
         assertTrue(result is Resource.Error)
 
         val errorResult = result as Resource.Error
-        assertEquals(DataError.NETWORK_ERROR, errorResult.error)
+        assertEquals(DataError.PARSING_ERROR, errorResult.error)
     }
 }

@@ -3,6 +3,9 @@ package com.matildaerenius.bookmap.util
 enum class DataError {
     NETWORK_ERROR,
     NOT_FOUND,
+    UNAUTHORIZED,
+    SERVER_ERROR,
+    PARSING_ERROR,
     UNKNOWN_ERROR
 }
 
