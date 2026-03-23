@@ -11,6 +11,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import retrofit2.HttpException
+import java.io.IOException
 
 class BookRepositoryImpl @Inject constructor(
     private val api: BookBeatApi
@@ -23,8 +25,11 @@ class BookRepositoryImpl @Inject constructor(
                     async {
                         try {
                             api.getBookById(id).toDomain()
-                        } catch (e: Exception) {
-                            Log.e("BookRepositoryImpl", "Could not load book with id: $id", e)
+                        } catch (e: IOException) {
+                            Log.e("BookRepositoryImpl", "Network error for book id:: $id", e)
+                            null
+                        } catch (e: HttpException) {
+                            Log.e("BookRepositoryImpl", "Http error ${e.code()} for book id: $id", e)
                             null
                         }
                     }
@@ -37,7 +42,16 @@ class BookRepositoryImpl @Inject constructor(
                 Resource.Success(books)
             }
 
+        } catch (e: IOException) {
+            Resource.Error(DataError.NETWORK_ERROR)
+        } catch (e: HttpException) {
+            if (e.code() == 404) {
+                Resource.Error(DataError.NOT_FOUND)
+            } else {
+                Resource.Error(DataError.UNKNOWN_ERROR)
+            }
         } catch (e: Exception) {
+            Log.e("BookRepositoryImpl", "Unknown error", e)
             Resource.Error(DataError.UNKNOWN_ERROR)
         }
     }

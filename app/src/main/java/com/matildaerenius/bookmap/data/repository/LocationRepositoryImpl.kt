@@ -6,6 +6,8 @@ import com.matildaerenius.bookmap.domain.model.BookLocation
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
 import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
@@ -16,8 +18,16 @@ class LocationRepositoryImpl @Inject constructor(
         return try {
             val response = api.getBookLocations()
             Resource.Success(response.map { it.toDomain() })
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             Resource.Error(DataError.NETWORK_ERROR)
+        } catch (e: HttpException) {
+            if (e.code() == 404) {
+                Resource.Error(DataError.NOT_FOUND)
+            } else {
+                Resource.Error(DataError.UNKNOWN_ERROR)
+            }
+        } catch (e: Exception) {
+            Resource.Error(DataError.UNKNOWN_ERROR)
         }
     }
 }
