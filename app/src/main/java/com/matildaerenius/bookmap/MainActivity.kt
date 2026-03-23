@@ -15,7 +15,7 @@ import com.matildaerenius.bookmap.domain.repository.LocationRepository
 import com.matildaerenius.bookmap.presentation.theme.BookmapTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject // OBS: Ändrad till javax.inject.Inject
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
