@@ -2,6 +2,7 @@ package com.matildaerenius.bookmap.data.repository
 
 import com.matildaerenius.bookmap.data.remote.api.LocationApi
 import com.matildaerenius.bookmap.data.remote.dto.LocationDto
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -34,7 +35,7 @@ class LocationRepositoryImplTest {
         assertTrue(result is Resource.Success)
 
         val successResult = result as Resource.Success
-        assertEquals("Gamla Stan", successResult.data.first().locationName)
+        assertEquals("Gamla Stan", successResult.data?.first()?.locationName)
     }
 
     @Test
@@ -46,6 +47,6 @@ class LocationRepositoryImplTest {
         assertTrue(result is Resource.Error)
 
         val errorResult = result as Resource.Error
-        assertEquals("Could not load location data", errorResult.message)
+        assertEquals(DataError.NETWORK_ERROR, errorResult.error)
     }
 }

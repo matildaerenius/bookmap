@@ -5,6 +5,7 @@ import com.matildaerenius.bookmap.data.mapper.toDomain
 import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import com.matildaerenius.bookmap.domain.model.Book
 import com.matildaerenius.bookmap.domain.repository.BookRepository
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -31,13 +32,13 @@ class BookRepositoryImpl @Inject constructor(
             }
 
             if (books.isEmpty() && bookIds.isNotEmpty()) {
-                Resource.Error("Could not load books. Check your internet connection")
+                Resource.Error(DataError.NETWORK_ERROR)
             } else {
                 Resource.Success(books)
             }
 
         } catch (e: Exception) {
-            Resource.Error("Unexpected error: ${e.localizedMessage}", e)
+            Resource.Error(DataError.UNKNOWN_ERROR)
         }
     }
 }

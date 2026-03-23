@@ -4,6 +4,7 @@ import com.matildaerenius.bookmap.data.remote.api.LocationApi
 import com.matildaerenius.bookmap.data.mapper.toDomain
 import com.matildaerenius.bookmap.domain.model.BookLocation
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ class LocationRepositoryImpl @Inject constructor(
             val response = api.getBookLocations()
             Resource.Success(response.map { it.toDomain() })
         } catch (e: Exception) {
-            Resource.Error(message = "Could not load location data", exception = e)
+            Resource.Error(DataError.NETWORK_ERROR)
         }
     }
 }

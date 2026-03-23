@@ -4,6 +4,7 @@ import com.matildaerenius.bookmap.domain.model.Book
 import com.matildaerenius.bookmap.domain.model.BookLocation
 import com.matildaerenius.bookmap.domain.repository.BookRepository
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -56,20 +57,19 @@ class GetBookMarkersUseCaseTest {
         val successResult = result as Resource.Success
         val markers = successResult.data
 
-        assertEquals(1, markers.size)
-        assertEquals("Gamla Stan", markers.first().locationName)
-        assertEquals("Test", markers.first().bookTitle)
+        assertEquals(1, markers?.size)
+        assertEquals("Gamla Stan", markers?.first()?.locationName)
+        assertEquals("Test", markers?.first()?.bookTitle)
     }
 
     @Test
     fun `invoke returns Error when fetching locations fails`() = runTest {
-        coEvery { mockLocationRepository.getLocations() } returns Resource.Error("Could not load position data")
-
+        coEvery { mockLocationRepository.getLocations() } returns Resource.Error(DataError.NETWORK_ERROR)
         val result = useCase()
 
         assertTrue(result is Resource.Error)
         val errorResult = result as Resource.Error
-        assertEquals("Could not load position data", errorResult.message)
+        assertEquals(DataError.NETWORK_ERROR, errorResult.error)
     }
 
     @Test
@@ -78,14 +78,14 @@ class GetBookMarkersUseCaseTest {
             BookLocation(1, "Gamla Stan", 59.32, 18.07, "des")
         )
         coEvery { mockLocationRepository.getLocations() } returns Resource.Success(mockLocations)
-        coEvery { mockBookRepository.getBooksByIds(listOf(1)) } returns Resource.Error("Could not load books")
-
+        coEvery { mockBookRepository.getBooksByIds(listOf(1)) } returns Resource.Error(DataError.NETWORK_ERROR)
         val result = useCase()
 
         assertTrue(result is Resource.Error)
         val errorResult = result as Resource.Error
-        assertEquals("Could not load books", errorResult.message)
+        assertEquals(DataError.NETWORK_ERROR, errorResult.error)
     }
+
     @Test
     fun `invoke returns Success with empty list when locations are empty`() = runTest {
         coEvery { mockLocationRepository.getLocations() } returns Resource.Success(emptyList())
@@ -94,7 +94,7 @@ class GetBookMarkersUseCaseTest {
 
         assertTrue(result is Resource.Success)
         val successResult = result as Resource.Success
-        assertTrue(successResult.data.isEmpty())
+        assertTrue(successResult.data?.isEmpty() == true)
     }
 
     @Test
@@ -116,8 +116,8 @@ class GetBookMarkersUseCaseTest {
         val successResult = result as Resource.Success
         val markers = successResult.data
 
-        assertEquals(1, markers.size)
-        assertEquals(1, markers.first().bookId)
-        assertEquals("Gamla Stan", markers.first().locationName)
+        assertEquals(1, markers?.size)
+        assertEquals(1, markers?.first()?.bookId)
+        assertEquals("Gamla Stan", markers?.first()?.locationName)
     }
 }
