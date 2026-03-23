@@ -2,6 +2,7 @@ package com.matildaerenius.bookmap.di
 
 import com.matildaerenius.bookmap.BuildConfig
 import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
+import com.matildaerenius.bookmap.data.remote.api.LocationApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +25,7 @@ object NetworkModule {
             coerceInputValues = true
         }
     }
-
+    @BookBeatRetrofit
     @Provides
     @Singleton
     fun provideRetrofit(json: Json): Retrofit {
@@ -35,9 +36,26 @@ object NetworkModule {
             .build()
     }
 
+    @GistRetrofit
     @Provides
     @Singleton
-    fun provideBookBeatApi(retrofit: Retrofit): BookBeatApi {
+    fun provideGistRetrofit(json: Json): Retrofit {
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GIST_BASE_URL)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookBeatApi(@BookBeatRetrofit retrofit: Retrofit): BookBeatApi {
         return retrofit.create(BookBeatApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationApi(@GistRetrofit retrofit: Retrofit): LocationApi {
+        return retrofit.create(LocationApi::class.java)
     }
 }

@@ -25,6 +25,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", "\"https://api.bookbeat.com/\"")
+        buildConfigField("String", "GIST_BASE_URL", "\"https://gist.githubusercontent.com/\"")
     }
 
     buildTypes {
