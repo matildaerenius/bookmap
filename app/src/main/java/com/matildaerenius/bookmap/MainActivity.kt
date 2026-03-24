@@ -4,34 +4,29 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.matildaerenius.bookmap.domain.repository.BookRepository
+import com.matildaerenius.bookmap.domain.usecase.GetBookMarkersUseCase
 import com.matildaerenius.bookmap.presentation.theme.BookmapTheme
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     @Inject
-    lateinit var repository: BookRepository
+    lateinit var getBookMarkersUseCase: GetBookMarkersUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        testFetchBooks()
+
+        testFetchCombinedData()
+
         setContent {
             BookmapTheme {
                 Surface(
@@ -44,14 +39,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun testFetchBooks() {
+    private fun testFetchCombinedData() {
         lifecycleScope.launch {
-            val bookIds = listOf(1765311)
+            Log.d("UseCaseTest", "Börjar hämta och kombinera data...")
 
-            Log.d("BookTest", "Hämtar böcker...")
-            val result = repository.getBooksByIds(bookIds)
+            val result = getBookMarkersUseCase()
 
-            Log.d("BookTest", "Resultat: $result")
+            Log.d("UseCaseTest", "Resultat: $result")
         }
     }
 }

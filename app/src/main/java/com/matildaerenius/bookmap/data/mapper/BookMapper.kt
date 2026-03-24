@@ -8,6 +8,6 @@ fun BookDto.toDomain(): Book {
         id = this.id,
         title = this.title ?: "Okänd titel",
         author = this.author ?: "Okänd författare",
-        imageUrl = this.image ?: ""
+        imageUrl = this.cover ?: ""
     )
 }

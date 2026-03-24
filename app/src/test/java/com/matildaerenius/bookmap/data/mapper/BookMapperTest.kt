@@ -8,7 +8,7 @@ class BookMapperTest {
 
     @Test
     fun `toDomain maps valid DTO correctly`() {
-        val dto = BookDto(id = 1, title = "Hell", author = "Test testsson", image = "url_to_image")
+        val dto = BookDto(id = 1, title = "Hell", author = "Test testsson", cover = "url_to_image")
 
         val result = dto.toDomain()
 
@@ -20,7 +20,7 @@ class BookMapperTest {
 
     @Test
     fun `toDomain handles null values safely`() {
-        val dto = BookDto(id = 2, title = null, author = null, image = null)
+        val dto = BookDto(id = 2, title = null, author = null, cover = null)
 
         val result = dto.toDomain()
 

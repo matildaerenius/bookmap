@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BookDto(
     val id: Int,
-    val title: String?,
-    val author: String?,
-    val image: String?
+    val title: String? = null,
+    val author: String? = null,
+    val cover: String? = null
 )
