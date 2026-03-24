@@ -40,8 +40,8 @@ class BookRepositoryImplTest {
         assertTrue("the result should be Resource.Success", result is Resource.Success)
 
         val successResult = result as Resource.Success
-        assertEquals(1, successResult.data?.size)
-        assertEquals("Hell", successResult.data?.get(0)?.title)
+        assertEquals(1, successResult.data.size)
+        assertEquals("Hell", successResult.data[0].title)
     }
 
     @Test

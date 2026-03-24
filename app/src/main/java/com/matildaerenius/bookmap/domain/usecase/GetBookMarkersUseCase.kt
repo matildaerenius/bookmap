@@ -16,10 +16,10 @@ class GetBookMarkersUseCase @Inject constructor(
         val locationsResult = locationRepository.getLocations()
 
         if (locationsResult is Resource.Error) {
-            return Resource.Error(locationsResult.error ?: DataError.UNKNOWN_ERROR)
+            return Resource.Error(locationsResult.error)
         }
 
-        val locations = (locationsResult as? Resource.Success)?.data ?: emptyList()
+        val locations = (locationsResult as Resource.Success).data
 
         if (locations.isEmpty()) {
             return Resource.Success(emptyList())
@@ -30,9 +30,9 @@ class GetBookMarkersUseCase @Inject constructor(
         val booksResult = bookRepository.getBooksByIds(bookIds)
 
         if (booksResult is Resource.Error) {
-            return Resource.Error(booksResult.error ?: DataError.UNKNOWN_ERROR)        }
+            return Resource.Error(booksResult.error)        }
 
-        val books = (booksResult as? Resource.Success)?.data ?: emptyList()
+        val books = (booksResult as Resource.Success).data
 
         val bookMap = books.associateBy { it.id }
 

@@ -11,6 +11,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 class BookRepositoryImpl @Inject constructor(
     private val api: BookBeatApi
@@ -37,6 +38,8 @@ class BookRepositoryImpl @Inject constructor(
             } else {
                 Resource.Success(books)
             }
+        } catch (e: CancellationException) {
+            throw e
 
         } catch (e: Exception) {
             Resource.Error(DataError.UNKNOWN_ERROR)

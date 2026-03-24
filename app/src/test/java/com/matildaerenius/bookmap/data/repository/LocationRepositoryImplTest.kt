@@ -35,7 +35,7 @@ class LocationRepositoryImplTest {
         assertTrue(result is Resource.Success)
 
         val successResult = result as Resource.Success
-        assertEquals("Gamla Stan", successResult.data?.first()?.locationName)
+        assertEquals("Gamla Stan", successResult.data.first().locationName)
     }
 
     @Test

@@ -57,9 +57,9 @@ class GetBookMarkersUseCaseTest {
         val successResult = result as Resource.Success
         val markers = successResult.data
 
-        assertEquals(1, markers?.size)
-        assertEquals("Gamla Stan", markers?.first()?.locationName)
-        assertEquals("Test", markers?.first()?.bookTitle)
+        assertEquals(1, markers.size)
+        assertEquals("Gamla Stan", markers.first().locationName)
+        assertEquals("Test", markers.first().bookTitle)
     }
 
     @Test
@@ -94,7 +94,7 @@ class GetBookMarkersUseCaseTest {
 
         assertTrue(result is Resource.Success)
         val successResult = result as Resource.Success
-        assertTrue(successResult.data?.isEmpty() == true)
+        assertTrue(successResult.data.isEmpty())
     }
 
     @Test
@@ -116,8 +116,8 @@ class GetBookMarkersUseCaseTest {
         val successResult = result as Resource.Success
         val markers = successResult.data
 
-        assertEquals(1, markers?.size)
-        assertEquals(1, markers?.first()?.bookId)
-        assertEquals("Gamla Stan", markers?.first()?.locationName)
+        assertEquals(1, markers.size)
+        assertEquals(1, markers.first().bookId)
+        assertEquals("Gamla Stan", markers.first().locationName)
     }
 }
