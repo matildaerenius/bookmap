@@ -3,6 +3,7 @@ package com.matildaerenius.bookmap.domain.usecase
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.repository.BookRepository
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
 import javax.inject.Inject
 
@@ -15,10 +16,10 @@ class GetBookMarkersUseCase @Inject constructor(
         val locationsResult = locationRepository.getLocations()
 
         if (locationsResult is Resource.Error) {
-            return Resource.Error(locationsResult.message ?: "Could not load position data")
+            return Resource.Error(locationsResult.error)
         }
 
-        val locations = (locationsResult as? Resource.Success)?.data ?: emptyList()
+        val locations = (locationsResult as Resource.Success).data
 
         if (locations.isEmpty()) {
             return Resource.Success(emptyList())
@@ -29,10 +30,9 @@ class GetBookMarkersUseCase @Inject constructor(
         val booksResult = bookRepository.getBooksByIds(bookIds)
 
         if (booksResult is Resource.Error) {
-            return Resource.Error(booksResult.message ?: "Could not load books")
-        }
+            return Resource.Error(booksResult.error)        }
 
-        val books = (booksResult as? Resource.Success)?.data ?: emptyList()
+        val books = (booksResult as Resource.Success).data
 
         val bookMap = books.associateBy { it.id }
 

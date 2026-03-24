@@ -1,15 +1,17 @@
 package com.matildaerenius.bookmap.data.repository
 
-import android.util.Log
 import com.matildaerenius.bookmap.data.mapper.toDomain
 import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import com.matildaerenius.bookmap.domain.model.Book
 import com.matildaerenius.bookmap.domain.repository.BookRepository
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
+import com.matildaerenius.bookmap.util.safeApiCall
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 class BookRepositoryImpl @Inject constructor(
     private val api: BookBeatApi
@@ -20,10 +22,11 @@ class BookRepositoryImpl @Inject constructor(
             val books = coroutineScope {
                 bookIds.map { id ->
                     async {
-                        try {
-                            api.getBookById(id).toDomain()
-                        } catch (e: Exception) {
-                            Log.e("BookRepositoryImpl", "Could not load book with id: $id", e)
+                        val result = safeApiCall { api.getBookById(id).toDomain() }
+
+                        if (result is Resource.Success) {
+                            result.data
+                        } else {
                             null
                         }
                     }
@@ -31,13 +34,15 @@ class BookRepositoryImpl @Inject constructor(
             }
 
             if (books.isEmpty() && bookIds.isNotEmpty()) {
-                Resource.Error("Could not load books. Check your internet connection")
+                Resource.Error(DataError.NETWORK_ERROR)
             } else {
                 Resource.Success(books)
             }
+        } catch (e: CancellationException) {
+            throw e
 
         } catch (e: Exception) {
-            Resource.Error("Unexpected error: ${e.localizedMessage}", e)
+            Resource.Error(DataError.UNKNOWN_ERROR)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.matildaerenius.bookmap.data.repository
 
 import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import com.matildaerenius.bookmap.data.remote.dto.BookDto
+import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -54,6 +55,6 @@ class BookRepositoryImplTest {
         assertTrue("The result should be Resource.Error because the list is empty", result is Resource.Error)
 
         val errorResult = result as Resource.Error
-        assertEquals("Could not load books. Check your internet connection", errorResult.message)
+        assertEquals(DataError.NETWORK_ERROR, errorResult.error)
     }
 }
