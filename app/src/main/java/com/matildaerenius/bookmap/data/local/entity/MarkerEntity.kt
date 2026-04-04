@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "marker_entity")
 data class MarkerEntity(
-    @PrimaryKey val bookId: String,
+    @PrimaryKey val bookId: Int,
     val title: String,
     val author: String,
     val description: String,
