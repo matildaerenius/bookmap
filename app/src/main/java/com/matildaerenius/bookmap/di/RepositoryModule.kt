@@ -1,8 +1,10 @@
 package com.matildaerenius.bookmap.di
 
 import com.matildaerenius.bookmap.data.repository.BookRepositoryImpl
+import com.matildaerenius.bookmap.data.repository.FavoriteRepositoryImpl
 import com.matildaerenius.bookmap.data.repository.LocationRepositoryImpl
 import com.matildaerenius.bookmap.domain.repository.BookRepository
+import com.matildaerenius.bookmap.domain.repository.FavoriteRepository
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindLocationRepository(
         locationRepositoryImpl: LocationRepositoryImpl
     ): LocationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFavoriteRepository(
+        favoriteRepositoryImpl: FavoriteRepositoryImpl
+    ): FavoriteRepository
 }
