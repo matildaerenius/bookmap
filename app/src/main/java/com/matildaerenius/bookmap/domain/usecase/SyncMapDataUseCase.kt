@@ -54,7 +54,7 @@ class SyncMapDataUseCase @Inject constructor(
             }
         }
 
-        markerRepository.saveMarkers(markers)
+        markerRepository.replaceCache(markers)
         return Resource.Success(Unit)
     }
 }

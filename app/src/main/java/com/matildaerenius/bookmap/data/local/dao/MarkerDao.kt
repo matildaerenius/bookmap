@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +18,10 @@ interface MarkerDao {
 
     @Query("DELETE FROM marker_entity")
     suspend fun clearMarkers()
+
+    @Transaction
+    suspend fun replaceAllMarkers(markers: List<MarkerEntity>) {
+        clearMarkers()
+        insertMarkers(markers)
+    }
 }
