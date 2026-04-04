@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.matildaerenius.bookmap.data.local.entity.FavoriteBookRelation
 import com.matildaerenius.bookmap.data.local.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
@@ -16,10 +17,10 @@ interface FavoriteDao {
     @Query("DELETE FROM favorite_entity WHERE bookId = :bookId")
     suspend fun deleteFavorite(bookId: String)
 
-    @Query("""
-        SELECT * FROM favorite_entity 
-        INNER JOIN marker_entity ON favorite_entity.bookId = marker_entity.bookId
-        ORDER BY favorite_entity.savedAt DESC
-    """)
+    @Transaction
+    @Query("SELECT * FROM favorite_entity ORDER BY savedAt DESC")
     fun getFavoritesWithDetails(): Flow<List<FavoriteBookRelation>>
+
+    @Query("SELECT * FROM favorite_entity")
+    fun getAllFavorites(): Flow<List<FavoriteEntity>>
 }
