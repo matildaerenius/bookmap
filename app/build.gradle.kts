@@ -77,6 +77,15 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp.logging)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    testImplementation(libs.room.testing)
+    testImplementation(libs.turbine)
+
+    androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.turbine)
 }
 
 secrets {
