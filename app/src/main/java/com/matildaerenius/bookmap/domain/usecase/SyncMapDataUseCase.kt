@@ -33,10 +33,10 @@ class SyncMapDataUseCase @Inject constructor(
         }
 
         val books = (booksResult as Resource.Success).data
-        val bookMap = books.associateBy { it.id.toString() }
+        val bookMap = books.associateBy { it.id }
 
         val markers = locations.mapNotNull { location ->
-            val book = bookMap[location.bookId.toString()]
+            val book = bookMap[location.bookId]
 
             if (book != null) {
                 BookMapMarker(
