@@ -19,7 +19,7 @@ class MarkerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun replaceCache(markers: List<BookMapMarker>) {
-        markerDao.replaceAllMarkers(markers.map { it.toEntity() })
+    override suspend fun upsertMarkers(markers: List<BookMapMarker>) {
+        markerDao.upsertMarkers(markers.map { it.toEntity() })
     }
 }
