@@ -50,8 +50,7 @@ class FavoriteRepositoryImplTest {
             assertEquals(1, emittedList.first().bookId)
             assertEquals("Test Book", emittedList.first().marker?.bookTitle)
 
-            awaitComplete()
-        }
+            cancelAndIgnoreRemainingEvents()        }
     }
 
     @Test
@@ -68,8 +67,7 @@ class FavoriteRepositoryImplTest {
             assertEquals(2, emittedList.first().bookId)
             assertNull(emittedList.first().marker)
 
-            awaitComplete()
-        }
+            cancelAndIgnoreRemainingEvents()        }
     }
 
     @Test

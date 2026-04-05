@@ -50,7 +50,15 @@ class SyncMapDataUseCaseTest {
         val result = syncMapDataUseCase()
 
         assertTrue(result is Resource.Success)
-        coVerify { markerRepository.replaceCache(any()) }
+
+        coVerify {
+            markerRepository.replaceCache(match { markers ->
+                markers.size == 1 &&
+                        markers.first().bookId == 100 &&
+                        markers.first().locationName == "Paris" &&
+                        markers.first().bookTitle == "The Paris Novel"
+            })
+        }
     }
 
     @Test

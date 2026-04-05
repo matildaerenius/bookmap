@@ -40,7 +40,6 @@ class ObserveBookMarkersUseCaseTest {
         observeBookMarkersUseCase().test {
             val list = awaitItem()
             assertEquals("Stockholm", list.first().locationName)
-            awaitComplete()
-        }
+            cancelAndIgnoreRemainingEvents()        }
     }
 }

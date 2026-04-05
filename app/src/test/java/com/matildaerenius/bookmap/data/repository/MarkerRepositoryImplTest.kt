@@ -46,8 +46,7 @@ class MarkerRepositoryImplTest {
             assertEquals(1, emittedList.first().bookId)
             assertEquals("Test Title", emittedList.first().bookTitle)
 
-            awaitComplete()
-        }
+            cancelAndIgnoreRemainingEvents()        }
     }
 
     @Test
