@@ -19,6 +19,7 @@ mockk = "1.14.9"
 kotlinxCoroutinesTest = "1.10.2"
 room = "2.8.4"
 turbine = "1.2.1"
+mockWebServer = "5.3.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockWebServer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

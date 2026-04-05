@@ -83,6 +83,7 @@ dependencies {
 
     testImplementation(libs.room.testing)
     testImplementation(libs.turbine)
+    testImplementation(libs.mockwebserver)
 
     androidTestImplementation(libs.room.testing)
     androidTestImplementation(libs.turbine)
