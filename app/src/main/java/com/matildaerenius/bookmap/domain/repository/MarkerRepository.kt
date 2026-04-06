@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MarkerRepository {
     fun observeMarkers(): Flow<List<BookMapMarker>>
-    suspend fun replaceCache(markers: List<BookMapMarker>)}
+    suspend fun upsertMarkers(markers: List<BookMapMarker>)
+}
