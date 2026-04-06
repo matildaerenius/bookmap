@@ -23,10 +23,18 @@ class SyncMapDataUseCase @Inject constructor(
         val allLocations = (locationsResult as Resource.Success).data
 
         val visibleLocations = allLocations.filter { location ->
-            location.latitude <= boundingBox.northEastLat &&
-                    location.latitude >= boundingBox.southWestLat &&
-                    location.longitude <= boundingBox.northEastLng &&
-                    location.longitude >= boundingBox.southWestLng
+            val inLatRange = location.latitude >= boundingBox.southWestLat &&
+                    location.latitude <= boundingBox.northEastLat
+
+            val inLngRange = if (boundingBox.northEastLng >= boundingBox.southWestLng) {
+                location.longitude >= boundingBox.southWestLng &&
+                        location.longitude <= boundingBox.northEastLng
+            } else {
+                location.longitude >= boundingBox.southWestLng ||
+                        location.longitude <= boundingBox.northEastLng
+            }
+
+            inLatRange && inLngRange
         }
 
         if (visibleLocations.isEmpty()) {

@@ -80,4 +80,54 @@ class SyncMapDataUseCaseTest {
         assertTrue(result is Resource.Error)
         coVerify(exactly = 0) { markerRepository.upsertMarkers(any()) }
     }
+
+    @Test
+    fun invoke_withOutOfBoundsLocation_doesNotFetchBooksOrSaveMarkers() = runTest {
+        val fakeLocations = listOf(
+            BookLocation(bookId = 100, locationName = "Paris", latitude = 48.8, longitude = 2.3, description = "A test")
+        )
+        coEvery { locationRepository.getLocations() } returns Resource.Success(fakeLocations)
+
+        val stockholmBox = MapBoundingBox(
+            northEastLat = 60.0,
+            northEastLng = 19.0,
+            southWestLat = 59.0,
+            southWestLng = 17.0
+        )
+
+        val result = syncMapDataUseCase(stockholmBox)
+
+        assertTrue(result is Resource.Success)
+        coVerify(exactly = 0) { bookRepository.getBooksByIds(any()) }
+        coVerify(exactly = 0) { markerRepository.upsertMarkers(any()) }
+    }
+
+    @Test
+    fun invoke_withAntimeridianCrossing_includesCorrectLocations() = runTest {
+        val fakeLocations = listOf(
+            BookLocation(bookId = 200, locationName = "Fiji", latitude = -18.0, longitude = 178.0, description = "Island")
+        )
+        val fakeBooks = listOf(
+            Book(id = 200, title = "Pacific Tales", author = "Ocean Writer", imageUrl = "url")
+        )
+
+        coEvery { locationRepository.getLocations() } returns Resource.Success(fakeLocations)
+        coEvery { bookRepository.getBooksByIds(listOf(200)) } returns Resource.Success(fakeBooks)
+
+        val pacificBox = MapBoundingBox(
+            northEastLat = -10.0,
+            northEastLng = -170.0,
+            southWestLat = -20.0,
+            southWestLng = 170.0
+        )
+
+        val result = syncMapDataUseCase(pacificBox)
+
+        assertTrue(result is Resource.Success)
+        coVerify {
+            markerRepository.upsertMarkers(match { markers ->
+                markers.size == 1 && markers.first().locationName == "Fiji"
+            })
+        }
+    }
 }
