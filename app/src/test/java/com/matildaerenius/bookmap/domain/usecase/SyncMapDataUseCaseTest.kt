@@ -2,6 +2,7 @@ package com.matildaerenius.bookmap.domain.usecase
 
 import com.matildaerenius.bookmap.domain.model.Book
 import com.matildaerenius.bookmap.domain.model.BookLocation
+import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.BookRepository
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
 import com.matildaerenius.bookmap.domain.repository.MarkerRepository
@@ -47,12 +48,19 @@ class SyncMapDataUseCaseTest {
         coEvery { locationRepository.getLocations() } returns Resource.Success(fakeLocations)
         coEvery { bookRepository.getBooksByIds(listOf(100)) } returns Resource.Success(fakeBooks)
 
-        val result = syncMapDataUseCase()
+        val testBoundingBox = MapBoundingBox(
+            northEastLat = 50.0,
+            northEastLng = 5.0,
+            southWestLat = 45.0,
+            southWestLng = 0.0
+        )
+
+        val result = syncMapDataUseCase(testBoundingBox)
 
         assertTrue(result is Resource.Success)
 
         coVerify {
-            markerRepository.replaceCache(match { markers ->
+            markerRepository.upsertMarkers(match { markers ->
                 markers.size == 1 &&
                         markers.first().bookId == 100 &&
                         markers.first().locationName == "Paris" &&
@@ -65,9 +73,11 @@ class SyncMapDataUseCaseTest {
     fun invoke_whenLocationApiFails_returnsErrorAndDoesNotSave() = runTest {
         coEvery { locationRepository.getLocations() } returns Resource.Error(DataError.NETWORK_ERROR)
 
-        val result = syncMapDataUseCase()
+        val testBoundingBox = MapBoundingBox(50.0, 5.0, 45.0, 0.0)
+
+        val result = syncMapDataUseCase(testBoundingBox)
 
         assertTrue(result is Resource.Error)
-        coVerify(exactly = 0) { markerRepository.replaceCache(any()) }
+        coVerify(exactly = 0) { markerRepository.upsertMarkers(any()) }
     }
 }

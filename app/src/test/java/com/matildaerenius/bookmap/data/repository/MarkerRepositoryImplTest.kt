@@ -46,11 +46,12 @@ class MarkerRepositoryImplTest {
             assertEquals(1, emittedList.first().bookId)
             assertEquals("Test Title", emittedList.first().bookTitle)
 
-            cancelAndIgnoreRemainingEvents()        }
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun replaceCache_mapsDomainModelsToEntities_andCallsDao() = runTest {
+    fun upsertMarkers_mapsDomainModelsToEntities_andCallsDao() = runTest {
         val domainMarker = BookMapMarker(
             bookId = 1,
             bookTitle = "Test Title",
@@ -62,10 +63,10 @@ class MarkerRepositoryImplTest {
             longitude = 18.06
         )
 
-        markerRepository.replaceCache(listOf(domainMarker))
+        markerRepository.upsertMarkers(listOf(domainMarker))
 
         coVerify {
-            markerDao.replaceAllMarkers(match { list ->
+            markerDao.upsertMarkers(match { list ->
                 list.size == 1 &&
                         list.first().bookId == 1 &&
                         list.first().title == "Test Title"
