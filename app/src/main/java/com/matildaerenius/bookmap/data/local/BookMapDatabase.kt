@@ -10,7 +10,7 @@ import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
 @Database(
     entities = [MarkerEntity::class, FavoriteEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class BookMapDatabase : RoomDatabase() {
 

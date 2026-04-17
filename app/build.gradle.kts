@@ -92,3 +92,6 @@ dependencies {
 secrets {
     propertiesFileName = "local.properties"
 }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
