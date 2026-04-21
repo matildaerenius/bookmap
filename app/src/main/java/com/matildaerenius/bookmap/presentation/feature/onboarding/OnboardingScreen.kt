@@ -1,5 +1,8 @@
 package com.matildaerenius.bookmap.presentation.feature.onboarding
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,10 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -28,11 +35,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.presentation.common.components.MapMarkerIcon
+import com.matildaerenius.bookmap.presentation.common.components.ProgressBar
 
 @Composable
 fun OnboardingScreen(
     onContinue: () -> Unit
 ) {
+    var startAnimation by remember { mutableStateOf(false) }
+
+    val progress by animateFloatAsState(
+        targetValue = if (startAnimation) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 2500,
+            easing = FastOutSlowInEasing
+        ),
+        finishedListener = {
+            onContinue()
+        },
+        label = "OnboardingProgress"
+    )
+
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -88,7 +114,6 @@ fun OnboardingScreen(
             )
         }
 
-
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -130,12 +155,11 @@ fun OnboardingScreen(
             iconColor = Color.Black
         )
 
-        Box(
+        ProgressBar(
+            progress = progress,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 32.dp)
-                .size(width = 48.dp, height = 4.dp)
-                .background(Color(0xFFC490FF), RoundedCornerShape(2.dp))
         )
     }
 }
