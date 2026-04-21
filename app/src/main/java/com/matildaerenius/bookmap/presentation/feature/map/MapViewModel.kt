@@ -43,7 +43,9 @@ class MapViewModel @Inject constructor(
 
     fun onEvent(event: MapEvent) {
         when (event) {
-            is MapEvent.OnMapBoundsChanged -> fetchMarkersForBounds(event.boundingBox)
+            is MapEvent.OnMapBoundsChanged ->  {
+                Log.d("BookMap", "MapViewModel: Received new map bounds. Getting markers from Repository.")
+                fetchMarkersForBounds(event.boundingBox)   }
             is MapEvent.OnMarkerClick -> {  }
         }
     }
@@ -56,19 +58,18 @@ class MapViewModel @Inject constructor(
                 _uiState.value = UiState.Loading
             }
 
-            Log.d("BookMap", "1. Startar nätverksanrop för området...")
             val result = syncMapDataUseCase(bounds)
 
             when (result) {
                 is Resource.Success -> {
                     _uiState.value = UiState.Success(result.data)
-                    Log.d("BookMap", "2. SUCCESS! Hittade ${result.data.size} böcker i området.")
+                    Log.d("BookMap", "2. SUCCESS! Found ${result.data.size} books in the area")
                 }
                 is Resource.Error -> {
                     if (_uiState.value !is UiState.Success) {
                         _uiState.value = UiState.Error(mapErrorToString(result.error))
                     }
-                    Log.d("BookMap", "2. ERROR! Nätverksfel: ${result.error}")
+                    Log.e("BookMap", "2. ERROR! Network error: ${result.error}")
                 }
             }
         }
@@ -76,7 +77,7 @@ class MapViewModel @Inject constructor(
 
     private fun mapErrorToString(error: DataError): String {
         return when (error) {
-            DataError.NETWORK_ERROR -> "Nätverksfel. Visar sparade platser."
+            DataError.NETWORK_ERROR -> "Networkerror. Shows saved locations."
             else -> "Ett oväntat fel uppstod."
         }
     }
