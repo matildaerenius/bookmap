@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
+import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
 import com.matildaerenius.bookmap.presentation.navigation.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,8 +30,17 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.Map
+                        startDestination = Routes.Onboarding
                     ) {
+                        composable<Routes.Onboarding> {
+                            OnboardingScreen(
+                                onContinue = {
+                                    navController.navigate(Routes.Map) {
+                                        popUpTo(Routes.Onboarding) { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
 
                         composable<Routes.Map> {
                             MapScreen(
