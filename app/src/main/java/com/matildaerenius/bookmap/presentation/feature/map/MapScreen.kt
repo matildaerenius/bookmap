@@ -33,20 +33,12 @@ fun MapScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    val stockholmCenter = LatLng(59.3293, 18.0686)
-    val stockholmBounds = LatLngBounds(
-        LatLng(59.2700, 17.9000),
-        LatLng(59.4000, 18.2500)
-    )
-
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(stockholmCenter, 12f)
-    }
+        position = CameraPosition.fromLatLngZoom(MapConstants.STOCKHOLM_CENTER, 12f)    }
 
     LaunchedEffect(Unit) {
         Log.i("BookMap", "MapScreen: Force start initial fetch")
-        viewModel.onEvent(MapEvent.OnMapBoundsChanged(stockholmBounds.toMapBoundingBox()))
-    }
+        viewModel.onEvent(MapEvent.OnMapBoundsChanged(MapConstants.STOCKHOLM_BOUNDS.toMapBoundingBox()))    }
 
     LaunchedEffect(cameraPositionState.isMoving) {
         if (!cameraPositionState.isMoving) {
@@ -72,7 +64,7 @@ fun MapScreen(
             properties = MapProperties(
                 minZoomPreference = 10f,
                 maxZoomPreference = 18f,
-                latLngBoundsForCameraTarget = stockholmBounds,
+                latLngBoundsForCameraTarget = MapConstants.STOCKHOLM_BOUNDS,
                 mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
             ),
             uiSettings = MapUiSettings(
@@ -126,3 +118,11 @@ fun LatLngBounds.toMapBoundingBox() = MapBoundingBox(
     northEastLat = this.northeast.latitude,
     northEastLng = this.northeast.longitude
 )
+
+object MapConstants {
+    val STOCKHOLM_CENTER = LatLng(59.3293, 18.0686)
+    val STOCKHOLM_BOUNDS = LatLngBounds(
+        LatLng(59.2700, 17.9000),
+        LatLng(59.4000, 18.2500)
+    )
+}
