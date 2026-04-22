@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -127,42 +126,36 @@ fun OnboardingScreen(
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .offset(x = 30.dp, y = 30.dp)
+                .offset(x = 30.dp, y = 45.dp)
                 .size(32.dp),
-            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.8f)
         )
 
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(x = 70.dp, y = 12.dp)
+                .offset(x = 70.dp, y = 35.dp)
                 .size(40.dp),
-            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.9f)
         )
 
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .offset(x = (-40).dp, y = 25.dp)
+                .offset(x = (-40).dp, y = 40.dp)
                 .size(28.dp),
-            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.7f)
         )
 
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .offset(x = (-100).dp, y = 30.dp)
+                .offset(x = (-100).dp, y = 40.dp)
                 .size(20.dp),
-            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.6f)
         )
 
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(x = (-20).dp, y = 40.dp)
+                .offset(x = (-35).dp, y = 65.dp)
                 .size(110.dp),
-            backgroundColor = colorResource(id = R.color.marker_bg_purple),
-            iconColor = Color.Black
         )
 
         ProgressBar(
