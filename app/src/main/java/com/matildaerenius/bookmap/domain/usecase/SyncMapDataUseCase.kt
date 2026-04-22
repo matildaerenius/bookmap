@@ -15,18 +15,13 @@ class SyncMapDataUseCase @Inject constructor(
     private val markerRepository: MarkerRepository
 ) {
     suspend operator fun invoke(boundingBox: MapBoundingBox): Resource<List<BookMapMarker>>{
-        Log.d("BookMap", "USECASE 1: Startar för boundingBox $boundingBox")
-        Log.d("BookMap", "USECASE 2: Anropar LocationRepository (Gist)...")
         val locationsResult = locationRepository.getLocations()
-        Log.d("BookMap", "USECASE 3: Fick svar från Gist!")
 
         if (locationsResult is Resource.Error) {
-            Log.d("BookMap", "USECASE 4: Gist returnerade Error: ${locationsResult.error}")
             return Resource.Error(locationsResult.error)
         }
 
         val allLocations = (locationsResult as Resource.Success).data
-        Log.d("BookMap", "USECASE 5: Hittade ${allLocations.size} platser totalt.")
 
         val visibleLocations = allLocations.filter { location ->
             val inLatRange = location.latitude >= boundingBox.southWestLat &&

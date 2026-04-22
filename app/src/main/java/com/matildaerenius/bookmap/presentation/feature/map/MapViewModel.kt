@@ -32,9 +32,11 @@ class MapViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             markerRepository.observeMarkers().collect { markers ->
+                val currentState = _uiState.value
+
                 if (markers.isNotEmpty()) {
                     _uiState.value = UiState.Success(markers)
-                } else if (_uiState.value !is UiState.Loading) {
+                } else if (currentState is UiState.Success) {
                     _uiState.value = UiState.Success(emptyList())
                 }
             }
