@@ -43,6 +43,15 @@ fun OnboardingScreen(
 ) {
     var startAnimation by remember { mutableStateOf(false) }
 
+    var hasNavigated by remember { mutableStateOf(false) }
+
+    val safeNavigate = {
+        if (!hasNavigated) {
+            hasNavigated = true
+            onContinue()
+        }
+    }
+
     val progress by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
         animationSpec = tween(
@@ -50,7 +59,7 @@ fun OnboardingScreen(
             easing = FastOutSlowInEasing
         ),
         finishedListener = {
-            onContinue()
+            safeNavigate()
         },
         label = "OnboardingProgress"
     )
@@ -62,7 +71,7 @@ fun OnboardingScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { onContinue() }
+            .clickable { safeNavigate() }
     ) {
         Image(
             painter = painterResource(id = R.drawable.stockholm),

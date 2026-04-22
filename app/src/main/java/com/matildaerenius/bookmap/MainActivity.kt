@@ -1,6 +1,7 @@
 package com.matildaerenius.bookmap
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         composable<Routes.Detail> { backStackEntry ->
                             val detailArgs = backStackEntry.toRoute<Routes.Detail>()
 
-                            println("TEST - detaljvyn ska visas nu för :) bok ID: ${detailArgs.bookId}")
+                            Log.d("Bookmap","TEST - detaljvyn ska visas nu för :) bok ID: ${detailArgs.bookId}")
                         }
 
                     }

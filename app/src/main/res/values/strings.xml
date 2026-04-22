@@ -3,4 +3,5 @@
         <string name="onboarding_title">Varje plats\nhar en historia</string>
         <string name="onboarding_description">Hitta böcker som utspelar sig på platser\ndu tycker är intressanta, drömmer om\neller kanske nyss besökt.</string>
         <string name="onboarding_image_desc">Bakgrundsbild Stockholm</string>
+        <string name="marker_icon">Bok</string>
 </resources>

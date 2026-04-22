@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import com.matildaerenius.bookmap.R
 
 @Composable
@@ -51,7 +52,7 @@ fun MapMarkerIcon(
         ) {
             Icon(
                 imageVector = Icons.Outlined.AutoStories,
-                contentDescription = "Book",
+                contentDescription = stringResource(id = R.string.marker_icon),
                 tint = iconColor,
                 modifier = Modifier.fillMaxSize(0.65f)
             )
