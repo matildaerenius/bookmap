@@ -28,7 +28,6 @@ fun MapMarkerIcon(
 ) {
     Box(
         modifier = modifier
-            .size(48.dp)
             .graphicsLayer {
                 rotationZ = 45f
                 shadowElevation = 8.dp.toPx()

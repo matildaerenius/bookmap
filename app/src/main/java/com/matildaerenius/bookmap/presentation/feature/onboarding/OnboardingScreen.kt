@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -128,7 +129,7 @@ fun OnboardingScreen(
                 .align(Alignment.CenterStart)
                 .offset(x = 30.dp, y = 30.dp)
                 .size(32.dp),
-            backgroundColor = Color(0xFFC490FF).copy(alpha = 0.8f)
+            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.8f)
         )
 
         MapMarkerIcon(
@@ -136,7 +137,7 @@ fun OnboardingScreen(
                 .align(Alignment.Center)
                 .offset(x = 70.dp, y = 12.dp)
                 .size(40.dp),
-            backgroundColor = Color(0xFFC490FF).copy(alpha = 0.9f)
+            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.9f)
         )
 
         MapMarkerIcon(
@@ -144,7 +145,7 @@ fun OnboardingScreen(
                 .align(Alignment.CenterEnd)
                 .offset(x = (-40).dp, y = 25.dp)
                 .size(28.dp),
-            backgroundColor = Color(0xFFC490FF).copy(alpha = 0.7f)
+            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.7f)
         )
 
         MapMarkerIcon(
@@ -152,7 +153,7 @@ fun OnboardingScreen(
                 .align(Alignment.CenterEnd)
                 .offset(x = (-100).dp, y = 30.dp)
                 .size(20.dp),
-            backgroundColor = Color(0xFFC490FF).copy(alpha = 0.6f)
+            backgroundColor = colorResource(id = R.color.marker_bg_purple).copy(alpha = 0.6f)
         )
 
         MapMarkerIcon(
@@ -160,7 +161,7 @@ fun OnboardingScreen(
                 .align(Alignment.Center)
                 .offset(x = (-20).dp, y = 40.dp)
                 .size(110.dp),
-            backgroundColor = Color(0xFFC490FF),
+            backgroundColor = colorResource(id = R.color.marker_bg_purple),
             iconColor = Color.Black
         )
 

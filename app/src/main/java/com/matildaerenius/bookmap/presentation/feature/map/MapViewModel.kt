@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,26 +27,39 @@ class MapViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<UiState<List<BookMapMarker>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<BookMapMarker>>> = _uiState.asStateFlow()
-
+    
+    private val currentBounds = MutableStateFlow<MapBoundingBox?>(null)
     private var syncJob: Job? = null
 
     init {
         viewModelScope.launch {
-            markerRepository.observeMarkers().collect { markers ->
+            combine(
+                markerRepository.observeMarkers(),
+                currentBounds
+            ) { allMarkers, bounds ->
+                if (bounds == null) return@combine emptyList<BookMapMarker>()
+
+                allMarkers.filter { marker ->
+                    marker.latitude in bounds.southWestLat..bounds.northEastLat &&
+                            marker.longitude in bounds.southWestLng..bounds.northEastLng
+                }
+            }.collect { visibleMarkers ->
                 val currentState = _uiState.value
 
-                if (markers.isNotEmpty()) {
-                    _uiState.value = UiState.Success(markers)
+                if (visibleMarkers.isNotEmpty()) {
+                    _uiState.value = UiState.Success(visibleMarkers)
                 } else if (currentState is UiState.Success) {
                     _uiState.value = UiState.Success(emptyList())
                 }
             }
         }
     }
+    
 
     fun onEvent(event: MapEvent) {
         when (event) {
             is MapEvent.OnMapBoundsChanged ->  {
+                currentBounds.value = event.boundingBox
                 Log.d("BookMap", "MapViewModel: Received new map bounds. Getting markers from Repository.")
                 fetchMarkersForBounds(event.boundingBox)   }
             is MapEvent.OnMarkerClick -> {  }
@@ -64,7 +78,6 @@ class MapViewModel @Inject constructor(
 
             when (result) {
                 is Resource.Success -> {
-                    _uiState.value = UiState.Success(result.data)
                     Log.d("BookMap", "2. SUCCESS! Found ${result.data.size} books in the area")
                 }
                 is Resource.Error -> {
@@ -80,7 +93,7 @@ class MapViewModel @Inject constructor(
     private fun mapErrorToString(error: DataError): String {
         return when (error) {
             DataError.NETWORK_ERROR -> "Networkerror. Shows saved locations."
-            else -> "Ett oväntat fel uppstod."
+            else -> "Unknown error"
         }
     }
 }

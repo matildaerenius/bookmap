@@ -15,6 +15,7 @@ import androidx.navigation.toRoute
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
 import com.matildaerenius.bookmap.presentation.navigation.Routes
+import com.matildaerenius.bookmap.presentation.theme.BookmapTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            BookmapTheme() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
