@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.matildaerenius.bookmap.presentation.feature.details.DetailScreen
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
 import com.matildaerenius.bookmap.presentation.navigation.Routes
@@ -55,9 +56,12 @@ class MainActivity : ComponentActivity() {
                         composable<Routes.Detail> { backStackEntry ->
                             val detailArgs = backStackEntry.toRoute<Routes.Detail>()
 
-                            Log.d("Bookmap","TEST - detaljvyn ska visas nu för :) bok ID: ${detailArgs.bookId}")
+                            DetailScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
-
                     }
                 }
             }
