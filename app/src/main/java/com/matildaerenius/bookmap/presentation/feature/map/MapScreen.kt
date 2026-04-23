@@ -34,6 +34,7 @@ fun MapScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedMarker by viewModel.selectedMarker.collectAsState()
+    val favorites by viewModel.favorites.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -89,6 +90,7 @@ fun MapScreen(
         }
 
         if (selectedMarker != null) {
+            val isFav = favorites.any { it.bookId == selectedMarker!!.bookId }
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
@@ -99,6 +101,10 @@ fun MapScreen(
             ) {
                 BookSummarySheet(
                     marker = selectedMarker!!,
+                    isFavorite = isFav,
+                    onToggleFavorite = {
+                        viewModel.onEvent(MapEvent.OnToggleFavorite(selectedMarker!!.bookId, isFav))
+                    }
                 )
             }
         }

@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Map
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.R
+import com.matildaerenius.bookmap.presentation.feature.favorites.FavoriteScreen
 
 enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageVector) {
     MAP(R.string.action_map, Icons.Default.Map),
@@ -51,12 +51,10 @@ fun MainScreen() {
                         MapScreen()
                     }
                     FloatingAction.FAVORITES.ordinal -> {
-                        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                            Text("Favoriter visas här :)", color = Color.Black)
+                        FavoriteScreen()
                         }
                     }
                 }
-            }
 
             Column(
                 modifier = Modifier

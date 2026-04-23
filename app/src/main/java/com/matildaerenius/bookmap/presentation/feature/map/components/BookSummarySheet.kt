@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,13 +29,14 @@ import com.matildaerenius.bookmap.domain.model.BookMapMarker
 
 @Composable
 fun BookSummarySheet(
-    marker: BookMapMarker) {
+    marker: BookMapMarker,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable { // TODO: gör favorit
-                }
             .padding(horizontal = 24.dp, vertical = 24.dp)
             .padding(bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -79,13 +81,13 @@ fun BookSummarySheet(
                     .size(64.dp)
                     .clip(CircleShape)
                     .background(Color.White)
-                    .clickable { /* TODO: Lägg till i favoriter */ },
+                    .clickable { onToggleFavorite() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = stringResource(id = R.string.add_to_fav),
-                    tint = Color.Black,
+                    tint = if (isFavorite) Color.Red else Color.Black,
                     modifier = Modifier.size(32.dp)
                 )
             }
