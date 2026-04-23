@@ -45,4 +45,10 @@ class BookRepositoryImpl @Inject constructor(
             Resource.Error(DataError.UNKNOWN_ERROR)
         }
     }
+
+    override suspend fun getBookById(bookId: Int): Resource<Book> {
+        return safeApiCall {
+            api.getBookById(bookId).toDomain()
+        }
+    }
 }

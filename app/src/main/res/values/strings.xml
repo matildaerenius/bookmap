@@ -4,4 +4,10 @@
         <string name="onboarding_description">Hitta böcker som utspelar sig på platser\ndu tycker är intressanta, drömmer om\neller kanske nyss besökt.</string>
         <string name="onboarding_image_desc">Bakgrundsbild Stockholm</string>
         <string name="marker_icon">Bok</string>
+        <string name="error_network">Nätverksfel. Visar sparade platser.</string>
+        <string name="error_unknown">Ett okänt fel inträffade.</string>
+        <string name="map_marker">Kart markör</string>
+        <string name="add_to_fav">Lägg till i favoriter</string>
+        <string name="action_map">Karta</string>
+        <string name="action_favorites">Favoriter</string>
 </resources>
