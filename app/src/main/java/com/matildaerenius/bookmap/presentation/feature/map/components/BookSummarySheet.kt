@@ -1,3 +1,5 @@
+package com.matildaerenius.bookmap.presentation.feature.map.components
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,18 +23,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 
 @Composable
 fun BookSummarySheet(
-    marker: BookMapMarker,
-    onCardClick: () -> Unit
-) {
+    marker: BookMapMarker) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable { onCardClick() }
+            .clickable { // TODO: gör favorit
+                }
             .padding(horizontal = 24.dp, vertical = 24.dp)
             .padding(bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -71,8 +74,6 @@ fun BookSummarySheet(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-            Spacer(modifier = Modifier.width(24.dp))
-
             Box(
                 modifier = Modifier
                     .size(64.dp)
@@ -83,7 +84,7 @@ fun BookSummarySheet(
             ) {
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = "Add to favorites",
+                    contentDescription = stringResource(id = R.string.add_to_fav),
                     tint = Color.Black,
                     modifier = Modifier.size(32.dp)
                 )

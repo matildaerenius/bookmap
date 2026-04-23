@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap.presentation.common.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,18 +23,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
+import com.matildaerenius.bookmap.R
 
-enum class FloatingAction(val label: String, val icon: ImageVector) {
-    MAP("Karta", Icons.Default.Map),
-    FAVORITES("Favoriter", Icons.Default.Favorite)
+enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageVector) {
+    MAP(R.string.action_map, Icons.Default.Map),
+    FAVORITES(R.string.action_favorites, Icons.Default.Favorite)
 }
 
 @Composable
-fun MainScreen(
-    onNavigateToDetail: (Int) -> Unit
-) {
+fun MainScreen() {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(FloatingAction.MAP.ordinal) }
 
     Surface(
@@ -47,9 +48,7 @@ fun MainScreen(
             ) {
                 when (selectedTabIndex) {
                     FloatingAction.MAP.ordinal -> {
-                        MapScreen(
-                            onNavigateToDetail = onNavigateToDetail
-                        )
+                        MapScreen()
                     }
                     FloatingAction.FAVORITES.ordinal -> {
                         Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -75,7 +74,7 @@ fun MainScreen(
                         icon = {
                             Icon(
                                 imageVector = action.icon,
-                                contentDescription = action.label,
+                                contentDescription = stringResource(id = action.labelResId),
                                 tint = Color.Black
                             )
                         }

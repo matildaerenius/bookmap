@@ -1,6 +1,6 @@
 package com.matildaerenius.bookmap.presentation.feature.map
 
-import BookSummarySheet
+import com.matildaerenius.bookmap.presentation.feature.map.components.BookSummarySheet
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,7 +31,6 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel(),
-    onNavigateToDetail: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedMarker by viewModel.selectedMarker.collectAsState()
@@ -100,10 +99,6 @@ fun MapScreen(
             ) {
                 BookSummarySheet(
                     marker = selectedMarker!!,
-                    onCardClick = {
-                        viewModel.onEvent(MapEvent.OnDismissBottomSheet)
-                        onNavigateToDetail(selectedMarker!!.bookId)
-                    }
                 )
             }
         }

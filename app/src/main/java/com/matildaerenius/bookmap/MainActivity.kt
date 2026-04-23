@@ -43,11 +43,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<Routes.Main> {
-                            MainScreen(
-                                onNavigateToDetail = { clickedBookId ->
-
-                                }
-                            )
+                            MainScreen()
                         }
                     }
                 }

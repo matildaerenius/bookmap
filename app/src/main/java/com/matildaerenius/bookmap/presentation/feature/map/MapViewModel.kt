@@ -81,7 +81,7 @@ class MapViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     if (_uiState.value !is UiState.Success) {
-                        _uiState.value = UiState.Error(mapErrorToString(result.error))
+                        _uiState.value = UiState.Error(mapErrorToUiText(result.error))
                     }
                     Log.e("BookMap", "2. ERROR! Network error: ${result.error}")
                 }
@@ -89,7 +89,7 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun mapErrorToString(error: DataError): UiText {
+    private fun mapErrorToUiText(error: DataError): UiText {
         return when (error) {
             DataError.NETWORK_ERROR -> UiText.StringResource(R.string.error_network)
             else -> UiText.StringResource(R.string.error_unknown)
