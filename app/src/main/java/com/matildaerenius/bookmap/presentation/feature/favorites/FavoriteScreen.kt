@@ -1,84 +1,58 @@
 package com.matildaerenius.bookmap.presentation.feature.favorites
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteItem
 
 @Composable
 fun FavoriteScreen(
-    viewModel: FavoriteViewModel = hiltViewModel()
+    viewModel: FavoriteViewModel = hiltViewModel(),
+    onNavigateToMap: (Int) -> Unit
 ) {
     val favorites by viewModel.favorites.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFF121212))
             .padding(16.dp)
     ) {
         if (favorites.isEmpty()) {
             Text(
                 text = "Du har inga sparade favoriter än.",
-                color = Color.White,
+                color = Color.Gray,
                 modifier = Modifier.align(Alignment.Center)
             )
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(top = 48.dp)
+                contentPadding = PaddingValues(top = 80.dp, bottom = 100.dp)
             ) {
-                items(favorites) { favorite ->
+                items(
+                    items = favorites,
+                    key = { favorite -> favorite.bookId }
+                ) { favorite ->
                     FavoriteItem(
-                        title = favorite.marker?.locationName ?: "Okänd plats",
-                        onRemove = { viewModel.onEvent(FavoriteEvent.OnRemoveFavorite(favorite.bookId)) }
+                        imageUrl = favorite.marker?.bookImageUrl,
+                        bookTitle = favorite.marker?.bookTitle ?: "Okänd titel",
+                        author = favorite.marker?.bookAuthor ?: "Okänd författare",
+                        locationName = favorite.marker?.locationName ?: "Okänd plats",
+                        onRemove = { viewModel.onEvent(FavoriteEvent.OnRemoveFavorite(favorite.bookId)) },
+                        onClick = { onNavigateToMap(favorite.bookId) }
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun FavoriteItem(
-    title: String,
-    onRemove: () -> Unit
-) {
-    Surface(
-        color = Color.Black.copy(alpha = 0.6f),
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = title,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-            IconButton(onClick = onRemove) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Ta bort",
-                    tint = Color.Gray
-                )
             }
         }
     }

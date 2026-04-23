@@ -24,9 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.presentation.feature.favorites.FavoriteScreen
+import com.matildaerenius.bookmap.presentation.feature.map.MapEvent
+import com.matildaerenius.bookmap.presentation.feature.map.MapViewModel
 
 enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageVector) {
     MAP(R.string.action_map, Icons.Default.Map),
@@ -34,7 +37,9 @@ enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageV
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    mapViewModel: MapViewModel = hiltViewModel()
+) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(FloatingAction.MAP.ordinal) }
 
     Surface(
@@ -48,13 +53,19 @@ fun MainScreen() {
             ) {
                 when (selectedTabIndex) {
                     FloatingAction.MAP.ordinal -> {
-                        MapScreen()
+                        MapScreen(viewModel = mapViewModel)
                     }
                     FloatingAction.FAVORITES.ordinal -> {
-                        FavoriteScreen()
-                        }
+                        FavoriteScreen(
+                            onNavigateToMap = { bookId ->
+                                selectedTabIndex = FloatingAction.MAP.ordinal
+
+                                mapViewModel.onEvent(MapEvent.OnMarkerClick(bookId))
+                            }
+                        )
                     }
                 }
+            }
 
             Column(
                 modifier = Modifier

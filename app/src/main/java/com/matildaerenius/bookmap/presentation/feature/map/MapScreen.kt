@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -45,6 +46,20 @@ fun MapScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
+
+    LaunchedEffect(selectedMarker) {
+        selectedMarker?.let { marker ->
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                LatLng(marker.latitude, marker.longitude),
+                18f
+            )
+
+            cameraPositionState.animate(
+                update = cameraUpdate,
+                durationMs = 1000
+            )
+        }
+    }
 
     LaunchedEffect(Unit) {
         Log.i("BookMap", "MapScreen: Force start initial fetch")
