@@ -1,82 +1,107 @@
 package com.matildaerenius.bookmap.presentation.common.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 
-enum class AppDestination(val label: String) {
-    MAP("Karta"),
-    FAVORITES("Favoriter")
+enum class FloatingAction(val label: String, val icon: ImageVector) {
+    MAP("Karta", Icons.Default.Map),
+    FAVORITES("Favoriter", Icons.Default.Favorite)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     onNavigateToDetail: (Int) -> Unit
 ) {
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(AppDestination.MAP.ordinal) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(FloatingAction.MAP.ordinal) }
 
-    Scaffold(
-        topBar = {
-            PrimaryTabRow(
-                selectedTabIndex = selectedTabIndex,
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
-                AppDestination.entries.forEachIndexed { index, destination ->
-                    Tab(
+                when (selectedTabIndex) {
+                    FloatingAction.MAP.ordinal -> {
+                        MapScreen(
+                            onNavigateToDetail = onNavigateToDetail
+                        )
+                    }
+                    FloatingAction.FAVORITES.ordinal -> {
+                        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                            Text("Favoriter visas här :)", color = Color.Black)
+                        }
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 48.dp, end = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                FloatingAction.entries.forEachIndexed { index, action ->
+                    FloatingActionButtonItem(
                         selected = selectedTabIndex == index,
                         onClick = {
                             selectedTabIndex = index
                         },
-                        text = {
-                            Text(
-                                text = destination.label,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal
+                        icon = {
+                            Icon(
+                                imageVector = action.icon,
+                                contentDescription = action.label,
+                                tint = Color.Black
                             )
                         }
                     )
                 }
             }
         }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            when (selectedTabIndex) {
-                AppDestination.MAP.ordinal -> {
-                    MapScreen(
-                        onNavigateToDetail = onNavigateToDetail
-                    )
-                }
-                AppDestination.FAVORITES.ordinal -> {
-                    // TODO: Visa din Favorit skärmen
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Text("Favoriter visas nu!")
-                    }
-                }
-            }
-        }
+    }
+}
+
+@Composable
+fun FloatingActionButtonItem(
+    selected: Boolean,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(56.dp)
+            .shadow(4.dp, CircleShape)
+            .clip(CircleShape)
+            .background(if (selected) Color(0xFFE0E0E0) else Color.White)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        icon()
     }
 }

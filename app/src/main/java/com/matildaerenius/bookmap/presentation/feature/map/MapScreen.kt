@@ -93,7 +93,7 @@ fun MapScreen(
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
-                containerColor = Color.Black.copy(alpha = 0.9f),
+                containerColor = Color.Black.copy(alpha = 0.8f),
                 scrimColor = Color.Transparent,
                 dragHandle = { },
                 modifier = Modifier.fillMaxHeight()
