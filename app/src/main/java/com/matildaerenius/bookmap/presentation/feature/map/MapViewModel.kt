@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.MarkerRepository
+import com.matildaerenius.bookmap.domain.usecase.ObserveBookMarkersUseCase
 import com.matildaerenius.bookmap.domain.usecase.SyncMapDataUseCase
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.util.DataError
@@ -22,28 +23,19 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val syncMapDataUseCase: SyncMapDataUseCase,
-    private val markerRepository: MarkerRepository
+    private val observeBookMarkersUseCase: ObserveBookMarkersUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<List<BookMapMarker>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<BookMapMarker>>> = _uiState.asStateFlow()
-    
+    private val _selectedMarker = MutableStateFlow<BookMapMarker?>(null)
+    val selectedMarker: StateFlow<BookMapMarker?> = _selectedMarker.asStateFlow()
     private val currentBounds = MutableStateFlow<MapBoundingBox?>(null)
     private var syncJob: Job? = null
 
     init {
         viewModelScope.launch {
-            combine(
-                markerRepository.observeMarkers(),
-                currentBounds
-            ) { allMarkers, bounds ->
-                if (bounds == null) return@combine emptyList<BookMapMarker>()
-
-                allMarkers.filter { marker ->
-                    marker.latitude in bounds.southWestLat..bounds.northEastLat &&
-                            marker.longitude in bounds.southWestLng..bounds.northEastLng
-                }
-            }.collect { visibleMarkers ->
+            observeBookMarkersUseCase(currentBounds).collect { visibleMarkers ->
                 val currentState = _uiState.value
 
                 if (visibleMarkers.isNotEmpty()) {
@@ -54,7 +46,6 @@ class MapViewModel @Inject constructor(
             }
         }
     }
-    
 
     fun onEvent(event: MapEvent) {
         when (event) {
@@ -62,7 +53,15 @@ class MapViewModel @Inject constructor(
                 currentBounds.value = event.boundingBox
                 Log.d("BookMap", "MapViewModel: Received new map bounds. Getting markers from Repository.")
                 fetchMarkersForBounds(event.boundingBox)   }
-            is MapEvent.OnMarkerClick -> {  }
+            is MapEvent.OnMarkerClick -> {
+                val currentState = _uiState.value
+                if (currentState is UiState.Success) {
+                    _selectedMarker.value = currentState.data.find { it.bookId == event.bookId }
+                }
+            }
+            is MapEvent.OnDismissBottomSheet -> {
+                _selectedMarker.value = null
+            }
         }
     }
 
