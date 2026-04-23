@@ -5,6 +5,6 @@ import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 sealed interface MapEvent {
     data class OnMapBoundsChanged(val boundingBox: MapBoundingBox) : MapEvent
     data class OnMarkerClick(val bookId: Int) : MapEvent
-    object OnDismissBottomSheet : MapEvent
+    data object OnDismissBottomSheet : MapEvent
 
 }

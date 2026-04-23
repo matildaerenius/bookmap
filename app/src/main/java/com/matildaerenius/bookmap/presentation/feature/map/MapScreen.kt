@@ -29,6 +29,7 @@ import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.components.MapMarkerIcon
 import com.matildaerenius.bookmap.presentation.common.state.UiState
+import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogleMap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,50 +66,28 @@ fun MapScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is UiState.Error) {
-            val message = (uiState as UiState.Error).message
-            Log.e("BookMap", "MapScreen: Error message: $message")
-            snackbarHostState.showSnackbar(message)
+            val errorMessage = (uiState as UiState.Error).message.asString(context)
+            Log.e("BookMap", "MapScreen: Error message: $errorMessage")
+            snackbarHostState.showSnackbar(errorMessage)
         }
     }
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            properties = MapProperties(
-                minZoomPreference = 10f,
-                maxZoomPreference = 18f,
-                latLngBoundsForCameraTarget = MapConstants.STOCKHOLM_BOUNDS,
-                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
-            ),
-            uiSettings = MapUiSettings(
-                zoomControlsEnabled = true,
-                myLocationButtonEnabled = false
-            )
-        ) {
-            if (uiState is UiState.Success) {
-                val markers = (uiState as UiState.Success).data
-                markers.forEach { bookMarker ->
-                    MarkerComposable(
-                        keys = arrayOf(bookMarker.bookId),
-                        state = MarkerState(
-                            position = LatLng(bookMarker.latitude, bookMarker.longitude)
-                        ),
-                        onClick = {
-                            viewModel.onEvent(MapEvent.OnMarkerClick(bookMarker.bookId))
-                            Log.i("BookMap", "MapScreen: User clicked on marker for bokID: ${bookMarker.bookId}")
-                            true
-                        }
-                    ) {
-                        MapMarkerIcon(
-                            modifier = Modifier.size(30.dp),
-                        )
-                    }
-                }
-            }
+        val currentMarkers = if (uiState is UiState.Success) {
+            (uiState as UiState.Success).data
+        } else {
+            emptyList()
         }
+
+        BookGoogleMap(
+            markers = currentMarkers,
+            cameraPositionState = cameraPositionState,
+            onMarkerClick = { bookId ->
+                viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
+            }
+        )
 
         if (uiState is UiState.Loading) {
             FullScreenLoadingIndicator()
@@ -122,7 +101,6 @@ fun MapScreen(
                 scrimColor = Color.Transparent,
                 dragHandle = { },
                 modifier = Modifier.fillMaxHeight()
-
             ) {
                 BookSummarySheet(
                     marker = selectedMarker!!,

@@ -3,6 +3,7 @@ package com.matildaerenius.bookmap.presentation.feature.map
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.MarkerRepository
@@ -11,6 +12,7 @@ import com.matildaerenius.bookmap.domain.usecase.SyncMapDataUseCase
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.util.DataError
 import com.matildaerenius.bookmap.util.Resource
+import com.matildaerenius.bookmap.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -89,10 +91,10 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun mapErrorToString(error: DataError): String {
+    private fun mapErrorToString(error: DataError): UiText {
         return when (error) {
-            DataError.NETWORK_ERROR -> "Networkerror. Shows saved locations."
-            else -> "Unknown error"
+            DataError.NETWORK_ERROR -> UiText.StringResource(R.string.error_network)
+            else -> UiText.StringResource(R.string.error_unknown)
         }
     }
 }
