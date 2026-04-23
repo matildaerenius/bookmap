@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
-import com.matildaerenius.bookmap.domain.repository.MarkerRepository
 import com.matildaerenius.bookmap.domain.usecase.ObserveBookMarkersUseCase
 import com.matildaerenius.bookmap.domain.usecase.SyncMapDataUseCase
 import com.matildaerenius.bookmap.presentation.common.state.UiState
@@ -18,7 +17,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
