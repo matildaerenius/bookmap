@@ -13,7 +13,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.presentation.common.components.MapMarkerIcon
@@ -44,7 +44,7 @@ fun BookGoogleMap(
         markers.forEach { bookMarker ->
             MarkerComposable(
                 keys = arrayOf(bookMarker.bookId),
-                state = MarkerState(
+                state = rememberUpdatedMarkerState(
                     position = LatLng(bookMarker.latitude, bookMarker.longitude)
                 ),
                 onClick = {
