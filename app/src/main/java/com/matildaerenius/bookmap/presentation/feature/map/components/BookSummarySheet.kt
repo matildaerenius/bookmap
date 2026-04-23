@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -57,7 +58,7 @@ fun BookSummarySheet(
             contentDescription = marker.bookTitle,
             modifier = Modifier
                 .size(240.dp, 240.dp)
-                .background(Color.Transparent),
+                .background(Color.DarkGray),
             contentScale = ContentScale.Fit
         )
 
@@ -93,3 +94,26 @@ fun BookSummarySheet(
             }
         }
     }
+
+@Preview(showBackground = true, backgroundColor = 0xFF121212)
+@Composable
+fun BookSummarySheetPreview() {
+    MaterialTheme {
+        val dummyMarker = BookMapMarker(
+            bookId = 1,
+            locationName = "Gamla Stan",
+            latitude = 59.3257,
+            longitude = 18.0709,
+            bookTitle = "Män som hatar kvinnor",
+            bookAuthor = "Stieg Larsson",
+            description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
+            bookImageUrl = ""
+        )
+
+        BookSummarySheet(
+            marker = dummyMarker,
+            isFavorite = true,
+            onToggleFavorite = {}
+        )
+    }
+}
