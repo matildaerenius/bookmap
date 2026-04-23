@@ -7,5 +7,5 @@ sealed interface Routes {
     @Serializable
     data object Onboarding : Routes
     @Serializable
-    data object Map : Routes
+    data object Main : Routes
 }

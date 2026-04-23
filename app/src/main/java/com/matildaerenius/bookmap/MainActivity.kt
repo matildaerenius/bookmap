@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
+import com.matildaerenius.bookmap.presentation.common.components.MainScreen
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
 import com.matildaerenius.bookmap.presentation.navigation.Routes
 import com.matildaerenius.bookmap.presentation.theme.BookmapTheme
@@ -35,15 +35,15 @@ class MainActivity : ComponentActivity() {
                         composable<Routes.Onboarding> {
                             OnboardingScreen(
                                 onContinue = {
-                                    navController.navigate(Routes.Map) {
+                                    navController.navigate(Routes.Main) {
                                         popUpTo(Routes.Onboarding) { inclusive = true }
                                     }
                                 }
                             )
                         }
 
-                        composable<Routes.Map> {
-                            MapScreen(
+                        composable<Routes.Main> {
+                            MainScreen(
                                 onNavigateToDetail = { clickedBookId ->
 
                                 }
