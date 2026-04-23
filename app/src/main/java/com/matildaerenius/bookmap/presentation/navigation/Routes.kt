@@ -8,7 +8,4 @@ sealed interface Routes {
     data object Onboarding : Routes
     @Serializable
     data object Map : Routes
-    @Serializable
-    data class Detail(val bookId: Int) : Routes
-
 }

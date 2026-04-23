@@ -1,7 +1,6 @@
 package com.matildaerenius.bookmap
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import com.matildaerenius.bookmap.presentation.feature.details.DetailScreen
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
 import com.matildaerenius.bookmap.presentation.navigation.Routes
@@ -48,17 +45,7 @@ class MainActivity : ComponentActivity() {
                         composable<Routes.Map> {
                             MapScreen(
                                 onNavigateToDetail = { clickedBookId ->
-                                    navController.navigate(Routes.Detail(bookId = clickedBookId))
-                                }
-                            )
-                        }
 
-                        composable<Routes.Detail> { backStackEntry ->
-                            val detailArgs = backStackEntry.toRoute<Routes.Detail>()
-
-                            DetailScreen(
-                                onNavigateBack = {
-                                    navController.popBackStack()
                                 }
                             )
                         }
