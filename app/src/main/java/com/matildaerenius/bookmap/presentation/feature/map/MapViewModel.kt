@@ -48,6 +48,10 @@ class MapViewModel @Inject constructor(
     )
 
     init {
+        val initialBounds = MapConstants.STOCKHOLM_BOUNDS.toMapBoundingBox()
+        currentBounds.value = initialBounds
+        fetchMarkersForBounds(initialBounds)
+
         viewModelScope.launch {
             observeBookMarkersUseCase(currentBounds).collect { visibleMarkers ->
                 val currentState = _uiState.value
@@ -63,20 +67,26 @@ class MapViewModel @Inject constructor(
 
     fun onEvent(event: MapEvent) {
         when (event) {
-            is MapEvent.OnMapBoundsChanged ->  {
+            is MapEvent.OnMapBoundsChanged -> {
                 currentBounds.value = event.boundingBox
-                Log.d("BookMap", "MapViewModel: Received new map bounds. Getting markers from Repository.")
+                Log.d(
+                    "BookMap",
+                    "MapViewModel: Received new map bounds. Getting markers from Repository."
+                )
                 fetchMarkersForBounds(event.boundingBox)
             }
+
             is MapEvent.OnMarkerClick -> {
                 val currentState = _uiState.value
                 if (currentState is UiState.Success) {
                     _selectedMarker.value = currentState.data.find { it.bookId == event.bookId }
                 }
             }
+
             is MapEvent.OnDismissBottomSheet -> {
                 _selectedMarker.value = null
             }
+
             is MapEvent.OnToggleFavorite -> {
                 viewModelScope.launch {
                     if (event.isCurrentlyFavorite) {
@@ -103,6 +113,7 @@ class MapViewModel @Inject constructor(
                 is Resource.Success -> {
                     Log.d("BookMap", "2. SUCCESS! Found ${result.data.size} books in the area")
                 }
+
                 is Resource.Error -> {
                     if (_uiState.value !is UiState.Success) {
                         _uiState.value = UiState.Error(mapErrorToUiText(result.error))

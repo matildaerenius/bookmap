@@ -62,11 +62,6 @@ fun MapScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        Log.i("BookMap", "MapScreen: Force start initial fetch")
-        viewModel.onEvent(MapEvent.OnMapBoundsChanged(MapConstants.STOCKHOLM_BOUNDS.toMapBoundingBox()))
-    }
-
     LaunchedEffect(cameraPositionState.isMoving) {
         if (!cameraPositionState.isMoving) {
             cameraPositionState.projection?.visibleRegion?.latLngBounds?.let { bounds ->

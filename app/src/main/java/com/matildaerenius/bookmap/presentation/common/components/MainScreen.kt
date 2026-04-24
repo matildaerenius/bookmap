@@ -125,22 +125,22 @@ fun MainScreen(
     }
 }
 
-    @Composable
-    fun FloatingActionButtonItem(
-        selected: Boolean,
-        onClick: () -> Unit,
-        icon: @Composable () -> Unit,
-        modifier: Modifier = Modifier
+@Composable
+fun FloatingActionButtonItem(
+    selected: Boolean,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(56.dp)
+            .shadow(4.dp, CircleShape)
+            .clip(CircleShape)
+            .background(if (selected) Color(0xFFE0E0E0) else Color.White)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = modifier
-                .size(56.dp)
-                .shadow(4.dp, CircleShape)
-                .clip(CircleShape)
-                .background(if (selected) Color(0xFFE0E0E0) else Color.White)
-                .clickable { onClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            icon()
-        }
+        icon()
     }
+}
