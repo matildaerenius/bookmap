@@ -32,6 +32,7 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel(),
+    onMapLoaded: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedMarker by viewModel.selectedMarker.collectAsState()
@@ -95,6 +96,7 @@ fun MapScreen(
         BookGoogleMap(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
+            onMapLoaded = onMapLoaded,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
             }

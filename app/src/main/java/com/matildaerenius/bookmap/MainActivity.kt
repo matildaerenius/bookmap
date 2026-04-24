@@ -30,18 +30,8 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.Onboarding
+                        startDestination = Routes.Main
                     ) {
-                        composable<Routes.Onboarding> {
-                            OnboardingScreen(
-                                onContinue = {
-                                    navController.navigate(Routes.Main) {
-                                        popUpTo(Routes.Onboarding) { inclusive = true }
-                                    }
-                                }
-                            )
-                        }
-
                         composable<Routes.Main> {
                             MainScreen()
                         }

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,40 +40,38 @@ import com.matildaerenius.bookmap.presentation.common.components.ProgressBar
 
 @Composable
 fun OnboardingScreen(
-    onContinue: () -> Unit
+    isReady: Boolean,
+    onFinished: () -> Unit
 ) {
-    var startAnimation by remember { mutableStateOf(false) }
+    var targetProgress by remember { mutableFloatStateOf(0f) }
+    var hasFinished by remember { mutableStateOf(false) }
 
-    var hasNavigated by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        targetProgress = 0.8f
+    }
 
-    val safeNavigate = {
-        if (!hasNavigated) {
-            hasNavigated = true
-            onContinue()
+    LaunchedEffect(isReady) {
+        if (isReady) {
+            targetProgress = 1f
         }
     }
 
     val progress by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0f,
+        targetValue = targetProgress,
         animationSpec = tween(
-            durationMillis = 2500,
+            durationMillis = if (targetProgress == 1f) 500 else 3000,
             easing = FastOutSlowInEasing
         ),
-        finishedListener = {
-            safeNavigate()
+        finishedListener = { currentValue ->
+            if (currentValue == 1f && !hasFinished) {
+                hasFinished = true
+                onFinished()
+            }
         },
         label = "OnboardingProgress"
     )
 
-    LaunchedEffect(Unit) {
-        startAnimation = true
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { safeNavigate() }
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.stockholm),
             contentDescription = stringResource(id = R.string.onboarding_image_desc),
@@ -127,35 +126,31 @@ fun OnboardingScreen(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .offset(x = 30.dp, y = 45.dp)
-                .size(32.dp),
+                .size(32.dp)
         )
-
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(x = 70.dp, y = 35.dp)
-                .size(40.dp),
+                .size(40.dp)
         )
-
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .offset(x = (-40).dp, y = 40.dp)
-                .size(28.dp),
+                .size(28.dp)
         )
-
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .offset(x = (-100).dp, y = 40.dp)
-                .size(20.dp),
+                .size(20.dp)
         )
-
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(x = (-35).dp, y = 65.dp)
-                .size(110.dp),
+                .size(110.dp)
         )
 
         ProgressBar(
