@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.matildaerenius.bookmap.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +55,7 @@ fun FavoriteItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Ta bort",
+                    contentDescription = stringResource(id = R.string.delete),
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
                 )
@@ -75,7 +77,7 @@ fun FavoriteItem(
                 ) {
                     AsyncImage(
                         model = imageUrl,
-                        contentDescription = "Bokomslag för $bookTitle",
+                        contentDescription = stringResource(id = R.string.book_cover),
                         modifier = Modifier
                             .width(60.dp)
                             .height(90.dp)

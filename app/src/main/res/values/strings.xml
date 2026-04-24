@@ -10,4 +10,7 @@
         <string name="add_to_fav">Lägg till i favoriter</string>
         <string name="action_map">Karta</string>
         <string name="action_favorites">Favoriter</string>
+        <string name="delete">Ta bort</string>
+        <string name="book_cover">Bokomslag</string>
+        <string name="saved_favorites">Du har inga sparade favoriter än</string>
 </resources>

@@ -51,7 +51,7 @@ fun MapScreen(
         selectedMarker?.let { marker ->
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
                 LatLng(marker.latitude, marker.longitude),
-                18f
+                16f
             )
 
             cameraPositionState.animate(

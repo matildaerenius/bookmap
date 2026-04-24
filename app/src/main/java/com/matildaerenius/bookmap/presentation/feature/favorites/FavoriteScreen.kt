@@ -11,8 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteItem
 
 @Composable
@@ -30,7 +32,7 @@ fun FavoriteScreen(
     ) {
         if (favorites.isEmpty()) {
             Text(
-                text = "Du har inga sparade favoriter än.",
+                text = stringResource(id = R.string.saved_favorites),
                 color = Color.Gray,
                 modifier = Modifier.align(Alignment.Center)
             )
