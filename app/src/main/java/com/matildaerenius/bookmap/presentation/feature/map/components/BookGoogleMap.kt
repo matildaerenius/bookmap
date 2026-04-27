@@ -23,13 +23,15 @@ import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 fun BookGoogleMap(
     markers: List<BookMapMarker>,
     cameraPositionState: CameraPositionState,
-    onMarkerClick: (Int) -> Unit
+    onMarkerClick: (Int) -> Unit,
+    onMapLoaded: () -> Unit
 ) {
     val context = LocalContext.current
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
+        onMapLoaded = onMapLoaded,
         properties = MapProperties(
             minZoomPreference = 10f,
             maxZoomPreference = 18f,
@@ -53,7 +55,7 @@ fun BookGoogleMap(
                 }
             ) {
                 MapMarkerIcon(
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -28,13 +30,14 @@ import com.matildaerenius.bookmap.domain.model.BookMapMarker
 
 @Composable
 fun BookSummarySheet(
-    marker: BookMapMarker) {
+    marker: BookMapMarker,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable { // TODO: gör favorit
-                }
             .padding(horizontal = 24.dp, vertical = 24.dp)
             .padding(bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -55,7 +58,7 @@ fun BookSummarySheet(
             contentDescription = marker.bookTitle,
             modifier = Modifier
                 .size(240.dp, 240.dp)
-                .background(Color.Transparent),
+                .background(Color.DarkGray),
             contentScale = ContentScale.Fit
         )
 
@@ -79,15 +82,38 @@ fun BookSummarySheet(
                     .size(64.dp)
                     .clip(CircleShape)
                     .background(Color.White)
-                    .clickable { /* TODO: Lägg till i favoriter */ },
+                    .clickable { onToggleFavorite() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = stringResource(id = R.string.add_to_fav),
-                    tint = Color.Black,
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription =  stringResource(id = if (isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                    tint = if (isFavorite) Color.Red else Color.Black,
                     modifier = Modifier.size(32.dp)
                 )
             }
         }
     }
+
+@Preview(showBackground = true, backgroundColor = 0xFF121212)
+@Composable
+fun BookSummarySheetPreview() {
+    MaterialTheme {
+        val dummyMarker = BookMapMarker(
+            bookId = 1,
+            locationName = "Gamla Stan",
+            latitude = 59.3257,
+            longitude = 18.0709,
+            bookTitle = "Män som hatar kvinnor",
+            bookAuthor = "Stieg Larsson",
+            description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
+            bookImageUrl = ""
+        )
+
+        BookSummarySheet(
+            marker = dummyMarker,
+            isFavorite = true,
+            onToggleFavorite = {}
+        )
+    }
+}

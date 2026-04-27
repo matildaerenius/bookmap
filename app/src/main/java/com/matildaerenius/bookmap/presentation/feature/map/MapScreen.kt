@@ -18,22 +18,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
+import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogleMap
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel(),
+    onMapLoaded: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedMarker by viewModel.selectedMarker.collectAsState()
+    val favorites by viewModel.favorites.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -45,18 +51,34 @@ fun MapScreen(
         skipPartiallyExpanded = false
     )
 
-    LaunchedEffect(Unit) {
-        Log.i("BookMap", "MapScreen: Force start initial fetch")
-        viewModel.onEvent(MapEvent.OnMapBoundsChanged(MapConstants.STOCKHOLM_BOUNDS.toMapBoundingBox()))
+    LaunchedEffect(selectedMarker) {
+        selectedMarker?.let { marker ->
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                LatLng(marker.latitude, marker.longitude),
+                16f
+            )
+
+            cameraPositionState.animate(
+                update = cameraUpdate,
+                durationMs = 1000
+            )
+        }
     }
 
-    LaunchedEffect(cameraPositionState.isMoving) {
-        if (!cameraPositionState.isMoving) {
-            cameraPositionState.projection?.visibleRegion?.latLngBounds?.let { bounds ->
-                Log.d("BookMap", "MapScreen: Camera stopped at $bounds")
-                viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
+    LaunchedEffect(cameraPositionState) {
+        snapshotFlow {
+            if (!cameraPositionState.isMoving) {
+                cameraPositionState.projection?.visibleRegion?.latLngBounds
+            } else {
+                null
             }
         }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .collect { bounds ->
+                Log.d("BookMap", "MapScreen: Camera settled at $bounds")
+                viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
+            }
     }
 
     LaunchedEffect(uiState) {
@@ -70,15 +92,20 @@ fun MapScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        val currentMarkers = if (uiState is UiState.Success) {
-            (uiState as UiState.Success).data
-        } else {
-            emptyList()
+        val currentMarkers = mutableListOf<BookMapMarker>()
+        if (uiState is UiState.Success) {
+            currentMarkers.addAll((uiState as UiState.Success).data)
+        }
+        selectedMarker?.let { marker ->
+            if (currentMarkers.none { it.bookId == marker.bookId }) {
+                currentMarkers.add(marker)
+            }
         }
 
         BookGoogleMap(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
+            onMapLoaded = onMapLoaded,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
             }
@@ -89,6 +116,7 @@ fun MapScreen(
         }
 
         if (selectedMarker != null) {
+            val isFav = favorites.any { it.bookId == selectedMarker!!.bookId }
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
@@ -99,6 +127,10 @@ fun MapScreen(
             ) {
                 BookSummarySheet(
                     marker = selectedMarker!!,
+                    isFavorite = isFav,
+                    onToggleFavorite = {
+                        viewModel.onEvent(MapEvent.OnToggleFavorite(selectedMarker!!.bookId, isFav))
+                    }
                 )
             }
         }
