@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHost
@@ -18,24 +19,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
-import com.matildaerenius.bookmap.domain.model.FavoriteBook
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogleMap
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import android.annotation.SuppressLint
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.stringResource
+import com.matildaerenius.bookmap.R
+import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel(),
+    hasLocationPermission: Boolean,
     onMapLoaded: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -43,6 +52,11 @@ fun MapScreen(
     val favorites by viewModel.favorites.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val appContext = context.applicationContext
+    val fusedLocationClient = remember(appContext) {
+        LocationServices.getFusedLocationProviderClient(appContext)
+    }
+    val coroutineScope = rememberCoroutineScope()
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(MapConstants.STOCKHOLM_CENTER, 12f)
@@ -108,10 +122,45 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             onMapLoaded = onMapLoaded,
             favorites = favorites,
+            hasLocationPermission = hasLocationPermission,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
-            }
+            },
         )
+        if (hasLocationPermission) {
+            FloatingActionButtonItem(
+                selected = false,
+                onClick = {
+                    @SuppressLint("MissingPermission")
+                    val locationTask = fusedLocationClient.lastLocation
+
+                    locationTask.addOnSuccessListener { location ->
+                        if (location != null) {
+                            coroutineScope.launch {
+                                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(location.latitude, location.longitude),
+                                    15f
+                                )
+                                cameraPositionState.animate(
+                                    update = cameraUpdate,
+                                    durationMs = 1000
+                                )
+                            }
+                        }
+                    }
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.MyLocation,
+                        contentDescription = stringResource(id = R.string.go_to_my_location),
+                        tint = Color.Black
+                    )
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 192.dp, end = 16.dp)
+            )
+        }
 
         if (uiState is UiState.Loading) {
             FullScreenLoadingIndicator()
