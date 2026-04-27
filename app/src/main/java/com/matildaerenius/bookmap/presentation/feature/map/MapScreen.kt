@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
+import com.matildaerenius.bookmap.domain.model.FavoriteBook
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
@@ -106,6 +107,7 @@ fun MapScreen(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
             onMapLoaded = onMapLoaded,
+            favorites = favorites,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
             }

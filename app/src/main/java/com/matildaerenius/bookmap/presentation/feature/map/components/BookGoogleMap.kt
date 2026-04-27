@@ -16,12 +16,14 @@ import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
+import com.matildaerenius.bookmap.domain.model.FavoriteBook
 import com.matildaerenius.bookmap.presentation.common.components.MapMarkerIcon
 import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 
 @Composable
 fun BookGoogleMap(
     markers: List<BookMapMarker>,
+    favorites: List<FavoriteBook>,
     cameraPositionState: CameraPositionState,
     onMarkerClick: (Int) -> Unit,
     onMapLoaded: () -> Unit
@@ -44,8 +46,9 @@ fun BookGoogleMap(
         )
     ) {
         markers.forEach { bookMarker ->
+            val isFavorite = favorites.any { it.bookId == bookMarker.bookId }
             MarkerComposable(
-                keys = arrayOf(bookMarker.bookId),
+                keys = arrayOf(bookMarker.bookId, isFavorite),
                 state = rememberUpdatedMarkerState(
                     position = LatLng(bookMarker.latitude, bookMarker.longitude)
                 ),
@@ -55,6 +58,7 @@ fun BookGoogleMap(
                 }
             ) {
                 MapMarkerIcon(
+                    isFavorite = isFavorite,
                     modifier = Modifier.size(40.dp)
                 )
             }
