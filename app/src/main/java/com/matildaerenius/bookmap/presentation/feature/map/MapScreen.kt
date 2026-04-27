@@ -35,6 +35,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Icon
+import androidx.compose.ui.res.stringResource
+import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
 import kotlinx.coroutines.launch
 
@@ -50,7 +52,10 @@ fun MapScreen(
     val favorites by viewModel.favorites.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val appContext = context.applicationContext
+    val fusedLocationClient = remember(appContext) {
+        LocationServices.getFusedLocationProviderClient(appContext)
+    }
     val coroutineScope = rememberCoroutineScope()
 
     val cameraPositionState = rememberCameraPositionState {
@@ -147,7 +152,7 @@ fun MapScreen(
                 icon = {
                     Icon(
                         imageVector = Icons.Default.MyLocation,
-                        contentDescription = "Gå till min plats",
+                        contentDescription = stringResource(id = R.string.go_to_my_location),
                         tint = Color.Black
                     )
                 },
