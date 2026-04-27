@@ -3,6 +3,7 @@ package com.matildaerenius.bookmap.presentation.feature.map.components
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,10 @@ fun BookGoogleMap(
 ) {
     val context = LocalContext.current
 
+    val favoriteIds = remember(favorites) {
+        favorites.map { it.bookId }.toSet()
+    }
+
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
@@ -46,7 +51,7 @@ fun BookGoogleMap(
         )
     ) {
         markers.forEach { bookMarker ->
-            val isFavorite = favorites.any { it.bookId == bookMarker.bookId }
+            val isFavorite = favoriteIds.contains(bookMarker.bookId)
             MarkerComposable(
                 keys = arrayOf(bookMarker.bookId, isFavorite),
                 state = rememberUpdatedMarkerState(
