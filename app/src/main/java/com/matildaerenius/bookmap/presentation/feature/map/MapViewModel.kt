@@ -77,10 +77,14 @@ class MapViewModel @Inject constructor(
             }
 
             is MapEvent.OnMarkerClick -> {
-                val currentState = _uiState.value
-                if (currentState is UiState.Success) {
-                    _selectedMarker.value = currentState.data.find { it.bookId == event.bookId }
+                var clickedMarker =
+                    (_uiState.value as? UiState.Success)?.data?.find { it.bookId == event.bookId }
+
+                if (clickedMarker == null) {
+                    clickedMarker = favorites.value.find { it.bookId == event.bookId }?.marker
                 }
+
+                _selectedMarker.value = clickedMarker
             }
 
             is MapEvent.OnDismissBottomSheet -> {

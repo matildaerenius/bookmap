@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
+import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
@@ -59,11 +60,16 @@ fun MapScreen(
                 update = cameraUpdate,
                 durationMs = 1000
             )
+            kotlinx.coroutines.delay(100)
+            cameraPositionState.projection?.visibleRegion?.latLngBounds?.let { bounds ->
+                viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
+            }
         }
     }
 
     LaunchedEffect(cameraPositionState.isMoving) {
         if (!cameraPositionState.isMoving) {
+            kotlinx.coroutines.delay(100)
             cameraPositionState.projection?.visibleRegion?.latLngBounds?.let { bounds ->
                 Log.d("BookMap", "MapScreen: Camera stopped at $bounds")
                 viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
@@ -82,10 +88,14 @@ fun MapScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        val currentMarkers = if (uiState is UiState.Success) {
-            (uiState as UiState.Success).data
-        } else {
-            emptyList()
+        val currentMarkers = mutableListOf<BookMapMarker>()
+        if (uiState is UiState.Success) {
+            currentMarkers.addAll((uiState as UiState.Success).data)
+        }
+        selectedMarker?.let { marker ->
+            if (currentMarkers.none { it.bookId == marker.bookId }) {
+                currentMarkers.add(marker)
+            }
         }
 
         BookGoogleMap(
