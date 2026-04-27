@@ -23,6 +23,7 @@ import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 
 @Composable
 fun BookGoogleMap(
+    hasLocationPermission: Boolean,
     markers: List<BookMapMarker>,
     favorites: List<FavoriteBook>,
     cameraPositionState: CameraPositionState,
@@ -40,6 +41,7 @@ fun BookGoogleMap(
         cameraPositionState = cameraPositionState,
         onMapLoaded = onMapLoaded,
         properties = MapProperties(
+            isMyLocationEnabled = hasLocationPermission,
             minZoomPreference = 10f,
             maxZoomPreference = 18f,
             latLngBoundsForCameraTarget = MapConstants.STOCKHOLM_BOUNDS,
@@ -47,7 +49,7 @@ fun BookGoogleMap(
         ),
         uiSettings = MapUiSettings(
             zoomControlsEnabled = true,
-            myLocationButtonEnabled = false
+            myLocationButtonEnabled = true,
         )
     ) {
         markers.forEach { bookMarker ->

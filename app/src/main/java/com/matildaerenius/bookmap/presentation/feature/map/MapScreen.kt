@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.filterNotNull
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel(),
+    hasLocationPermission: Boolean,
     onMapLoaded: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -108,9 +109,10 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             onMapLoaded = onMapLoaded,
             favorites = favorites,
+            hasLocationPermission = hasLocationPermission,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
-            }
+            },
         )
 
         if (uiState is UiState.Loading) {
