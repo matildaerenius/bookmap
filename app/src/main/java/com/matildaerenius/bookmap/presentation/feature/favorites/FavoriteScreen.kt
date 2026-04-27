@@ -61,9 +61,9 @@ fun FavoriteScreen(
                         ) { favorite ->
                             FavoriteItem(
                                 imageUrl = favorite.marker?.bookImageUrl,
-                                bookTitle = favorite.marker?.bookTitle ?: "Okänd titel",
-                                author = favorite.marker?.bookAuthor ?: "Okänd författare",
-                                locationName = favorite.marker?.locationName ?: "Okänd plats",
+                                bookTitle = favorite.marker?.bookTitle ?: stringResource(id = R.string.unknown_title),
+                                author = favorite.marker?.bookAuthor ?: stringResource(id = R.string.unknown_author),
+                                locationName = favorite.marker?.locationName ?: stringResource(id = R.string.unknown_location),
                                 onRemove = { viewModel.onEvent(FavoriteEvent.OnRemoveFavorite(favorite.bookId)) },
                                 onClick = { onNavigateToMap(favorite.bookId) }
                             )

@@ -87,7 +87,7 @@ fun BookSummarySheet(
             ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = stringResource(id = R.string.add_to_fav),
+                    contentDescription =  stringResource(id = if (isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
                     tint = if (isFavorite) Color.Red else Color.Black,
                     modifier = Modifier.size(32.dp)
                 )

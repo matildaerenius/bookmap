@@ -14,4 +14,8 @@
         <string name="book_cover">Bokomslag</string>
         <string name="saved_favorites">Du har inga sparade favoriter än</string>
         <string name="fav_could_not_load">Kunde inte ladda favoriter</string>
+        <string name="remove_from_fav">Ta bort från favoriter</string>
+        <string name="unknown_author">Okänd författare</string>
+        <string name="unknown_title">Okänd titel</string>
+        <string name="unknown_location">Okänd plats</string>
 </resources>
