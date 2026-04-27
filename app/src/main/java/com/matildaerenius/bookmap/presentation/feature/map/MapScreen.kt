@@ -28,6 +28,8 @@ import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogleMap
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,21 +62,23 @@ fun MapScreen(
                 update = cameraUpdate,
                 durationMs = 1000
             )
-            kotlinx.coroutines.delay(100)
-            cameraPositionState.projection?.visibleRegion?.latLngBounds?.let { bounds ->
-                viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
-            }
         }
     }
 
-    LaunchedEffect(cameraPositionState.isMoving) {
-        if (!cameraPositionState.isMoving) {
-            kotlinx.coroutines.delay(100)
-            cameraPositionState.projection?.visibleRegion?.latLngBounds?.let { bounds ->
-                Log.d("BookMap", "MapScreen: Camera stopped at $bounds")
-                viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
+    LaunchedEffect(cameraPositionState) {
+        snapshotFlow {
+            if (!cameraPositionState.isMoving) {
+                cameraPositionState.projection?.visibleRegion?.latLngBounds
+            } else {
+                null
             }
         }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .collect { bounds ->
+                Log.d("BookMap", "MapScreen: Camera settled at $bounds")
+                viewModel.onEvent(MapEvent.OnMapBoundsChanged(bounds.toMapBoundingBox()))
+            }
     }
 
     LaunchedEffect(uiState) {
