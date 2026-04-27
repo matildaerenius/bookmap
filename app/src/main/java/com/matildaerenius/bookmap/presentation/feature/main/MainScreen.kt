@@ -1,15 +1,18 @@
 package com.matildaerenius.bookmap.presentation.feature.main
-// Kom ihåg att justera dina imports efter var filerna ligger!
 
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,7 +29,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.matildaerenius.bookmap.presentation.common.components.FloatingAction
+import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
 import com.matildaerenius.bookmap.presentation.common.components.LocationPermissionDialog
 import com.matildaerenius.bookmap.presentation.common.state.UiState
@@ -34,6 +38,12 @@ import com.matildaerenius.bookmap.presentation.feature.map.MapEvent
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.presentation.feature.map.MapViewModel
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
+
+
+enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageVector) {
+    MAP(R.string.action_map, Icons.Default.Map),
+    FAVORITES(R.string.action_favorites, Icons.Default.Favorite)
+}
 
 @Composable
 fun MainScreen(
@@ -53,7 +63,10 @@ fun MainScreen(
 
     var hasLocationPermission by remember {
         mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         )
     }
 
@@ -109,6 +122,7 @@ fun MainScreen(
                                 onMapLoaded = { isMapTilesLoaded = true }
                             )
                         }
+
                         FloatingAction.FAVORITES.ordinal -> {
                             FavoriteScreen(
                                 onNavigateToMap = { bookId ->

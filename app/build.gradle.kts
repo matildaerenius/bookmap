@@ -76,6 +76,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.hilt)
+    implementation(libs.play.services.location)
     ksp(libs.hilt.compiler)
     implementation(libs.google.maps.compose)
     implementation(libs.retrofit)

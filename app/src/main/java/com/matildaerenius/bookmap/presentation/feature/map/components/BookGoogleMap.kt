@@ -49,7 +49,7 @@ fun BookGoogleMap(
         ),
         uiSettings = MapUiSettings(
             zoomControlsEnabled = true,
-            myLocationButtonEnabled = true,
+            myLocationButtonEnabled = false,
         )
     ) {
         markers.forEach { bookMarker ->
