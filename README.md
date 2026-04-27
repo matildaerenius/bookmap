@@ -21,14 +21,18 @@
 <br>
 
 ## ✨ Features
+* 💾 Uses a local Room database as the single source of truth, enabling instant load times and offline accessibility
+* ❤️ Save books to a dedicated list. Favorited books dynamically update on the map with custom heart markers
+*
+*
 
 ## 🛠 Tech Stack
 * **Language:** Kotlin 
-* **UI Toolkit:** Jetpack Compose
+* **UI:** Jetpack Compose
 * **Architecture:** MVVM, Clean Architecture
 * **Dependency Injection:** Dagger Hilt
 * **Networking:** Retrofit, Kotlinx Serialization
-* **Local Storage:** Room Database
+* **Local Storage:** Room
 * **Mapping:** Google Maps SDK for Android 
 * **Image Loading:** Coil
 * **CI/CD:** GitHub Actions
@@ -56,4 +60,4 @@ git clone [https://github.com/matildaerenius/bookmap.git](https://github.com/mat
 * Click the **Run** button (Shift + F10) to deploy the app to your emulator or physical device.
 
 ## 📖 Documentation
-Curious about the process? Check out the thesis report detailing the architecture, design choices, and implementation of BookMap, available in the [Project Wiki](https://github.com/matildaerenius/bookmap/wiki)
+Curious about the process? Check out the thesis report detailing the architecture, design choices, and implementation, available in the [Project Wiki](https://github.com/matildaerenius/bookmap/wiki)
