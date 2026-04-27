@@ -13,4 +13,5 @@
         <string name="delete">Ta bort</string>
         <string name="book_cover">Bokomslag</string>
         <string name="saved_favorites">Du har inga sparade favoriter än</string>
+        <string name="fav_could_not_load">Kunde inte ladda favoriter</string>
 </resources>
