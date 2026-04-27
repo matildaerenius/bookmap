@@ -140,6 +140,7 @@ fun OnboardingScreen(
                 .size(28.dp)
         )
         MapMarkerIcon(
+            isFavorite = true,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .offset(x = (-100).dp, y = 40.dp)

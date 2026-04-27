@@ -9,10 +9,18 @@ import com.matildaerenius.bookmap.R
 
 @Composable
 fun MapMarkerIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean = false
 ) {
+
+    val iconResId = if (isFavorite) {
+        R.drawable.fav_map_marker
+    } else {
+        R.drawable.book_map_marker
+    }
+
     Image(
-        painter = painterResource(id = R.drawable.map_marker),
+        painter = painterResource(id = iconResId),
         contentDescription = stringResource(id = R.string.map_marker),
         modifier = modifier
     )
