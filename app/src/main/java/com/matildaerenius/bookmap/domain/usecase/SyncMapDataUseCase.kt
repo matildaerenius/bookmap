@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap.domain.usecase
 
+import android.util.Log
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.BookRepository
@@ -13,7 +14,7 @@ class SyncMapDataUseCase @Inject constructor(
     private val bookRepository: BookRepository,
     private val markerRepository: MarkerRepository
 ) {
-    suspend operator fun invoke(boundingBox: MapBoundingBox): Resource<Unit> {
+    suspend operator fun invoke(boundingBox: MapBoundingBox): Resource<List<BookMapMarker>>{
         val locationsResult = locationRepository.getLocations()
 
         if (locationsResult is Resource.Error) {
@@ -38,7 +39,7 @@ class SyncMapDataUseCase @Inject constructor(
         }
 
         if (visibleLocations.isEmpty()) {
-            return Resource.Success(Unit)
+            return Resource.Success((emptyList()))
         }
 
         val bookIds = visibleLocations.map { it.bookId }.distinct()
@@ -71,6 +72,6 @@ class SyncMapDataUseCase @Inject constructor(
         }
 
         markerRepository.upsertMarkers(markers)
-        return Resource.Success(Unit)
+        return Resource.Success(markers)
     }
 }

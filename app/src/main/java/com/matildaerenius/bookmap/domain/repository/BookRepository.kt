@@ -5,4 +5,5 @@ import com.matildaerenius.bookmap.util.Resource
 
 interface BookRepository {
     suspend fun getBooksByIds(bookIds : List<Int>) : Resource<List<Book>>
+    suspend fun getBookById(bookId: Int) : Resource<Book>
 }
