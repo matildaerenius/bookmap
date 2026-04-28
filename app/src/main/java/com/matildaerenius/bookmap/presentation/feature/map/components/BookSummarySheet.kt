@@ -76,10 +76,7 @@ fun BookSummarySheet(
 
             Text(
                 text = marker.locationName,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = FontFamily.Serif
-                ),
+                style = MaterialTheme.typography.headlineMedium,
                 color = Color.White
             )
 
@@ -98,9 +95,7 @@ fun BookSummarySheet(
 
             Text(
                 text = marker.description,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    lineHeight = 24.sp
-                ),
+                style = MaterialTheme.typography.bodyLarge,
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 maxLines = 4,
