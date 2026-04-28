@@ -33,6 +33,7 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Icon
 import androidx.compose.ui.res.stringResource
@@ -63,7 +64,7 @@ fun MapScreen(
     }
 
     val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = false
+        skipPartiallyExpanded = true
     )
 
     LaunchedEffect(selectedMarker) {
@@ -171,16 +172,27 @@ fun MapScreen(
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
-                containerColor = Color.Black.copy(alpha = 0.8f),
+                containerColor = Color.Transparent,
                 scrimColor = Color.Transparent,
+                contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
+                tonalElevation = 0.dp,
                 dragHandle = { },
                 modifier = Modifier.fillMaxHeight()
             ) {
                 BookSummarySheet(
                     marker = selectedMarker!!,
                     isFavorite = isFav,
+                    onClose = {
+                        coroutineScope.launch {
+                            sheetState.hide()
+                            viewModel.onEvent(MapEvent.OnDismissBottomSheet)
+                        }
+                    },
                     onToggleFavorite = {
                         viewModel.onEvent(MapEvent.OnToggleFavorite(selectedMarker!!.bookId, isFav))
+                    },
+                    onAddClick = {
+                        // TODO: Hantera visited
                     }
                 )
             }
