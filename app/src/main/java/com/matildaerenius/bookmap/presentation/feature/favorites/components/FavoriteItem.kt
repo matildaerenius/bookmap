@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -71,7 +71,7 @@ fun FavoriteItem(
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(12.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -79,8 +79,8 @@ fun FavoriteItem(
                         model = imageUrl,
                         contentDescription = stringResource(id = R.string.book_cover),
                         modifier = Modifier
-                            .width(60.dp)
-                            .height(90.dp)
+                            .width(64.dp)
+                            .height(96.dp)
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.DarkGray),
                         contentScale = ContentScale.Crop
@@ -95,20 +95,21 @@ fun FavoriteItem(
                             text = bookTitle,
                             color = Color.White,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
                             text = author,
                             color = Color.LightGray,
                             style = MaterialTheme.typography.bodyMedium,
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
@@ -122,7 +123,8 @@ fun FavoriteItem(
                                 text = locationName,
                                 color = Color(0xFFC084FC),
                                 style = MaterialTheme.typography.bodySmall,
-                                maxLines = 1
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }

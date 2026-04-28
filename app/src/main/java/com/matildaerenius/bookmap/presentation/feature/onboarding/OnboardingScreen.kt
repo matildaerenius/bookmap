@@ -102,11 +102,7 @@ fun OnboardingScreen(
         ) {
             Text(
                 text = stringResource(id = R.string.onboarding_title),
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 36.sp,
-                    lineHeight = 44.sp
-                ),
+                style = MaterialTheme.typography.headlineLarge,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
