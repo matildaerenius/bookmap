@@ -118,20 +118,25 @@ class MapViewModel @Inject constructor(
         syncJob?.cancel()
 
         syncJob = viewModelScope.launch {
-            _uiState.update { it.copy(markersState = UiState.Loading) }
+
+            if (_uiState.value.markersState !is UiState.Success) {
+                _uiState.update { it.copy(markersState = UiState.Loading) }
+            }
 
             val result = syncMapDataUseCase(bounds)
 
             when (result) {
                 is Resource.Success -> {
-                    Log.d("BookMap", "2. SUCCESS! Found ${result.data.size} books in the area")
+                    Log.d("BookMap", "SUCCESS! Found ${result.data.size} books in the area")
                 }
 
                 is Resource.Error -> {
-                    _uiState.update {
-                        it.copy(markersState = UiState.Error(mapErrorToUiText(result.error)))
+                    if (_uiState.value.markersState !is UiState.Success) {
+                        _uiState.update {
+                            it.copy(markersState = UiState.Error(mapErrorToUiText(result.error)))
+                        }
                     }
-                    Log.e("BookMap", "2. ERROR! Network error: ${result.error}")
+                    Log.e("BookMap", "ERROR! Network error: ${result.error}")
                 }
             }
         }
