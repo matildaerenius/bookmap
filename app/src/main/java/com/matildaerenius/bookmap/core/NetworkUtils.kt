@@ -1,4 +1,4 @@
-package com.matildaerenius.bookmap.util
+package com.matildaerenius.bookmap.core
 
 import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException

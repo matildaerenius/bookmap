@@ -6,8 +6,8 @@ import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.BookRepository
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
 import com.matildaerenius.bookmap.domain.repository.MarkerRepository
-import com.matildaerenius.bookmap.util.DataError
-import com.matildaerenius.bookmap.util.Resource
+import com.matildaerenius.bookmap.core.DataError
+import com.matildaerenius.bookmap.core.Resource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

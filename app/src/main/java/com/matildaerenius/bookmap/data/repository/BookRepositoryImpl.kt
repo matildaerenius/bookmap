@@ -4,9 +4,9 @@ import com.matildaerenius.bookmap.data.mapper.toDomain
 import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import com.matildaerenius.bookmap.domain.model.Book
 import com.matildaerenius.bookmap.domain.repository.BookRepository
-import com.matildaerenius.bookmap.util.DataError
-import com.matildaerenius.bookmap.util.Resource
-import com.matildaerenius.bookmap.util.safeApiCall
+import com.matildaerenius.bookmap.core.DataError
+import com.matildaerenius.bookmap.core.Resource
+import com.matildaerenius.bookmap.core.safeApiCall
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

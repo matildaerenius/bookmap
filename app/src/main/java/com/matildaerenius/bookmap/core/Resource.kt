@@ -1,4 +1,4 @@
-package com.matildaerenius.bookmap.util
+package com.matildaerenius.bookmap.core
 
 enum class DataError {
     NETWORK_ERROR,

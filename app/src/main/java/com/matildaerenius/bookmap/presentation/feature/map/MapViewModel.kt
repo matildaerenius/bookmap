@@ -12,9 +12,9 @@ import com.matildaerenius.bookmap.domain.usecase.ObserveFavoritesUseCase
 import com.matildaerenius.bookmap.domain.usecase.RemoveFavoriteUseCase
 import com.matildaerenius.bookmap.domain.usecase.SyncMapDataUseCase
 import com.matildaerenius.bookmap.presentation.common.state.UiState
-import com.matildaerenius.bookmap.util.DataError
-import com.matildaerenius.bookmap.util.Resource
-import com.matildaerenius.bookmap.util.UiText
+import com.matildaerenius.bookmap.core.DataError
+import com.matildaerenius.bookmap.core.Resource
+import com.matildaerenius.bookmap.core.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
