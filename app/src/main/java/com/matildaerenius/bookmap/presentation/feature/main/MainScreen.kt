@@ -50,11 +50,11 @@ fun MainScreen(
     mapViewModel: MapViewModel = hiltViewModel()
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(FloatingAction.MAP.ordinal) }
-    val uiState by mapViewModel.uiState.collectAsState()
+    val state by mapViewModel.uiState.collectAsState()
     var isMapTilesLoaded by rememberSaveable { mutableStateOf(false) }
     var showOnboarding by rememberSaveable { mutableStateOf(true) }
 
-    val isDataReady = uiState is UiState.Success || uiState is UiState.Error
+    val isDataReady = state.markersState is UiState.Success || state.markersState is UiState.Error
     val isEverythingReady = isMapTilesLoaded && isDataReady
 
     val context = LocalContext.current

@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
@@ -27,73 +29,130 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
+import androidx.compose.ui.graphics.Brush
 
 @Composable
 fun BookSummarySheet(
     marker: BookMapMarker,
     isFavorite: Boolean,
-    onToggleFavorite: () -> Unit
+    onClose: () -> Unit,
+    onToggleFavorite: () -> Unit,
+    onAddClick: () -> Unit
 ) {
-    Column(
+
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(horizontal = 24.dp, vertical = 24.dp)
-            .padding(bottom = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = marker.locationName,
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Normal,
-                fontFamily = FontFamily.Serif
-            ),
-            color = Color.White
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        AsyncImage(
-            model = marker.bookImageUrl,
-            contentDescription = marker.bookTitle,
-            modifier = Modifier
-                .size(240.dp, 240.dp)
-                .background(Color.DarkGray),
-            contentScale = ContentScale.Fit
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = marker.description,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                lineHeight = 24.sp
-            ),
-            color = Color.White,
-            textAlign = TextAlign.Center,
-            maxLines = 4,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-            Box(
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .clickable { onToggleFavorite() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription =  stringResource(id = if (isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
-                    tint = if (isFavorite) Color.Red else Color.Black,
-                    modifier = Modifier.size(32.dp)
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        Color(0xDD000000),
+                        Color(0xEE000000),
+                        Color(0xFF000000)
+                    ),
+                    startY = 200f,
                 )
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .padding(bottom = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(id = R.string.close),
+                tint = Color.White,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .size(32.dp)
+                    .clickable { onClose() }
+            )
+
+            Text(
+                text = marker.locationName,
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = FontFamily.Serif
+                ),
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            AsyncImage(
+                model = marker.bookImageUrl,
+                contentDescription = marker.bookTitle,
+                modifier = Modifier
+                    .size(240.dp, 240.dp)
+                    .background(Color.DarkGray),
+                contentScale = ContentScale.Fit
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                text = marker.description,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    lineHeight = 24.sp
+                ),
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .clickable { onAddClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.add),
+                        tint = Color.Black,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .clickable { onToggleFavorite() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = stringResource(id = if (isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                        tint = if (isFavorite) Color.Red else Color.Black,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
         }
     }
+}
+
 
 @Preview(showBackground = true, backgroundColor = 0xFF121212)
 @Composable
@@ -113,7 +172,9 @@ fun BookSummarySheetPreview() {
         BookSummarySheet(
             marker = dummyMarker,
             isFavorite = true,
-            onToggleFavorite = {}
+            onToggleFavorite = {},
+            onClose = {},
+            onAddClick = {}
         )
     }
 }

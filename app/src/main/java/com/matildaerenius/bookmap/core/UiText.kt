@@ -1,4 +1,4 @@
-package com.matildaerenius.bookmap.util
+package com.matildaerenius.bookmap.core
 
 import android.content.Context
 import androidx.annotation.StringRes

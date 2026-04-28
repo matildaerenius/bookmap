@@ -1,6 +1,6 @@
 package com.matildaerenius.bookmap.presentation.common.state
 
-import com.matildaerenius.bookmap.util.UiText
+import com.matildaerenius.bookmap.core.UiText
 
 sealed interface UiState<out T> {
     object Loading : UiState<Nothing>

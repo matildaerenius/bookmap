@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matildaerenius.bookmap.R
-import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.usecase.AddFavoriteUseCase
 import com.matildaerenius.bookmap.domain.usecase.ObserveBookMarkersUseCase
@@ -12,9 +11,9 @@ import com.matildaerenius.bookmap.domain.usecase.ObserveFavoritesUseCase
 import com.matildaerenius.bookmap.domain.usecase.RemoveFavoriteUseCase
 import com.matildaerenius.bookmap.domain.usecase.SyncMapDataUseCase
 import com.matildaerenius.bookmap.presentation.common.state.UiState
-import com.matildaerenius.bookmap.util.DataError
-import com.matildaerenius.bookmap.util.Resource
-import com.matildaerenius.bookmap.util.UiText
+import com.matildaerenius.bookmap.core.DataError
+import com.matildaerenius.bookmap.core.Resource
+import com.matildaerenius.bookmap.core.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,18 +34,10 @@ class MapViewModel @Inject constructor(
     private val removeFavoriteUseCase: RemoveFavoriteUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<BookMapMarker>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<BookMapMarker>>> = _uiState.asStateFlow()
-    private val _selectedMarker = MutableStateFlow<BookMapMarker?>(null)
-    val selectedMarker: StateFlow<BookMapMarker?> = _selectedMarker.asStateFlow()
+    private val _uiState = MutableStateFlow(MapUiState())
+    val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
     private val currentBounds = MutableStateFlow<MapBoundingBox?>(null)
     private var syncJob: Job? = null
-
-    val favorites = observeFavoritesUseCase().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
-    )
 
     init {
         val initialBounds = MapConstants.STOCKHOLM_BOUNDS.toMapBoundingBox()
@@ -54,12 +46,25 @@ class MapViewModel @Inject constructor(
 
         viewModelScope.launch {
             observeBookMarkersUseCase(currentBounds).collect { visibleMarkers ->
-                val currentState = _uiState.value
+                _uiState.update { currentState ->
 
-                if (visibleMarkers.isNotEmpty()) {
-                    _uiState.value = UiState.Success(visibleMarkers)
-                } else if (currentState is UiState.Success) {
-                    _uiState.value = UiState.Success(emptyList())
+                    val shouldShowSuccess =
+                        visibleMarkers.isNotEmpty() || currentState.markersState is UiState.Success
+
+                    if (shouldShowSuccess) {
+                        currentState.copy(markersState = UiState.Success(visibleMarkers))
+                    } else {
+                        currentState
+                    }
+                }
+            }
+        }
+        viewModelScope.launch {
+            observeFavoritesUseCase().collect { favs ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        favorites = favs
+                    )
                 }
             }
         }
@@ -77,18 +82,24 @@ class MapViewModel @Inject constructor(
             }
 
             is MapEvent.OnMarkerClick -> {
-                var clickedMarker =
-                    (_uiState.value as? UiState.Success)?.data?.find { it.bookId == event.bookId }
+                val currentMarkers =
+                    (_uiState.value.markersState as? UiState.Success)?.data ?: emptyList()
+                val currentFavs = _uiState.value.favorites
 
+                var clickedMarker = currentMarkers.find { it.bookId == event.bookId }
                 if (clickedMarker == null) {
-                    clickedMarker = favorites.value.find { it.bookId == event.bookId }?.marker
+                    clickedMarker = currentFavs.find { it.bookId == event.bookId }?.marker
                 }
 
-                _selectedMarker.value = clickedMarker
+                _uiState.update { currentState ->
+                    currentState.copy(selectedMarker = clickedMarker)
+                }
             }
 
             is MapEvent.OnDismissBottomSheet -> {
-                _selectedMarker.value = null
+                _uiState.update { currentState ->
+                    currentState.copy(selectedMarker = null)
+                }
             }
 
             is MapEvent.OnToggleFavorite -> {
@@ -107,22 +118,25 @@ class MapViewModel @Inject constructor(
         syncJob?.cancel()
 
         syncJob = viewModelScope.launch {
-            if (_uiState.value !is UiState.Success) {
-                _uiState.value = UiState.Loading
+
+            if (_uiState.value.markersState !is UiState.Success) {
+                _uiState.update { it.copy(markersState = UiState.Loading) }
             }
 
             val result = syncMapDataUseCase(bounds)
 
             when (result) {
                 is Resource.Success -> {
-                    Log.d("BookMap", "2. SUCCESS! Found ${result.data.size} books in the area")
+                    Log.d("BookMap", "SUCCESS! Found ${result.data.size} books in the area")
                 }
 
                 is Resource.Error -> {
-                    if (_uiState.value !is UiState.Success) {
-                        _uiState.value = UiState.Error(mapErrorToUiText(result.error))
+                    if (_uiState.value.markersState !is UiState.Success) {
+                        _uiState.update {
+                            it.copy(markersState = UiState.Error(mapErrorToUiText(result.error)))
+                        }
                     }
-                    Log.e("BookMap", "2. ERROR! Network error: ${result.error}")
+                    Log.e("BookMap", "ERROR! Network error: ${result.error}")
                 }
             }
         }
