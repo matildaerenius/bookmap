@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matildaerenius.bookmap.R
-import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.usecase.AddFavoriteUseCase
 import com.matildaerenius.bookmap.domain.usecase.ObserveBookMarkersUseCase
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,10 +34,8 @@ class MapViewModel @Inject constructor(
     private val removeFavoriteUseCase: RemoveFavoriteUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<BookMapMarker>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<BookMapMarker>>> = _uiState.asStateFlow()
-    private val _selectedMarker = MutableStateFlow<BookMapMarker?>(null)
-    val selectedMarker: StateFlow<BookMapMarker?> = _selectedMarker.asStateFlow()
+    private val _uiState = MutableStateFlow(MapUiState())
+    val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
     private val currentBounds = MutableStateFlow<MapBoundingBox?>(null)
     private var syncJob: Job? = null
 
@@ -54,12 +52,19 @@ class MapViewModel @Inject constructor(
 
         viewModelScope.launch {
             observeBookMarkersUseCase(currentBounds).collect { visibleMarkers ->
-                val currentState = _uiState.value
-
-                if (visibleMarkers.isNotEmpty()) {
-                    _uiState.value = UiState.Success(visibleMarkers)
-                } else if (currentState is UiState.Success) {
-                    _uiState.value = UiState.Success(emptyList())
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        markersState = UiState.Success(visibleMarkers)
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            observeFavoritesUseCase().collect { favs ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        favorites = favs
+                    )
                 }
             }
         }
@@ -77,18 +82,24 @@ class MapViewModel @Inject constructor(
             }
 
             is MapEvent.OnMarkerClick -> {
-                var clickedMarker =
-                    (_uiState.value as? UiState.Success)?.data?.find { it.bookId == event.bookId }
+                val currentMarkers =
+                    (_uiState.value.markersState as? UiState.Success)?.data ?: emptyList()
+                val currentFavs = _uiState.value.favorites
 
+                var clickedMarker = currentMarkers.find { it.bookId == event.bookId }
                 if (clickedMarker == null) {
-                    clickedMarker = favorites.value.find { it.bookId == event.bookId }?.marker
+                    clickedMarker = currentFavs.find { it.bookId == event.bookId }?.marker
                 }
 
-                _selectedMarker.value = clickedMarker
+                _uiState.update { currentState ->
+                    currentState.copy(selectedMarker = clickedMarker)
+                }
             }
 
             is MapEvent.OnDismissBottomSheet -> {
-                _selectedMarker.value = null
+                _uiState.update { currentState ->
+                    currentState.copy(selectedMarker = null)
+                }
             }
 
             is MapEvent.OnToggleFavorite -> {
@@ -107,9 +118,7 @@ class MapViewModel @Inject constructor(
         syncJob?.cancel()
 
         syncJob = viewModelScope.launch {
-            if (_uiState.value !is UiState.Success) {
-                _uiState.value = UiState.Loading
-            }
+            _uiState.update { it.copy(markersState = UiState.Loading) }
 
             val result = syncMapDataUseCase(bounds)
 
@@ -119,8 +128,8 @@ class MapViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    if (_uiState.value !is UiState.Success) {
-                        _uiState.value = UiState.Error(mapErrorToUiText(result.error))
+                    _uiState.update {
+                        it.copy(markersState = UiState.Error(mapErrorToUiText(result.error)))
                     }
                     Log.e("BookMap", "2. ERROR! Network error: ${result.error}")
                 }

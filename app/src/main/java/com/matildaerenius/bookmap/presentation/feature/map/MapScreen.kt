@@ -48,9 +48,7 @@ fun MapScreen(
     hasLocationPermission: Boolean,
     onMapLoaded: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val selectedMarker by viewModel.selectedMarker.collectAsState()
-    val favorites by viewModel.favorites.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -67,8 +65,8 @@ fun MapScreen(
         skipPartiallyExpanded = true
     )
 
-    LaunchedEffect(selectedMarker) {
-        selectedMarker?.let { marker ->
+    LaunchedEffect(state.selectedMarker) {
+        state.selectedMarker?.let { marker ->
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
                 LatLng(marker.latitude, marker.longitude),
                 16f
@@ -97,9 +95,9 @@ fun MapScreen(
             }
     }
 
-    LaunchedEffect(uiState) {
-        if (uiState is UiState.Error) {
-            val errorMessage = (uiState as UiState.Error).message.asString(context)
+    LaunchedEffect(state.markersState) {
+        if (state.markersState is UiState.Error) {
+            val errorMessage = (state.markersState as UiState.Error).message.asString(context)
             Log.e("BookMap", "MapScreen: Error message: $errorMessage")
             snackbarHostState.showSnackbar(errorMessage)
         }
@@ -109,10 +107,10 @@ fun MapScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         val currentMarkers = mutableListOf<BookMapMarker>()
-        if (uiState is UiState.Success) {
-            currentMarkers.addAll((uiState as UiState.Success).data)
+        if (state.markersState is UiState.Success) {
+            currentMarkers.addAll((state.markersState as UiState.Success).data)
         }
-        selectedMarker?.let { marker ->
+        state.selectedMarker?.let { marker ->
             if (currentMarkers.none { it.bookId == marker.bookId }) {
                 currentMarkers.add(marker)
             }
@@ -122,7 +120,7 @@ fun MapScreen(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
             onMapLoaded = onMapLoaded,
-            favorites = favorites,
+            favorites = state.favorites,
             hasLocationPermission = hasLocationPermission,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
@@ -163,12 +161,12 @@ fun MapScreen(
             )
         }
 
-        if (uiState is UiState.Loading) {
+        if (state.markersState is UiState.Loading) {
             FullScreenLoadingIndicator()
         }
 
-        if (selectedMarker != null) {
-            val isFav = favorites.any { it.bookId == selectedMarker!!.bookId }
+        if (state.selectedMarker != null) {
+            val isFav = state.favorites.any { it.bookId == state.selectedMarker!!.bookId }
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
@@ -180,7 +178,7 @@ fun MapScreen(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 BookSummarySheet(
-                    marker = selectedMarker!!,
+                    marker = state.selectedMarker!!,
                     isFavorite = isFav,
                     onClose = {
                         coroutineScope.launch {
@@ -189,7 +187,7 @@ fun MapScreen(
                         }
                     },
                     onToggleFavorite = {
-                        viewModel.onEvent(MapEvent.OnToggleFavorite(selectedMarker!!.bookId, isFav))
+                        viewModel.onEvent(MapEvent.OnToggleFavorite(state.selectedMarker!!.bookId, isFav))
                     },
                     onAddClick = {
                         // TODO: Hantera visited
