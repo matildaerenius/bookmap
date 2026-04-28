@@ -39,12 +39,6 @@ class MapViewModel @Inject constructor(
     private val currentBounds = MutableStateFlow<MapBoundingBox?>(null)
     private var syncJob: Job? = null
 
-    val favorites = observeFavoritesUseCase().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
-    )
-
     init {
         val initialBounds = MapConstants.STOCKHOLM_BOUNDS.toMapBoundingBox()
         currentBounds.value = initialBounds
@@ -53,9 +47,15 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             observeBookMarkersUseCase(currentBounds).collect { visibleMarkers ->
                 _uiState.update { currentState ->
-                    currentState.copy(
-                        markersState = UiState.Success(visibleMarkers)
-                    )
+
+                    val shouldShowSuccess =
+                        visibleMarkers.isNotEmpty() || currentState.markersState is UiState.Success
+
+                    if (shouldShowSuccess) {
+                        currentState.copy(markersState = UiState.Success(visibleMarkers))
+                    } else {
+                        currentState
+                    }
                 }
             }
         }
