@@ -29,13 +29,13 @@ class ObserveBookMarkersUseCaseTest {
         val stockholmMarker = BookMapMarker(
             bookId = 1, locationName = "Stockholm",
             latitude = 59.32, longitude = 18.06,
-            description = "Test", bookTitle = "Bok 1", bookAuthor = "Författare", bookImageUrl = "url"
+            description = "Test", bookTitle = "Bok 1", bookAuthor = "Författare", bookImageUrl = "url", isVisited = false
         )
 
         val gothenburgMarker = BookMapMarker(
             bookId = 2, locationName = "Göteborg",
             latitude = 57.70, longitude = 11.97,
-            description = "Test", bookTitle = "Bok 2", bookAuthor = "Författare", bookImageUrl = "url"
+            description = "Test", bookTitle = "Bok 2", bookAuthor = "Författare", bookImageUrl = "url", isVisited = false
         )
 
         every { markerRepository.observeMarkers() } returns flowOf(listOf(stockholmMarker, gothenburgMarker))
@@ -59,7 +59,7 @@ class ObserveBookMarkersUseCaseTest {
         val fakeMarker = BookMapMarker(
             bookId = 1, locationName = "Stockholm",
             latitude = 59.32, longitude = 18.06,
-            description = "Test", bookTitle = "Test Book", bookAuthor = "Author", bookImageUrl = "url"
+            description = "Test", bookTitle = "Test Book", bookAuthor = "Author", bookImageUrl = "url", isVisited = false
         )
 
         every { markerRepository.observeMarkers() } returns flowOf(listOf(fakeMarker))
