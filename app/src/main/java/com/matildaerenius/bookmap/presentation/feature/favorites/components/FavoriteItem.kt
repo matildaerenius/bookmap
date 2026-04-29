@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap.presentation.feature.favorites.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -65,6 +67,7 @@ fun FavoriteItem(
             Surface(
                 color = Color(0xFF2A2A2A),
                 shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.05f)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick() }
@@ -81,6 +84,7 @@ fun FavoriteItem(
                         modifier = Modifier
                             .width(64.dp)
                             .height(96.dp)
+                            .shadow(4.dp, RoundedCornerShape(6.dp))
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.DarkGray),
                         contentScale = ContentScale.Crop

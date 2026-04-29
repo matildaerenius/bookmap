@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.presentation.common.state.UiState
+import com.matildaerenius.bookmap.presentation.feature.favorites.components.EmptyFavoritesState
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteItem
 
 @Composable
@@ -44,17 +46,21 @@ fun FavoriteScreen(
                 val favorites = favState.data
 
                 if (favorites.isEmpty()) {
-                    Text(
-                        text = stringResource(id = R.string.saved_favorites),
-                        color = Color.Gray,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    EmptyFavoritesState(modifier = Modifier.align(Alignment.Center))
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(top = 180.dp, bottom = 100.dp)
+                        contentPadding = PaddingValues(top = 100.dp, bottom = 100.dp)
                     ) {
+                        item {
+                            Text(
+                                text = stringResource(id = R.string.action_favorites),
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = Color.White,
+                                modifier = Modifier.padding(bottom = 24.dp, start = 4.dp)
+                            )
+                        }
                         items(
                             items = favorites,
                             key = { favorite -> favorite.bookId }
