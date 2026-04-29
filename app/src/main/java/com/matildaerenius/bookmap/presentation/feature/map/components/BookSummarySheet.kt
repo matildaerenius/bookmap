@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -116,7 +117,7 @@ fun BookSummarySheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        imageVector = if (marker.isVisited) Icons.Default.Check else Icons.Default.Add,
                         contentDescription = stringResource(id = R.string.add),
                         tint = Color.Black,
                         modifier = Modifier.size(32.dp)
@@ -158,7 +159,8 @@ fun BookSummarySheetPreview() {
             bookTitle = "Män som hatar kvinnor",
             bookAuthor = "Stieg Larsson",
             description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
-            bookImageUrl = ""
+            bookImageUrl = "",
+            isVisited = false
         )
 
         BookSummarySheet(

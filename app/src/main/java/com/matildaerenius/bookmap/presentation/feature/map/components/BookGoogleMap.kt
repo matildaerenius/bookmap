@@ -55,7 +55,7 @@ fun BookGoogleMap(
         markers.forEach { bookMarker ->
             val isFavorite = favoriteIds.contains(bookMarker.bookId)
             MarkerComposable(
-                keys = arrayOf(bookMarker.bookId, isFavorite),
+                keys = arrayOf(bookMarker.bookId, isFavorite, bookMarker.isVisited),
                 state = rememberUpdatedMarkerState(
                     position = LatLng(bookMarker.latitude, bookMarker.longitude)
                 ),
@@ -66,6 +66,7 @@ fun BookGoogleMap(
             ) {
                 MapMarkerIcon(
                     isFavorite = isFavorite,
+                    isVisited = bookMarker.isVisited,
                     modifier = Modifier.size(40.dp)
                 )
             }

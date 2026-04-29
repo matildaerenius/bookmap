@@ -190,7 +190,7 @@ fun MapScreen(
                         viewModel.onEvent(MapEvent.OnToggleFavorite(state.selectedMarker!!.bookId, isFav))
                     },
                     onAddClick = {
-                        // TODO: Hantera visited
+                        viewModel.onEvent(MapEvent.OnToggleVisited(state.selectedMarker!!.bookId, state.selectedMarker!!.isVisited))
                     }
                 )
             }
