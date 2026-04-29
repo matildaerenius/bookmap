@@ -42,9 +42,9 @@ fun BookGoogleMap(
         onMapLoaded = onMapLoaded,
         properties = MapProperties(
             isMyLocationEnabled = hasLocationPermission,
-            minZoomPreference = 10f,
+            minZoomPreference = 12f,
             maxZoomPreference = 18f,
-            latLngBoundsForCameraTarget = MapConstants.STOCKHOLM_BOUNDS,
+            latLngBoundsForCameraTarget = MapConstants.INNER_CITY_BOUNDS,
             mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
         ),
         uiSettings = MapUiSettings(
