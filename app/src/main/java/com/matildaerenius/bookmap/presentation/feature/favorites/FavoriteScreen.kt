@@ -24,7 +24,7 @@ fun FavoriteScreen(
     viewModel: FavoriteViewModel = hiltViewModel(),
     onNavigateToMap: (Int) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -32,7 +32,7 @@ fun FavoriteScreen(
             .background(Color(0xFF121212))
             .padding(16.dp)
     ) {
-        when (val state = uiState) {
+        when (val favState = state.favoritesState) {
             is UiState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
@@ -41,7 +41,7 @@ fun FavoriteScreen(
             }
 
             is UiState.Success -> {
-                val favorites = state.data
+                val favorites = favState.data
 
                 if (favorites.isEmpty()) {
                     Text(
@@ -53,7 +53,7 @@ fun FavoriteScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(top = 80.dp, bottom = 100.dp)
+                        contentPadding = PaddingValues(top = 180.dp, bottom = 100.dp)
                     ) {
                         items(
                             items = favorites,
@@ -61,10 +61,19 @@ fun FavoriteScreen(
                         ) { favorite ->
                             FavoriteItem(
                                 imageUrl = favorite.marker?.bookImageUrl,
-                                bookTitle = favorite.marker?.bookTitle ?: stringResource(id = R.string.unknown_title),
-                                author = favorite.marker?.bookAuthor ?: stringResource(id = R.string.unknown_author),
-                                locationName = favorite.marker?.locationName ?: stringResource(id = R.string.unknown_location),
-                                onRemove = { viewModel.onEvent(FavoriteEvent.OnRemoveFavorite(favorite.bookId)) },
+                                bookTitle = favorite.marker?.bookTitle
+                                    ?: stringResource(id = R.string.unknown_title),
+                                author = favorite.marker?.bookAuthor
+                                    ?: stringResource(id = R.string.unknown_author),
+                                locationName = favorite.marker?.locationName
+                                    ?: stringResource(id = R.string.unknown_location),
+                                onRemove = {
+                                    viewModel.onEvent(
+                                        FavoriteEvent.OnRemoveFavorite(
+                                            favorite.bookId
+                                        )
+                                    )
+                                },
                                 onClick = { onNavigateToMap(favorite.bookId) }
                             )
                         }

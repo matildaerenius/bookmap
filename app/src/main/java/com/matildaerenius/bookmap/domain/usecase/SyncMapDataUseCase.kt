@@ -1,12 +1,11 @@
 package com.matildaerenius.bookmap.domain.usecase
 
-import android.util.Log
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.BookRepository
 import com.matildaerenius.bookmap.domain.repository.LocationRepository
 import com.matildaerenius.bookmap.domain.repository.MarkerRepository
-import com.matildaerenius.bookmap.util.Resource
+import com.matildaerenius.bookmap.core.Resource
 import javax.inject.Inject
 
 class SyncMapDataUseCase @Inject constructor(

@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.matildaerenius.bookmap.R
@@ -102,11 +103,7 @@ fun OnboardingScreen(
         ) {
             Text(
                 text = stringResource(id = R.string.onboarding_title),
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 36.sp,
-                    lineHeight = 44.sp
-                ),
+                style = MaterialTheme.typography.headlineLarge,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
@@ -124,7 +121,7 @@ fun OnboardingScreen(
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .offset(x = 30.dp, y = 45.dp)
+                .offset(x = 30.dp, y = 43.dp)
                 .size(32.dp)
         )
         MapMarkerIcon(
@@ -143,13 +140,13 @@ fun OnboardingScreen(
             isFavorite = true,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .offset(x = (-100).dp, y = 40.dp)
+                .offset(x = (-95).dp, y = 40.dp)
                 .size(20.dp)
         )
         MapMarkerIcon(
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(x = (-35).dp, y = 65.dp)
+                .offset(x = (-15).dp, y = 53.dp)
                 .size(110.dp)
         )
 
@@ -158,6 +155,17 @@ fun OnboardingScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 32.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun OnboardingScreenPreview() {
+    MaterialTheme {
+        OnboardingScreen(
+            isReady = false,
+            onFinished = {}
         )
     }
 }
