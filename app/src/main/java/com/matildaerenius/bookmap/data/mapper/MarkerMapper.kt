@@ -27,6 +27,7 @@ fun MarkerEntity.toDomain(): BookMapMarker {
         bookTitle = this.title,
         bookAuthor = this.author,
         bookImageUrl = this.coverImageUrl,
+        isFavorite = false,
         isVisited = false
     )
 }
@@ -41,6 +42,7 @@ fun BookWithDetails.toDomain(): BookMapMarker {
         bookTitle = this.marker.title,
         bookAuthor = this.marker.author,
         bookImageUrl = this.marker.coverImageUrl,
+        isFavorite = this.favorite != null,
         isVisited = this.visited != null
     )
 }

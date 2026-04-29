@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.Brush
 @Composable
 fun BookSummarySheet(
     marker: BookMapMarker,
-    isFavorite: Boolean,
     onClose: () -> Unit,
     onToggleFavorite: () -> Unit,
     onAddClick: () -> Unit
@@ -135,9 +134,9 @@ fun BookSummarySheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = stringResource(id = if (isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
-                        tint = if (isFavorite) Color.Red else Color.Black,
+                        imageVector = if (marker.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                        tint = if (marker.isFavorite) Color.Red else Color.Black,
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -160,12 +159,12 @@ fun BookSummarySheetPreview() {
             bookAuthor = "Stieg Larsson",
             description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
             bookImageUrl = "",
+            isFavorite = false,
             isVisited = false
         )
 
         BookSummarySheet(
             marker = dummyMarker,
-            isFavorite = true,
             onToggleFavorite = {},
             onClose = {},
             onAddClick = {}

@@ -3,7 +3,6 @@ package com.matildaerenius.bookmap.presentation.feature.map.components
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -17,7 +16,6 @@ import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
-import com.matildaerenius.bookmap.domain.model.FavoriteBook
 import com.matildaerenius.bookmap.presentation.common.components.MapMarkerIcon
 import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 
@@ -25,16 +23,11 @@ import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 fun BookGoogleMap(
     hasLocationPermission: Boolean,
     markers: List<BookMapMarker>,
-    favorites: List<FavoriteBook>,
     cameraPositionState: CameraPositionState,
     onMarkerClick: (Int) -> Unit,
     onMapLoaded: () -> Unit
 ) {
     val context = LocalContext.current
-
-    val favoriteIds = remember(favorites) {
-        favorites.map { it.bookId }.toSet()
-    }
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
@@ -53,9 +46,8 @@ fun BookGoogleMap(
         )
     ) {
         markers.forEach { bookMarker ->
-            val isFavorite = favoriteIds.contains(bookMarker.bookId)
             MarkerComposable(
-                keys = arrayOf(bookMarker.bookId, isFavorite, bookMarker.isVisited),
+                keys = arrayOf(bookMarker.bookId, bookMarker.isFavorite, bookMarker.isVisited),
                 state = rememberUpdatedMarkerState(
                     position = LatLng(bookMarker.latitude, bookMarker.longitude)
                 ),
@@ -65,7 +57,7 @@ fun BookGoogleMap(
                 }
             ) {
                 MapMarkerIcon(
-                    isFavorite = isFavorite,
+                    isFavorite = bookMarker.isFavorite,
                     isVisited = bookMarker.isVisited,
                     modifier = Modifier.size(40.dp)
                 )

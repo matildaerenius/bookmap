@@ -120,7 +120,6 @@ fun MapScreen(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
             onMapLoaded = onMapLoaded,
-            favorites = state.favorites,
             hasLocationPermission = hasLocationPermission,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
@@ -179,7 +178,6 @@ fun MapScreen(
             ) {
                 BookSummarySheet(
                     marker = state.selectedMarker!!,
-                    isFavorite = isFav,
                     onClose = {
                         coroutineScope.launch {
                             sheetState.hide()

@@ -84,7 +84,7 @@ fun FavoriteItem(
                         modifier = Modifier
                             .width(64.dp)
                             .height(96.dp)
-                            .shadow(4.dp, RoundedCornerShape(6.dp))
+                            .shadow(4.dp, RoundedCornerShape(6.dp), clip = false)
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.DarkGray),
                         contentScale = ContentScale.Crop
