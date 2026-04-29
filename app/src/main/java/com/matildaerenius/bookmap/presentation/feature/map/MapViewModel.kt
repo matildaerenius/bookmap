@@ -17,10 +17,8 @@ import com.matildaerenius.bookmap.core.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -128,6 +126,13 @@ class MapViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     Log.d("BookMap", "SUCCESS! Found ${result.data.size} books in the area")
+                    _uiState.update { currentState ->
+                        if (currentState.markersState is UiState.Loading) {
+                            currentState.copy(markersState = UiState.Success(emptyList()))
+                        } else {
+                            currentState
+                        }
+                    }
                 }
 
                 is Resource.Error -> {
