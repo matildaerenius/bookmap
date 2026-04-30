@@ -192,7 +192,7 @@ fun MapScreen(
                             )
                         )
                     },
-                    onAddClick = {
+                    onToggleVisit = {
                         viewModel.onEvent(
                             MapEvent.OnToggleVisited(
                                 state.selectedMarker!!.bookId,

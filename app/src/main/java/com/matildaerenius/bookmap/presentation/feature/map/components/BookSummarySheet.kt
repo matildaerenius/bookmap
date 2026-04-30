@@ -35,7 +35,7 @@ fun BookSummarySheet(
     marker: BookMapMarker,
     onClose: () -> Unit,
     onToggleFavorite: () -> Unit,
-    onAddClick: () -> Unit
+    onToggleVisit: () -> Unit
 ) {
 
     Box(
@@ -113,7 +113,7 @@ fun BookSummarySheet(
                         .size(64.dp)
                         .clip(CircleShape)
                         .background(Color.White)
-                        .clickable { onAddClick() },
+                        .clickable { onToggleVisit() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -168,7 +168,7 @@ fun BookSummarySheetPreview() {
             marker = dummyMarker,
             onToggleFavorite = {},
             onClose = {},
-            onAddClick = {}
+            onToggleVisit = {}
         )
     }
 }
