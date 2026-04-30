@@ -2,6 +2,8 @@ package com.matildaerenius.bookmap.data.repository
 
 import app.cash.turbine.test
 import com.matildaerenius.bookmap.data.local.dao.MarkerDao
+import com.matildaerenius.bookmap.data.local.dao.VisitedDao
+import com.matildaerenius.bookmap.data.local.entity.BookWithDetails
 import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import io.mockk.coVerify
@@ -16,12 +18,15 @@ import org.junit.Test
 class MarkerRepositoryImplTest {
 
     private lateinit var markerDao: MarkerDao
+
+    private lateinit var visitedDao: VisitedDao
     private lateinit var markerRepository: MarkerRepositoryImpl
 
     @Before
     fun setup() {
         markerDao = mockk(relaxed = true)
-        markerRepository = MarkerRepositoryImpl(markerDao)
+        visitedDao = mockk(relaxed = true)
+        markerRepository = MarkerRepositoryImpl(markerDao, visitedDao)
     }
 
     @Test
@@ -37,7 +42,13 @@ class MarkerRepositoryImplTest {
             longitude = 18.06
         )
 
-        every { markerDao.getAllMarkers() } returns flowOf(listOf(entity))
+        val bookWithDetails = BookWithDetails(
+            marker = entity,
+            visited = null,
+            favorite = null
+        )
+
+        every { markerDao.getMarkersWithDetails() } returns flowOf(listOf(bookWithDetails))
 
         markerRepository.observeMarkers().test {
             val emittedList = awaitItem()
@@ -45,6 +56,8 @@ class MarkerRepositoryImplTest {
             assertEquals(1, emittedList.size)
             assertEquals(1, emittedList.first().bookId)
             assertEquals("Test Title", emittedList.first().bookTitle)
+
+            assertEquals(false, emittedList.first().isVisited)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -60,7 +73,9 @@ class MarkerRepositoryImplTest {
             bookImageUrl = "url",
             locationName = "Stockholm",
             latitude = 59.32,
-            longitude = 18.06
+            longitude = 18.06,
+            isVisited = false,
+            isFavorite = false
         )
 
         markerRepository.upsertMarkers(listOf(domainMarker))

@@ -5,6 +5,7 @@ import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
 import com.matildaerenius.bookmap.data.local.entity.FavoriteBookRelation
 import com.matildaerenius.bookmap.data.local.entity.FavoriteEntity
 import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
+import com.matildaerenius.bookmap.data.local.entity.VisitedEntity
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -39,7 +40,8 @@ class FavoriteRepositoryImplTest {
             latitude = 59.32,
             longitude = 18.06
         )
-        val relation = FavoriteBookRelation(favorite = favoriteEntity, marker = markerEntity)
+        val visitedEntity = VisitedEntity(bookId = 1)
+        val relation = FavoriteBookRelation(favorite = favoriteEntity, marker = markerEntity, visited = visitedEntity)
 
         every { favoriteDao.getFavoritesWithDetails() } returns flowOf(listOf(relation))
 
@@ -56,7 +58,7 @@ class FavoriteRepositoryImplTest {
     @Test
     fun getFavorites_handlesNullMarkerProperly() = runTest {
         val favoriteEntity = FavoriteEntity(bookId = 2, savedAt = 2000L)
-        val relation = FavoriteBookRelation(favorite = favoriteEntity, marker = null)
+        val relation = FavoriteBookRelation(favorite = favoriteEntity, marker = null, visited = null)
 
         every { favoriteDao.getFavoritesWithDetails() } returns flowOf(listOf(relation))
 

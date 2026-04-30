@@ -3,17 +3,16 @@ package com.matildaerenius.bookmap.data.local.entity
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class FavoriteBookRelation(
-    @Embedded val favorite: FavoriteEntity,
-
+data class BookWithDetails(
+    @Embedded val marker: MarkerEntity,
     @Relation(
         parentColumn = "bookId",
         entityColumn = "bookId"
     )
-    val marker: MarkerEntity?,
+    val visited: VisitedEntity?,
     @Relation(
         parentColumn = "bookId",
         entityColumn = "bookId"
     )
-    val visited: VisitedEntity?
+    val favorite: FavoriteEntity?
 )

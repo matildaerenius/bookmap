@@ -27,18 +27,37 @@ class ObserveBookMarkersUseCaseTest {
     @Test
     fun `invoke returns only markers within given bounding box`() = runTest {
         val stockholmMarker = BookMapMarker(
-            bookId = 1, locationName = "Stockholm",
-            latitude = 59.32, longitude = 18.06,
-            description = "Test", bookTitle = "Bok 1", bookAuthor = "Författare", bookImageUrl = "url"
+            bookId = 1,
+            locationName = "Stockholm",
+            latitude = 59.32,
+            longitude = 18.06,
+            description = "Test",
+            bookTitle = "Bok 1",
+            bookAuthor = "Författare",
+            bookImageUrl = "url",
+            isVisited = false,
+            isFavorite = false
         )
 
         val gothenburgMarker = BookMapMarker(
-            bookId = 2, locationName = "Göteborg",
-            latitude = 57.70, longitude = 11.97,
-            description = "Test", bookTitle = "Bok 2", bookAuthor = "Författare", bookImageUrl = "url"
+            bookId = 2,
+            locationName = "Göteborg",
+            latitude = 57.70,
+            longitude = 11.97,
+            description = "Test",
+            bookTitle = "Bok 2",
+            bookAuthor = "Författare",
+            bookImageUrl = "url",
+            isVisited = false,
+            isFavorite = false
         )
 
-        every { markerRepository.observeMarkers() } returns flowOf(listOf(stockholmMarker, gothenburgMarker))
+        every { markerRepository.observeMarkers() } returns flowOf(
+            listOf(
+                stockholmMarker,
+                gothenburgMarker
+            )
+        )
 
         val stockholmBounds = MapBoundingBox(
             southWestLat = 59.00, southWestLng = 17.50,
@@ -57,9 +76,16 @@ class ObserveBookMarkersUseCaseTest {
     @Test
     fun `invoke returns empty list when bounds are null`() = runTest {
         val fakeMarker = BookMapMarker(
-            bookId = 1, locationName = "Stockholm",
-            latitude = 59.32, longitude = 18.06,
-            description = "Test", bookTitle = "Test Book", bookAuthor = "Author", bookImageUrl = "url"
+            bookId = 1,
+            locationName = "Stockholm",
+            latitude = 59.32,
+            longitude = 18.06,
+            description = "Test",
+            bookTitle = "Test Book",
+            bookAuthor = "Author",
+            bookImageUrl = "url",
+            isVisited = false,
+            isFavorite = false
         )
 
         every { markerRepository.observeMarkers() } returns flowOf(listOf(fakeMarker))

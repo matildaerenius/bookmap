@@ -14,6 +14,7 @@ import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.core.DataError
 import com.matildaerenius.bookmap.core.Resource
 import com.matildaerenius.bookmap.core.UiText
+import com.matildaerenius.bookmap.domain.usecase.ToggleVisitedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,8 @@ class MapViewModel @Inject constructor(
     private val observeBookMarkersUseCase: ObserveBookMarkersUseCase,
     private val observeFavoritesUseCase: ObserveFavoritesUseCase,
     private val addFavoriteUseCase: AddFavoriteUseCase,
-    private val removeFavoriteUseCase: RemoveFavoriteUseCase
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
+    private val toggleVisitedUseCase: ToggleVisitedUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MapUiState())
@@ -107,6 +109,23 @@ class MapViewModel @Inject constructor(
                     } else {
                         addFavoriteUseCase(event.bookId)
                     }
+                }
+            }
+
+            is MapEvent.OnToggleVisited -> {
+                viewModelScope.launch {
+                    toggleVisitedUseCase(event.bookId, !event.isCurrentlyVisited)
+                }
+
+                _uiState.update { currentState ->
+                    val updatedMarker = currentState.selectedMarker?.let { currentMarker ->
+                        if (currentMarker.bookId == event.bookId) {
+                            currentMarker.copy(isVisited = !event.isCurrentlyVisited)
+                        } else {
+                            currentMarker
+                        }
+                    }
+                    currentState.copy(selectedMarker = updatedMarker)
                 }
             }
         }

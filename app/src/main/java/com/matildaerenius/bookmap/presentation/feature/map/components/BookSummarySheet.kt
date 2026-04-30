@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -31,7 +32,6 @@ import androidx.compose.ui.graphics.Brush
 @Composable
 fun BookSummarySheet(
     marker: BookMapMarker,
-    isFavorite: Boolean,
     onClose: () -> Unit,
     onToggleFavorite: () -> Unit,
     onAddClick: () -> Unit
@@ -116,8 +116,8 @@ fun BookSummarySheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.add),
+                        imageVector = if (marker.isVisited) Icons.Default.Check else Icons.Default.Add,
+                        contentDescription = stringResource(id = if(marker.isVisited) R.string.has_visit else R.string.delete),
                         tint = Color.Black,
                         modifier = Modifier.size(32.dp)
                     )
@@ -134,9 +134,9 @@ fun BookSummarySheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = stringResource(id = if (isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
-                        tint = if (isFavorite) Color.Red else Color.Black,
+                        imageVector = if (marker.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                        tint = if (marker.isFavorite) Color.Red else Color.Black,
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -158,12 +158,13 @@ fun BookSummarySheetPreview() {
             bookTitle = "Män som hatar kvinnor",
             bookAuthor = "Stieg Larsson",
             description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
-            bookImageUrl = ""
+            bookImageUrl = "",
+            isFavorite = false,
+            isVisited = false
         )
 
         BookSummarySheet(
             marker = dummyMarker,
-            isFavorite = true,
             onToggleFavorite = {},
             onClose = {},
             onAddClick = {}
