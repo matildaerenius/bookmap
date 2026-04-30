@@ -117,7 +117,7 @@ fun BookSummarySheet(
                 ) {
                     Icon(
                         imageVector = if (marker.isVisited) Icons.Default.Check else Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.add),
+                        contentDescription = stringResource(id = if(marker.isVisited) R.string.has_visit else R.string.delete),
                         tint = Color.Black,
                         modifier = Modifier.size(32.dp)
                     )

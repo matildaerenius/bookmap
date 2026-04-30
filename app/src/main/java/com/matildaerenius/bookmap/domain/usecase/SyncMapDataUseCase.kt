@@ -64,7 +64,8 @@ class SyncMapDataUseCase @Inject constructor(
                     bookTitle = book.title,
                     bookAuthor = book.author,
                     bookImageUrl = book.imageUrl,
-                    isVisited = false
+                    isVisited = false,
+                    isFavorite = false
                 )
             } else {
                 null

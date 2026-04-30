@@ -74,7 +74,8 @@ class MarkerRepositoryImplTest {
             locationName = "Stockholm",
             latitude = 59.32,
             longitude = 18.06,
-            isVisited = false
+            isVisited = false,
+            isFavorite = false
         )
 
         markerRepository.upsertMarkers(listOf(domainMarker))
