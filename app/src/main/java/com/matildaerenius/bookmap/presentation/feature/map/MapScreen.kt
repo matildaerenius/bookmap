@@ -165,7 +165,7 @@ fun MapScreen(
         }
 
         if (state.selectedMarker != null) {
-            val isFav = state.favorites.any { it.bookId == state.selectedMarker!!.bookId }
+            val freshMarker = currentMarkers.find { it.bookId == state.selectedMarker!!.bookId } ?: state.selectedMarker!!
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
@@ -177,7 +177,7 @@ fun MapScreen(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 BookSummarySheet(
-                    marker = state.selectedMarker!!,
+                    marker = freshMarker,
                     onClose = {
                         coroutineScope.launch {
                             sheetState.hide()
@@ -188,7 +188,7 @@ fun MapScreen(
                         viewModel.onEvent(
                             MapEvent.OnToggleFavorite(
                                 state.selectedMarker!!.bookId,
-                                isFav
+                                freshMarker.isFavorite
                             )
                         )
                     },
@@ -196,7 +196,7 @@ fun MapScreen(
                         viewModel.onEvent(
                             MapEvent.OnToggleVisited(
                                 state.selectedMarker!!.bookId,
-                                state.selectedMarker!!.isVisited
+                                freshMarker.isVisited
                             )
                         )
                     }
