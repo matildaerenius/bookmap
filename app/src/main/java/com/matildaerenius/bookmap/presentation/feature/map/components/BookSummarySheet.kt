@@ -28,6 +28,7 @@ import coil.compose.AsyncImage
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.colorResource
 
 @Composable
 fun BookSummarySheet(
@@ -44,9 +45,9 @@ fun BookSummarySheet(
                 brush = Brush.verticalGradient(
                     colors = listOf(
                         Color.Transparent,
-                        Color(0xDD000000),
-                        Color(0xEE000000),
-                        Color(0xFF000000)
+                        colorResource(id = R.color.bg_black_gradient_1),
+                        colorResource(id = R.color.bg_black_gradient_2),
+                        colorResource(id = R.color.bg_black_gradient_3),
                     ),
                     startY = 200f,
                 )
