@@ -195,7 +195,7 @@ fun MapScreen(
                         viewModel.onEvent(
                             MapEvent.OnToggleVisited(
                                 state.selectedMarker!!.bookId,
-                                state.selectedMarker!!.isFavorite
+                                state.selectedMarker!!.isVisited
                             )
                         )
                     }
