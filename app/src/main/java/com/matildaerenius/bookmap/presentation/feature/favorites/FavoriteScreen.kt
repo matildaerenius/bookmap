@@ -33,7 +33,7 @@ fun FavoriteScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_black))
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
         when (val favState = state.favoritesState) {
             is UiState.Loading -> {
@@ -46,43 +46,55 @@ fun FavoriteScreen(
             is UiState.Success -> {
                 val favorites = favState.data
 
-                if (favorites.isEmpty()) {
-                    EmptyFavoritesState(modifier = Modifier.align(Alignment.Center))
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(top = 100.dp, bottom = 100.dp)
-                    ) {
-                        item {
-                            Text(
-                                text = stringResource(id = R.string.action_favorites),
-                                style = MaterialTheme.typography.headlineLarge,
-                                color = Color.White,
-                                modifier = Modifier.padding(bottom = 24.dp, start = 4.dp)
-                            )
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Spacer(modifier = Modifier.height(60.dp))
+
+                    Text(
+                        text = stringResource(id = R.string.action_favorites),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 64.dp, bottom = 24.dp, start = 4.dp)
+                    )
+
+                    if (favorites.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            EmptyFavoritesState()
                         }
-                        items(
-                            items = favorites,
-                            key = { favorite -> favorite.bookId }
-                        ) { favorite ->
-                            FavoriteItem(
-                                imageUrl = favorite.marker?.bookImageUrl,
-                                bookTitle = favorite.marker?.bookTitle
-                                    ?: stringResource(id = R.string.unknown_title),
-                                author = favorite.marker?.bookAuthor
-                                    ?: stringResource(id = R.string.unknown_author),
-                                locationName = favorite.marker?.locationName
-                                    ?: stringResource(id = R.string.unknown_location),
-                                onRemove = {
-                                    viewModel.onEvent(
-                                        FavoriteEvent.OnRemoveFavorite(
-                                            favorite.bookId
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(bottom = 100.dp)
+                        ) {
+                            items(
+                                items = favorites,
+                                key = { favorite -> favorite.bookId }
+                            ) { favorite ->
+                                FavoriteItem(
+                                    imageUrl = favorite.marker?.bookImageUrl,
+                                    bookTitle = favorite.marker?.bookTitle
+                                        ?: stringResource(id = R.string.unknown_title),
+                                    author = favorite.marker?.bookAuthor
+                                        ?: stringResource(id = R.string.unknown_author),
+                                    locationName = favorite.marker?.locationName
+                                        ?: stringResource(id = R.string.unknown_location),
+                                    onRemove = {
+                                        viewModel.onEvent(
+                                            FavoriteEvent.OnRemoveFavorite(
+                                                favorite.bookId
+                                            )
                                         )
-                                    )
-                                },
-                                onClick = { onNavigateToMap(favorite.bookId) }
-                            )
+                                    },
+                                    onClick = { onNavigateToMap(favorite.bookId) }
+                                )
+                            }
                         }
                     }
                 }
