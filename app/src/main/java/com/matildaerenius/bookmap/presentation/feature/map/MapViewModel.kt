@@ -103,6 +103,13 @@ class MapViewModel @Inject constructor(
             }
 
             is MapEvent.OnToggleFavorite -> {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        selectedMarker = currentState.selectedMarker?.copy(
+                            isFavorite = !event.isCurrentlyFavorite
+                        )
+                    )
+                }
                 viewModelScope.launch {
                     if (event.isCurrentlyFavorite) {
                         removeFavoriteUseCase(event.bookId)
@@ -113,19 +120,16 @@ class MapViewModel @Inject constructor(
             }
 
             is MapEvent.OnToggleVisited -> {
-                viewModelScope.launch {
-                    toggleVisitedUseCase(event.bookId, !event.isCurrentlyVisited)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        selectedMarker = currentState.selectedMarker?.copy(
+                            isVisited = !event.isCurrentlyVisited
+                        )
+                    )
                 }
 
-                _uiState.update { currentState ->
-                    val updatedMarker = currentState.selectedMarker?.let { currentMarker ->
-                        if (currentMarker.bookId == event.bookId) {
-                            currentMarker.copy(isVisited = !event.isCurrentlyVisited)
-                        } else {
-                            currentMarker
-                        }
-                    }
-                    currentState.copy(selectedMarker = updatedMarker)
+                viewModelScope.launch {
+                    toggleVisitedUseCase(event.bookId, !event.isCurrentlyVisited)
                 }
             }
         }
