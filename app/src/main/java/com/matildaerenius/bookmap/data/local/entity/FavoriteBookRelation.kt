@@ -10,5 +10,10 @@ data class FavoriteBookRelation(
         parentColumn = "bookId",
         entityColumn = "bookId"
     )
-    val marker: MarkerEntity?
+    val marker: MarkerEntity?,
+    @Relation(
+        parentColumn = "bookId",
+        entityColumn = "bookId"
+    )
+    val visited: VisitedEntity?
 )

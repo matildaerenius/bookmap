@@ -17,21 +17,6 @@ fun BookMapMarker.toEntity(): MarkerEntity {
     )
 }
 
-fun MarkerEntity.toDomain(): BookMapMarker {
-    return BookMapMarker(
-        bookId = this.bookId,
-        locationName = this.locationDescription,
-        latitude = this.latitude,
-        longitude = this.longitude,
-        description = this.description,
-        bookTitle = this.title,
-        bookAuthor = this.author,
-        bookImageUrl = this.coverImageUrl,
-        isFavorite = false,
-        isVisited = false
-    )
-}
-
 fun BookWithDetails.toDomain(): BookMapMarker {
     return BookMapMarker(
         bookId = this.marker.bookId,
