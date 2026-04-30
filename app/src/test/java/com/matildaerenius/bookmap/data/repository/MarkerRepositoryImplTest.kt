@@ -88,4 +88,34 @@ class MarkerRepositoryImplTest {
             })
         }
     }
+
+    @Test
+    fun `updateVisitedStatus with isVisited true should call insertVisited`() = runTest {
+        val testBookId = 1
+
+        markerRepository.updateVisitedStatus(testBookId, isVisited = true)
+
+        coVerify(exactly = 1) {
+            visitedDao.insertVisited(match { insertedEntity ->
+                insertedEntity.bookId == testBookId
+            })
+        }
+        coVerify(exactly = 0) {
+            visitedDao.deleteVisited(any())
+        }
+    }
+
+    @Test
+    fun `updateVisitedStatus with isVisited false should call deleteVisited`() = runTest {
+        val testBookId = 2
+
+        markerRepository.updateVisitedStatus(testBookId, isVisited = false)
+
+        coVerify(exactly = 1) {
+            visitedDao.deleteVisited(testBookId)
+        }
+        coVerify(exactly = 0) {
+            visitedDao.insertVisited(any())
+        }
+    }
 }
