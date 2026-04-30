@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.matildaerenius.bookmap.data.local.BookMapDatabase
 import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
 import com.matildaerenius.bookmap.data.local.dao.MarkerDao
+import com.matildaerenius.bookmap.data.local.dao.VisitedDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +27,7 @@ object DatabaseModule {
             BookMapDatabase::class.java,
             "bookmap_database"
         )
+            .fallbackToDestructiveMigration(false)
             .build()
     }
 
@@ -39,5 +41,11 @@ object DatabaseModule {
     @Singleton
     fun provideFavoriteDao(database: BookMapDatabase): FavoriteDao {
         return database.favoriteDao
+    }
+
+    @Provides
+    @Singleton
+    fun provideVisitedDao(database: BookMapDatabase): VisitedDao {
+        return database.visitedDao
     }
 }

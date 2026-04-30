@@ -9,4 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="marker_bg_purple">#C490FF</color>
     <color name="marker_inner_purple">#E8D4FF</color>
+    <color name="bg_black_gradient_1">#DD000000</color>
+    <color name="bg_black_gradient_2">#EE000000</color>
+    <color name="bg_black_gradient_3">#FF000000</color>
+    <color name="red">#FFE53935</color>
+    <color name="bg_grey">#FF2A2A2A</color>
+    <color name="purple_location">#FFC084FC</color>
+    <color name="bg_black">#FF121212</color>
 </resources>

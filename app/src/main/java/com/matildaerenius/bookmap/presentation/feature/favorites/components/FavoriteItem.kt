@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap.presentation.feature.favorites.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,8 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +52,7 @@ fun FavoriteItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFE53935))
+                    .background(colorResource(id = R.color.red))
                     .padding(end = 24.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
@@ -63,8 +66,9 @@ fun FavoriteItem(
         },
         content = {
             Surface(
-                color = Color(0xFF2A2A2A),
+                color = colorResource(id = R.color.bg_grey),
                 shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.05f)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick() }
@@ -81,6 +85,7 @@ fun FavoriteItem(
                         modifier = Modifier
                             .width(64.dp)
                             .height(96.dp)
+                            .shadow(4.dp, RoundedCornerShape(6.dp), clip = false)
                             .clip(RoundedCornerShape(6.dp))
                             .background(Color.DarkGray),
                         contentScale = ContentScale.Crop
@@ -115,13 +120,13 @@ fun FavoriteItem(
                             Icon(
                                 imageVector = Icons.Default.Place,
                                 contentDescription = null,
-                                tint = Color(0xFFC084FC),
+                                tint = colorResource(id = R.color.purple_location),
                                 modifier = Modifier.size(14.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = locationName,
-                                color = Color(0xFFC084FC),
+                                color = colorResource(id = R.color.purple_location),
                                 style = MaterialTheme.typography.bodySmall,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis

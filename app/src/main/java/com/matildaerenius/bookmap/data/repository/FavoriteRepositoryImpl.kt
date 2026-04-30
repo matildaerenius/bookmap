@@ -15,12 +15,7 @@ class FavoriteRepositoryImpl @Inject constructor(
 
     override fun getFavorites(): Flow<List<FavoriteBook>> {
         return favoriteDao.getFavoritesWithDetails().map { relations ->
-            relations.map { relation ->
-                FavoriteBook(
-                    bookId = relation.favorite.bookId,
-                    marker = relation.marker?.toDomain()
-                )
-            }
+            relations.map { it.toDomain() }
         }
     }
 

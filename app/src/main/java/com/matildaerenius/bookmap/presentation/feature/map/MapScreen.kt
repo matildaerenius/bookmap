@@ -58,7 +58,7 @@ fun MapScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(MapConstants.STOCKHOLM_CENTER, 12f)
+        position = CameraPosition.fromLatLngZoom(MapConstants.STOCKHOLM_CENTER, 13f)
     }
 
     val sheetState = rememberModalBottomSheetState(
@@ -120,7 +120,6 @@ fun MapScreen(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
             onMapLoaded = onMapLoaded,
-            favorites = state.favorites,
             hasLocationPermission = hasLocationPermission,
             onMarkerClick = { bookId ->
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
@@ -166,7 +165,6 @@ fun MapScreen(
         }
 
         if (state.selectedMarker != null) {
-            val isFav = state.favorites.any { it.bookId == state.selectedMarker!!.bookId }
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
@@ -179,7 +177,6 @@ fun MapScreen(
             ) {
                 BookSummarySheet(
                     marker = state.selectedMarker!!,
-                    isFavorite = isFav,
                     onClose = {
                         coroutineScope.launch {
                             sheetState.hide()
@@ -187,10 +184,20 @@ fun MapScreen(
                         }
                     },
                     onToggleFavorite = {
-                        viewModel.onEvent(MapEvent.OnToggleFavorite(state.selectedMarker!!.bookId, isFav))
+                        viewModel.onEvent(
+                            MapEvent.OnToggleFavorite(
+                                state.selectedMarker!!.bookId,
+                                state.selectedMarker!!.isFavorite
+                            )
+                        )
                     },
-                    onAddClick = {
-                        // TODO: Hantera visited
+                    onToggleVisit = {
+                        viewModel.onEvent(
+                            MapEvent.OnToggleVisited(
+                                state.selectedMarker!!.bookId,
+                                state.selectedMarker!!.isFavorite
+                            )
+                        )
                     }
                 )
             }
@@ -218,4 +225,9 @@ object MapConstants {
         LatLng(59.2700, 17.9000),
         LatLng(59.4000, 18.2500)
     )
+    val INNER_CITY_BOUNDS = LatLngBounds(
+        LatLng(59.3080, 18.0000),
+        LatLng(59.3520, 18.1050)
+    )
+
 }
