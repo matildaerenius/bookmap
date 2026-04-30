@@ -85,7 +85,7 @@ fun BookSummarySheet(
                 contentDescription = marker.bookTitle,
                 modifier = Modifier
                     .size(240.dp, 240.dp)
-                    .background(Color.DarkGray),
+                    .background(Color.Transparent),
                 contentScale = ContentScale.Fit
             )
 
