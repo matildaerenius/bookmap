@@ -23,6 +23,14 @@ class MarkerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upsertMarkers(markers: List<BookMapMarker>) {
+        val localIds = markerDao.getAllMarkerIds()
+        val incomingIds = markers.map { it.bookId }
+        val idsToDelete = localIds.filterNot { it in incomingIds }
+
+        if (idsToDelete.isNotEmpty()) {
+            markerDao.deleteMarkersByIds(idsToDelete)
+        }
+
         markerDao.upsertMarkers(markers.map { it.toEntity() })
     }
 
