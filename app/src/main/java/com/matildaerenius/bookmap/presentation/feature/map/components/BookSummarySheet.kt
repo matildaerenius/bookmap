@@ -1,9 +1,11 @@
 package com.matildaerenius.bookmap.presentation.feature.map.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -29,6 +31,7 @@ import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun BookSummarySheet(
@@ -78,15 +81,48 @@ fun BookSummarySheet(
                 color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(18.dp))
+
+            if (marker.audio || marker.ebook) {
+                Row(
+                    modifier = Modifier
+                        .width(240.dp)
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (marker.audio) {
+                        val audioBook = R.drawable.audiobook
+                        Image(
+                            painter = painterResource(id = audioBook),
+                            contentDescription = stringResource(id = R.string.audiobook),
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+
+                    if (marker.audio && marker.ebook) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                    }
+
+                    if (marker.ebook) {
+                        val ebook = R.drawable.ebook
+                        Image(
+                            painter = painterResource(id = ebook),
+                            contentDescription = stringResource(id = R.string.ebook),
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                }
+            }
 
             AsyncImage(
                 model = marker.bookImageUrl,
                 contentDescription = marker.bookTitle,
                 modifier = Modifier
                     .size(240.dp, 240.dp)
+                    .clip((RoundedCornerShape(4.dp)))
                     .background(Color.Transparent),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -118,13 +154,13 @@ fun BookSummarySheet(
                 ) {
                     Icon(
                         imageVector = if (marker.isVisited) Icons.Default.Check else Icons.Default.Add,
-                        contentDescription = stringResource(id = if(marker.isVisited) R.string.has_visit else R.string.delete),
+                        contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
                         tint = Color.Black,
                         modifier = Modifier.size(32.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(25.dp))
 
                 Box(
                     modifier = Modifier
@@ -161,7 +197,9 @@ fun BookSummarySheetPreview() {
             description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
             bookImageUrl = "",
             isFavorite = false,
-            isVisited = false
+            isVisited = false,
+            ebook = true,
+            audio = true
         )
 
         BookSummarySheet(

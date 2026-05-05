@@ -10,6 +10,8 @@ data class MarkerEntity(
     val author: String,
     val description: String,
     val coverImageUrl: String,
+    val ebook: Boolean,
+    val audio: Boolean,
     val locationDescription: String,
     val latitude: Double,
     val longitude: Double

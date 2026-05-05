@@ -35,7 +35,7 @@ fun BookGoogleMap(
         onMapLoaded = onMapLoaded,
         properties = MapProperties(
             isMyLocationEnabled = hasLocationPermission,
-            minZoomPreference = 12f,
+            minZoomPreference = 13f,
             maxZoomPreference = 18f,
             latLngBoundsForCameraTarget = MapConstants.INNER_CITY_BOUNDS,
             mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)

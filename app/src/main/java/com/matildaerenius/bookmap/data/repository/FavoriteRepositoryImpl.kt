@@ -3,6 +3,7 @@ package com.matildaerenius.bookmap.data.repository
 import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
 import com.matildaerenius.bookmap.data.local.entity.FavoriteEntity
 import com.matildaerenius.bookmap.data.mapper.toDomain
+import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.FavoriteBook
 import com.matildaerenius.bookmap.domain.repository.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,8 +20,20 @@ class FavoriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addFavorite(bookId: Int, savedAt: Long) {
-        val entity = FavoriteEntity(bookId = bookId, savedAt = savedAt)
+    override suspend fun addFavorite(marker: BookMapMarker, savedAt: Long) {
+        val entity = FavoriteEntity(
+            bookId = marker.bookId,
+            savedAt = savedAt,
+            title = marker.bookTitle,
+            author = marker.bookAuthor,
+            description = marker.description,
+            locationName = marker.locationName,
+            imageUrl = marker.bookImageUrl,
+            latitude = marker.latitude,
+            longitude = marker.longitude,
+            ebook = marker.ebook,
+            audio = marker.audio
+        )
         favoriteDao.insertFavorite(entity)
     }
 

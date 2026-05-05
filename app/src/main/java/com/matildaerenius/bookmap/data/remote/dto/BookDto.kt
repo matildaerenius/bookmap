@@ -6,5 +6,7 @@ data class BookDto(
     val id: Int,
     val title: String? = null,
     val author: String? = null,
-    val cover: String? = null
+    val cover: String? = null,
+    val ebooklength: Int? = null,
+    val audiobooklength: Int? = null
 )

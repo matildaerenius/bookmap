@@ -10,5 +10,7 @@ data class BookMapMarker(
     val bookAuthor: String,
     val bookImageUrl: String,
     val isFavorite: Boolean,
-    val isVisited: Boolean
+    val isVisited: Boolean,
+    val ebook: Boolean,
+    val audio: Boolean
 )
