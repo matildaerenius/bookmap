@@ -27,4 +27,6 @@
         <string name="has_visit">Har besökt</string>
         <string name="fav_empty">Utforska kartan för att hitta spännande böcker och platser att spara här</string>
         <string name="no_saved_fav">Inga sparade favoriter</string>
+        <string name="audiobook">Audio book</string>
+        <string name="ebook">Ebook</string>
 </resources>

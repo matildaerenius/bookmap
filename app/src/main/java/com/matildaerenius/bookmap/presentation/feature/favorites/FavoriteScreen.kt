@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.matildaerenius.bookmap.R
+import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.EmptyFavoritesState
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteItem
@@ -77,23 +78,31 @@ fun FavoriteScreen(
                                 items = favorites,
                                 key = { favorite -> favorite.bookId }
                             ) { favorite ->
-                                FavoriteItem(
-                                    imageUrl = favorite.marker?.bookImageUrl,
-                                    bookTitle = favorite.marker?.bookTitle
-                                        ?: stringResource(id = R.string.unknown_title),
-                                    author = favorite.marker?.bookAuthor
-                                        ?: stringResource(id = R.string.unknown_author),
-                                    locationName = favorite.marker?.locationName
-                                        ?: stringResource(id = R.string.unknown_location),
-                                    onRemove = {
-                                        viewModel.onEvent(
-                                            FavoriteEvent.OnRemoveFavorite(
-                                                favorite.bookId
+                                if (favorite.marker != null) {
+                                    FavoriteItem(
+                                        marker = favorite.marker,
+                                        onRemove = {
+                                            viewModel.onEvent(
+                                                FavoriteEvent.OnRemoveFavorite(
+                                                    favorite.bookId
+                                                )
                                             )
+                                        },
+                                        onClick = { onNavigateToMap(favorite.bookId) }
+                                    )
+                                } else {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(120.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator(
+                                            color = colorResource(id = R.color.purple_location),
+                                            modifier = Modifier.size(32.dp)
                                         )
-                                    },
-                                    onClick = { onNavigateToMap(favorite.bookId) }
-                                )
+                                    }
+                                }
                             }
                         }
                     }

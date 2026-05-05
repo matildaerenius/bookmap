@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap.domain.usecase
 
+import android.util.Log
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.domain.repository.BookRepository
@@ -65,7 +66,9 @@ class SyncMapDataUseCase @Inject constructor(
                     bookAuthor = book.author,
                     bookImageUrl = book.imageUrl,
                     isVisited = false,
-                    isFavorite = false
+                    isFavorite = false,
+                    ebook = book.ebook,
+                    audio = book.audio
                 )
             } else {
                 null

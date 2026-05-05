@@ -1,6 +1,7 @@
 package com.matildaerenius.bookmap.presentation.feature.favorites.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,20 +19,19 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matildaerenius.bookmap.R
+import com.matildaerenius.bookmap.domain.model.BookMapMarker
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteItem(
-    imageUrl: String?,
-    bookTitle: String,
-    author: String,
-    locationName: String,
+    marker: BookMapMarker,
     onRemove: () -> Unit,
     onClick: () -> Unit
 ) {
@@ -73,64 +73,98 @@ fun FavoriteItem(
                     .fillMaxWidth()
                     .clickable { onClick() }
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    AsyncImage(
-                        model = imageUrl,
-                        contentDescription = stringResource(id = R.string.book_cover),
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Row(
                         modifier = Modifier
-                            .width(64.dp)
-                            .height(96.dp)
-                            .shadow(4.dp, RoundedCornerShape(6.dp), clip = false)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(Color.DarkGray),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(
-                        modifier = Modifier.weight(1f)
+                            .padding(12.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = bookTitle,
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                        AsyncImage(
+                            model = marker.bookImageUrl,
+                            contentDescription = stringResource(id = R.string.book_cover),
+                            modifier = Modifier
+                                .width(80.dp)
+                                .height(96.dp)
+                                .shadow(4.dp, RoundedCornerShape(6.dp), clip = false)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color.DarkGray),
+                            contentScale = ContentScale.Crop
                         )
 
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
 
-                        Text(
-                            text = author,
-                            color = Color.LightGray,
-                            style = MaterialTheme.typography.bodyMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Place,
-                                contentDescription = null,
-                                tint = colorResource(id = R.color.purple_location),
-                                modifier = Modifier.size(14.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 32.dp)
+                        ) {
                             Text(
-                                text = locationName,
-                                color = colorResource(id = R.color.purple_location),
-                                style = MaterialTheme.typography.bodySmall,
+                                text = marker.bookTitle,
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
+
+                            Spacer(modifier = Modifier.height(6.dp))
+
+                            Text(
+                                text = marker.bookAuthor,
+                                color = Color.LightGray,
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Place,
+                                    contentDescription = null,
+                                    tint = colorResource(id = R.color.purple_location),
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = marker.locationName,
+                                    color = colorResource(id = R.color.purple_location),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+
+                    if (marker.audio || marker.ebook) {
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(top = 12.dp, end = 12.dp, bottom = 12.dp),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (marker.audio) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.audiobook),
+                                    contentDescription = stringResource(id = R.string.audiobook),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+
+                            if (marker.audio && marker.ebook) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+
+                            if (marker.ebook) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ebook),
+                                    contentDescription = stringResource(id = R.string.ebook),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -143,12 +177,24 @@ fun FavoriteItem(
 @Composable
 fun FavoriteItemPreview() {
     MaterialTheme {
+        val dummyMarker = BookMapMarker(
+            bookId = 1,
+            locationName = "Gamla Stan",
+            latitude = 59.3257,
+            longitude = 18.0709,
+            bookTitle = "Män som hatar kvinnor",
+            bookAuthor = "Stieg Larsson",
+            description = "En kort testbeskrivning",
+            bookImageUrl = "",
+            isFavorite = true,
+            isVisited = false,
+            ebook = true,
+            audio = true
+        )
+
         Box(modifier = Modifier.padding(16.dp)) {
             FavoriteItem(
-                imageUrl = null,
-                bookTitle = "Män som hatar kvinnor",
-                author = "Stieg Larsson",
-                locationName = "Gamla Stan",
+                marker = dummyMarker,
                 onRemove = {},
                 onClick = {}
             )
