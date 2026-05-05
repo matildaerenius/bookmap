@@ -1,9 +1,19 @@
 package com.matildaerenius.bookmap.presentation.feature.map.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,8 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,13 +41,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
+import com.matildaerenius.bookmap.presentation.common.components.BookMediaIcons
 
 @Composable
 fun BookSummarySheet(
     marker: BookMapMarker,
+    distanceText: String? = null,
     onClose: () -> Unit,
     onToggleFavorite: () -> Unit,
     onToggleVisit: () -> Unit
@@ -45,7 +56,7 @@ fun BookSummarySheet(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.verticalGradient(
+                brush = verticalGradient(
                     colors = listOf(
                         Color.Transparent,
                         colorResource(id = R.color.bg_black_gradient_1),
@@ -83,35 +94,30 @@ fun BookSummarySheet(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            if (marker.audio || marker.ebook) {
+            if (distanceText != null || marker.audio || marker.ebook) {
                 Row(
                     modifier = Modifier
                         .width(240.dp)
                         .padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (marker.audio) {
-                        val audioBook = R.drawable.audiobook
-                        Image(
-                            painter = painterResource(id = audioBook),
-                            contentDescription = stringResource(id = R.string.audiobook),
-                            modifier = Modifier.size(14.dp)
+
+                    if (distanceText != null) {
+                        Text(
+                            text = distanceText,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.LightGray
                         )
                     }
 
-                    if (marker.audio && marker.ebook) {
-                        Spacer(modifier = Modifier.width(10.dp))
-                    }
+                    Spacer(modifier = Modifier.weight(1f))
 
-                    if (marker.ebook) {
-                        val ebook = R.drawable.ebook
-                        Image(
-                            painter = painterResource(id = ebook),
-                            contentDescription = stringResource(id = R.string.ebook),
-                            modifier = Modifier.size(14.dp)
-                        )
-                    }
+                    BookMediaIcons(
+                        hasAudio = marker.audio,
+                        hasEbook = marker.ebook,
+                        iconSize = 14.dp,
+                        spacing = 10.dp
+                    )
                 }
             }
 
@@ -146,7 +152,7 @@ fun BookSummarySheet(
 
                 Box(
                     modifier = Modifier
-                        .size(64.dp)
+                        .size(68.dp)
                         .clip(CircleShape)
                         .background(Color.White)
                         .clickable { onToggleVisit() },
@@ -156,7 +162,7 @@ fun BookSummarySheet(
                         imageVector = if (marker.isVisited) Icons.Default.Check else Icons.Default.Add,
                         contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
                         tint = Color.Black,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(36.dp)
                     )
                 }
 
@@ -164,7 +170,7 @@ fun BookSummarySheet(
 
                 Box(
                     modifier = Modifier
-                        .size(64.dp)
+                        .size(68.dp)
                         .clip(CircleShape)
                         .background(Color.White)
                         .clickable { onToggleFavorite() },
@@ -174,7 +180,7 @@ fun BookSummarySheet(
                         imageVector = if (marker.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
                         tint = if (marker.isFavorite) Color.Red else Color.Black,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(36.dp)
                     )
                 }
             }
