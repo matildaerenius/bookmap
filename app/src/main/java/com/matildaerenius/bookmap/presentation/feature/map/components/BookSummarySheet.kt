@@ -81,7 +81,7 @@ fun BookSummarySheet(
                 color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             if (marker.audio || marker.ebook) {
                 Row(
@@ -96,7 +96,7 @@ fun BookSummarySheet(
                         Image(
                             painter = painterResource(id = audioBook),
                             contentDescription = stringResource(id = R.string.audiobook),
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(14.dp)
                         )
                     }
 
@@ -109,7 +109,7 @@ fun BookSummarySheet(
                         Image(
                             painter = painterResource(id = ebook),
                             contentDescription = stringResource(id = R.string.ebook),
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(14.dp)
                         )
                     }
                 }
@@ -160,7 +160,7 @@ fun BookSummarySheet(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(25.dp))
 
                 Box(
                     modifier = Modifier
