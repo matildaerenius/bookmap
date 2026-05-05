@@ -39,7 +39,9 @@ class MarkerRepositoryImplTest {
             coverImageUrl = "url",
             locationDescription = "Stockholm",
             latitude = 59.32,
-            longitude = 18.06
+            longitude = 18.06,
+            ebook = true,
+            audio = true
         )
 
         val bookWithDetails = BookWithDetails(
@@ -74,6 +76,8 @@ class MarkerRepositoryImplTest {
             locationName = "Stockholm",
             latitude = 59.32,
             longitude = 18.06,
+            ebook = true,
+            audio = true,
             isVisited = false,
             isFavorite = false
         )

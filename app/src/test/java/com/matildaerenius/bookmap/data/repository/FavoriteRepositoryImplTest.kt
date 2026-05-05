@@ -2,17 +2,17 @@ package com.matildaerenius.bookmap.data.repository
 
 import app.cash.turbine.test
 import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
-import com.matildaerenius.bookmap.data.local.entity.FavoriteBookRelation
+import com.matildaerenius.bookmap.data.local.dao.FavoriteWithVisit
 import com.matildaerenius.bookmap.data.local.entity.FavoriteEntity
-import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
-import com.matildaerenius.bookmap.data.local.entity.VisitedEntity
+import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -29,21 +29,23 @@ class FavoriteRepositoryImplTest {
 
     @Test
     fun getFavorites_mapsRelationsToDomainModels() = runTest {
-        val favoriteEntity = FavoriteEntity(bookId = 1, savedAt = 1000L)
-        val markerEntity = MarkerEntity(
+        val favoriteEntity = FavoriteEntity(
             bookId = 1,
+            savedAt = 1000L,
             title = "Test Book",
             author = "Test Author",
-            description = "Desc",
-            coverImageUrl = "url",
-            locationDescription = "Stockholm",
-            latitude = 59.32,
-            longitude = 18.06
+            locationName = "Stockholm",
+            imageUrl = "url",
+            ebook = true,
+            audio = true
         )
-        val visitedEntity = VisitedEntity(bookId = 1)
-        val relation = FavoriteBookRelation(favorite = favoriteEntity, marker = markerEntity, visited = visitedEntity)
 
-        every { favoriteDao.getFavoritesWithDetails() } returns flowOf(listOf(relation))
+        val favoriteWithVisit = FavoriteWithVisit(
+            favorite = favoriteEntity,
+            isVisited = true
+        )
+
+        every { favoriteDao.getFavoritesWithDetails() } returns flowOf(listOf(favoriteWithVisit))
 
         favoriteRepository.getFavorites().test {
             val emittedList = awaitItem()
@@ -51,14 +53,29 @@ class FavoriteRepositoryImplTest {
             assertEquals(1, emittedList.size)
             assertEquals(1, emittedList.first().bookId)
             assertEquals("Test Book", emittedList.first().marker?.bookTitle)
+            assertTrue(emittedList.first().marker?.isVisited == true)
 
-            cancelAndIgnoreRemainingEvents()        }
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun getFavorites_handlesNullMarkerProperly() = runTest {
-        val favoriteEntity = FavoriteEntity(bookId = 2, savedAt = 2000L)
-        val relation = FavoriteBookRelation(favorite = favoriteEntity, marker = null, visited = null)
+    fun getFavorites_mapsNotVisitedCorrectly() = runTest {
+        val favoriteEntity = FavoriteEntity(
+            bookId = 2,
+            savedAt = 2000L,
+            title = "Another Book",
+            author = "Another Author",
+            locationName = "Göteborg",
+            imageUrl = "url2",
+            ebook = false,
+            audio = false
+        )
+
+        val relation = FavoriteWithVisit(
+            favorite = favoriteEntity,
+            isVisited = false
+        )
 
         every { favoriteDao.getFavoritesWithDetails() } returns flowOf(listOf(relation))
 
@@ -67,19 +84,43 @@ class FavoriteRepositoryImplTest {
 
             assertEquals(1, emittedList.size)
             assertEquals(2, emittedList.first().bookId)
-            assertNull(emittedList.first().marker)
+            assertFalse(emittedList.first().marker?.isVisited == true)
 
-            cancelAndIgnoreRemainingEvents()        }
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
     fun addFavorite_mapsToEntityAndCallsDao() = runTest {
-        val testBookId = 123
-        val testSavedAt = 1500L
+        val testSavedAt = 1000L
+        val marker = BookMapMarker(
+            bookId = 1,
+            bookTitle = "test",
+            bookAuthor = "test testsson",
+            description = "Desc",
+            bookImageUrl = "url",
+            locationName = "norrmalm",
+            latitude = 0.0,
+            longitude = 0.0,
+            ebook = true,
+            audio = true,
+            isFavorite = false,
+            isVisited = false
+        )
 
-        favoriteRepository.addFavorite(testBookId, testSavedAt)
+        favoriteRepository.addFavorite(marker, testSavedAt)
 
-        val expectedEntity = FavoriteEntity(bookId = testBookId, savedAt = testSavedAt)
+        val expectedEntity = FavoriteEntity(
+            bookId = 1,
+            savedAt = testSavedAt,
+            title = "test",
+            author = "test testsson",
+            locationName = "norrmalm",
+            imageUrl = "url",
+            ebook = true,
+            audio = true
+        )
+
         coVerify { favoriteDao.insertFavorite(expectedEntity) }
     }
 

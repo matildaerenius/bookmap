@@ -44,7 +44,15 @@ class FavoriteDaoTest {
     @Test
     fun insertFavorite_savesToDatabase_andEmitsToFlow() = runTest {
         val testBookId = 123
-        val favorite = FavoriteEntity(bookId = testBookId, savedAt = 1000L)
+        val favorite = FavoriteEntity(
+            bookId = testBookId, savedAt = 1000L,
+            title = "test",
+            author = "test testsson",
+            locationName = "norrmalm",
+            imageUrl = "",
+            ebook = true,
+            audio = true
+        )
 
         favoriteDao.insertFavorite(favorite)
 
@@ -61,7 +69,15 @@ class FavoriteDaoTest {
     @Test
     fun deleteFavorite_removesFromDatabase() = runTest {
         val testBookId = 123
-        val favorite = FavoriteEntity(bookId = testBookId, savedAt = 1000L)
+        val favorite = FavoriteEntity(
+            bookId = testBookId, savedAt = 1000L,
+            title = "test",
+            author = "test testsson",
+            locationName = "norrmalm",
+            imageUrl = "",
+            ebook = true,
+            audio = true
+        )
         favoriteDao.insertFavorite(favorite)
 
         favoriteDao.deleteFavorite(testBookId)

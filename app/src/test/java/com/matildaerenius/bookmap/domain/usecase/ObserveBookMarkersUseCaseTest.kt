@@ -36,7 +36,9 @@ class ObserveBookMarkersUseCaseTest {
             bookAuthor = "Författare",
             bookImageUrl = "url",
             isVisited = false,
-            isFavorite = false
+            isFavorite = false,
+            audio = true,
+            ebook = true
         )
 
         val gothenburgMarker = BookMapMarker(
@@ -49,7 +51,9 @@ class ObserveBookMarkersUseCaseTest {
             bookAuthor = "Författare",
             bookImageUrl = "url",
             isVisited = false,
-            isFavorite = false
+            isFavorite = false,
+            audio = true,
+            ebook = true
         )
 
         every { markerRepository.observeMarkers() } returns flowOf(
@@ -85,7 +89,9 @@ class ObserveBookMarkersUseCaseTest {
             bookAuthor = "Author",
             bookImageUrl = "url",
             isVisited = false,
-            isFavorite = false
+            isFavorite = false,
+            audio = true,
+            ebook = true
         )
 
         every { markerRepository.observeMarkers() } returns flowOf(listOf(fakeMarker))
