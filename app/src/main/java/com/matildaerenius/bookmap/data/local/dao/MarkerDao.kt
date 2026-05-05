@@ -20,4 +20,10 @@ interface MarkerDao {
     @Transaction
     @Query("SELECT * FROM marker_entity")
     fun getMarkersWithDetails(): Flow<List<BookWithDetails>>
+
+    @Query("SELECT bookId FROM marker_entity")
+    suspend fun getAllMarkerIds(): List<Int>
+
+    @Query("DELETE FROM marker_entity WHERE bookId IN (:ids)")
+    suspend fun deleteMarkersByIds(ids: List<Int>)
 }

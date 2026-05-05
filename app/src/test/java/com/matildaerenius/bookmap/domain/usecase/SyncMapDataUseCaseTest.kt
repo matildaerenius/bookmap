@@ -39,10 +39,23 @@ class SyncMapDataUseCaseTest {
     @Test
     fun invoke_withSuccessfulNetworkCalls_savesMergedDataToCache() = runTest {
         val fakeLocations = listOf(
-            BookLocation(bookId = 100, locationName = "Paris", latitude = 48.8, longitude = 2.3, description = "A test")
+            BookLocation(
+                bookId = 100,
+                locationName = "Paris",
+                latitude = 48.8,
+                longitude = 2.3,
+                description = "A test"
+            )
         )
         val fakeBooks = listOf(
-            Book(id = 100, title = "The Paris Novel", author = "Jane Doe", imageUrl = "url")
+            Book(
+                id = 100,
+                title = "The Paris Novel",
+                author = "Jane Doe",
+                imageUrl = "url",
+                audio = true,
+                ebook = true
+            )
         )
 
         coEvery { locationRepository.getLocations() } returns Resource.Success(fakeLocations)
@@ -84,7 +97,13 @@ class SyncMapDataUseCaseTest {
     @Test
     fun invoke_withOutOfBoundsLocation_doesNotFetchBooksOrSaveMarkers() = runTest {
         val fakeLocations = listOf(
-            BookLocation(bookId = 100, locationName = "Paris", latitude = 48.8, longitude = 2.3, description = "A test")
+            BookLocation(
+                bookId = 100,
+                locationName = "Paris",
+                latitude = 48.8,
+                longitude = 2.3,
+                description = "A test"
+            )
         )
         coEvery { locationRepository.getLocations() } returns Resource.Success(fakeLocations)
 
@@ -105,10 +124,23 @@ class SyncMapDataUseCaseTest {
     @Test
     fun invoke_withAntimeridianCrossing_includesCorrectLocations() = runTest {
         val fakeLocations = listOf(
-            BookLocation(bookId = 200, locationName = "Fiji", latitude = -18.0, longitude = 178.0, description = "Island")
+            BookLocation(
+                bookId = 200,
+                locationName = "Fiji",
+                latitude = -18.0,
+                longitude = 178.0,
+                description = "Island"
+            )
         )
         val fakeBooks = listOf(
-            Book(id = 200, title = "Pacific Tales", author = "Ocean Writer", imageUrl = "url")
+            Book(
+                id = 200,
+                title = "Pacific Tales",
+                author = "Ocean Writer",
+                imageUrl = "url",
+                audio = true,
+                ebook = true
+            )
         )
 
         coEvery { locationRepository.getLocations() } returns Resource.Success(fakeLocations)

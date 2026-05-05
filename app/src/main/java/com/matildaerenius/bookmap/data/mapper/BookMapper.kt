@@ -8,6 +8,8 @@ fun BookDto.toDomain(): Book {
         id = this.id,
         title = this.title ?: "Okänd titel",
         author = this.author ?: "Okänd författare",
-        imageUrl = this.cover ?: ""
+        imageUrl = this.cover ?: "",
+        ebook = this.ebooklength != null && this.ebooklength > 0,
+        audio = this.audiobooklength != null && this.audiobooklength > 0
     )
 }
