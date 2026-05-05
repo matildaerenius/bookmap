@@ -1,6 +1,6 @@
 package com.matildaerenius.bookmap.data.mapper
 
-import com.matildaerenius.bookmap.data.local.dao.FavoriteWithVisit
+import com.matildaerenius.bookmap.data.local.entity.FavoriteWithVisit
 import com.matildaerenius.bookmap.data.local.entity.BookWithDetails
 import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
 import com.matildaerenius.bookmap.domain.model.BookMapMarker

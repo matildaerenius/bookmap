@@ -2,8 +2,8 @@ package com.matildaerenius.bookmap.data.repository
 
 import app.cash.turbine.test
 import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
-import com.matildaerenius.bookmap.data.local.dao.FavoriteWithVisit
 import com.matildaerenius.bookmap.data.local.entity.FavoriteEntity
+import com.matildaerenius.bookmap.data.local.entity.FavoriteWithVisit
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import io.mockk.coVerify
 import io.mockk.every

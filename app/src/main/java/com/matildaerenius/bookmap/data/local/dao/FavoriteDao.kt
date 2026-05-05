@@ -1,18 +1,13 @@
 package com.matildaerenius.bookmap.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.matildaerenius.bookmap.data.local.entity.FavoriteEntity
+import com.matildaerenius.bookmap.data.local.entity.FavoriteWithVisit
 import kotlinx.coroutines.flow.Flow
 
-
-data class FavoriteWithVisit(
-    @Embedded val favorite: FavoriteEntity,
-    val isVisited: Boolean
-)
 
 @Dao
 interface FavoriteDao {
