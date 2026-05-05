@@ -25,6 +25,7 @@
         <string name="go_to_my_location">Gå till min plats</string>
         <string name="close">Stäng</string>
         <string name="has_visit">Har besökt</string>
+        <string name="unmark_visit">Avmarkera besökt</string>
         <string name="fav_empty">Utforska kartan för att hitta spännande böcker och platser att spara här</string>
         <string name="no_saved_fav">Inga sparade favoriter</string>
         <string name="audiobook">Audio book</string>

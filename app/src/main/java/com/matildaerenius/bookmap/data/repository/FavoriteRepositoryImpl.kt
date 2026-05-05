@@ -26,8 +26,11 @@ class FavoriteRepositoryImpl @Inject constructor(
             savedAt = savedAt,
             title = marker.bookTitle,
             author = marker.bookAuthor,
+            description = marker.description,
             locationName = marker.locationName,
             imageUrl = marker.bookImageUrl,
+            latitude = marker.latitude,
+            longitude = marker.longitude,
             ebook = marker.ebook,
             audio = marker.audio
         )

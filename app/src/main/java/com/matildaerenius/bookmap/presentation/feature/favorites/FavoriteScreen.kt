@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.matildaerenius.bookmap.R
-import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.EmptyFavoritesState
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteItem

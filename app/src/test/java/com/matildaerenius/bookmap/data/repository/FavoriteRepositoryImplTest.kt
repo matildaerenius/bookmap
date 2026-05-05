@@ -37,7 +37,10 @@ class FavoriteRepositoryImplTest {
             locationName = "Stockholm",
             imageUrl = "url",
             ebook = true,
-            audio = true
+            audio = true,
+            description = "test test test",
+            latitude = 0.0,
+            longitude = 0.0
         )
 
         val favoriteWithVisit = FavoriteWithVisit(
@@ -69,7 +72,10 @@ class FavoriteRepositoryImplTest {
             locationName = "Göteborg",
             imageUrl = "url2",
             ebook = false,
-            audio = false
+            audio = false,
+            description = "test test test",
+            latitude = 0.0,
+            longitude = 0.0
         )
 
         val relation = FavoriteWithVisit(
@@ -97,7 +103,7 @@ class FavoriteRepositoryImplTest {
             bookId = 1,
             bookTitle = "test",
             bookAuthor = "test testsson",
-            description = "Desc",
+            description = "test test test",
             bookImageUrl = "url",
             locationName = "norrmalm",
             latitude = 0.0,
@@ -118,7 +124,10 @@ class FavoriteRepositoryImplTest {
             locationName = "norrmalm",
             imageUrl = "url",
             ebook = true,
-            audio = true
+            audio = true,
+            description = "test test test",
+            latitude = 0.0,
+            longitude = 0.0
         )
 
         coVerify { favoriteDao.insertFavorite(expectedEntity) }
