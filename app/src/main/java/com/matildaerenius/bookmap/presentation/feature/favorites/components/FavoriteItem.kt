@@ -97,7 +97,7 @@ fun FavoriteItem(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(end = 32.dp)
+                                .padding(end = 72.dp)
                         ) {
                             Text(
                                 text = marker.bookTitle,

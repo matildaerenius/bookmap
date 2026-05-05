@@ -125,6 +125,7 @@ fun MainScreen(
 
                         FloatingAction.FAVORITES.ordinal -> {
                             FavoriteScreen(
+                                hasLocationPermission = hasLocationPermission,
                                 onNavigateToMap = { bookId ->
                                     selectedTabIndex = FloatingAction.MAP.ordinal
                                     mapViewModel.onEvent(MapEvent.OnMarkerClick(bookId))

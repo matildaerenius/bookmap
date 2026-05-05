@@ -35,6 +35,7 @@ import com.matildaerenius.bookmap.presentation.feature.favorites.components.Favo
 @Composable
 fun FavoriteScreen(
     viewModel: FavoriteViewModel = hiltViewModel(),
+    hasLocationPermission: Boolean,
     onNavigateToMap: (Int) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -47,7 +48,7 @@ fun FavoriteScreen(
         mutableStateOf<Location?>(null)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(hasLocationPermission) {
         try {
             @SuppressLint("MissingPermission")
             val locationTask = fusedLocationClient.lastLocation
