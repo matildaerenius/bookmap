@@ -1,5 +1,6 @@
 package com.matildaerenius.bookmap
 
+import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 
@@ -24,6 +25,7 @@ class BookScraper {
         }
     }
 
+    @Ignore("Körs endast manuellt för att scrapa böcker, ska inte ingå i CI")
     @Test
     fun runScraper() {
         val isbnLista = listOf(

@@ -49,14 +49,16 @@ fun FavoriteScreen(
     }
 
     LaunchedEffect(hasLocationPermission) {
-        try {
-            @SuppressLint("MissingPermission")
-            val locationTask = fusedLocationClient.lastLocation
-            locationTask.addOnSuccessListener { location ->
-                userLocation = location
+        if (hasLocationPermission) {
+            try {
+                @SuppressLint("MissingPermission")
+                val locationTask = fusedLocationClient.lastLocation
+                locationTask.addOnSuccessListener { location ->
+                    userLocation = location
+                }
+            } catch (e: SecurityException) {
+                Log.e("BookMap", "Saknar rättighet för plats", e)
             }
-        } catch (e: SecurityException) {
-            Log.e("BookMap", "Saknar rättighet för plats", e)
         }
     }
 

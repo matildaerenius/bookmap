@@ -51,7 +51,10 @@ class FavoriteDaoTest {
             locationName = "norrmalm",
             imageUrl = "",
             ebook = true,
-            audio = true
+            audio = true,
+            description = "En testbeskrivning",
+            latitude = 59.3293,
+            longitude = 18.0686
         )
 
         favoriteDao.insertFavorite(favorite)
@@ -76,7 +79,10 @@ class FavoriteDaoTest {
             locationName = "norrmalm",
             imageUrl = "",
             ebook = true,
-            audio = true
+            audio = true,
+            description = "En testbeskrivning",
+            latitude = 59.3293,
+            longitude = 18.0686
         )
         favoriteDao.insertFavorite(favorite)
 
