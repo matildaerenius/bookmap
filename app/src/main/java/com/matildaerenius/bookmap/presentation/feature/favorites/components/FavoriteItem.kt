@@ -1,7 +1,6 @@
 package com.matildaerenius.bookmap.presentation.feature.favorites.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,7 +18,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,11 +25,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
+import com.matildaerenius.bookmap.presentation.common.components.BookMediaIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteItem(
     marker: BookMapMarker,
+    distanceText: String? = null,
     onRemove: () -> Unit,
     onClick: () -> Unit
 ) {
@@ -97,7 +97,7 @@ fun FavoriteItem(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(end = 32.dp)
+                                .padding(end = 72.dp)
                         ) {
                             Text(
                                 text = marker.bookTitle,
@@ -138,40 +138,32 @@ fun FavoriteItem(
                         }
                     }
 
-                    if (marker.audio || marker.ebook) {
-                        Row(
+                    if (distanceText != null) {
+                        Text(
+                            text = distanceText,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.LightGray,
                             modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(top = 12.dp, end = 12.dp, bottom = 12.dp),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (marker.audio) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.audiobook),
-                                    contentDescription = stringResource(id = R.string.audiobook),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-
-                            if (marker.audio && marker.ebook) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
-
-                            if (marker.ebook) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ebook),
-                                    contentDescription = stringResource(id = R.string.ebook),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        }
+                                .align(Alignment.TopEnd)
+                                .padding(top = 12.dp, end = 12.dp)
+                        )
                     }
+
+                    BookMediaIcons(
+                        hasAudio = marker.audio,
+                        hasEbook = marker.ebook,
+                        iconSize = 16.dp,
+                        spacing = 8.dp,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = 12.dp, bottom = 12.dp)
+                    )
                 }
             }
         }
     )
 }
+
 
 @Preview(showBackground = true, backgroundColor = 0xFF121212)
 @Composable

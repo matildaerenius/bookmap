@@ -33,11 +33,14 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
+import android.location.Location
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Icon
 import androidx.compose.ui.res.stringResource
+import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.matildaerenius.bookmap.R
+import com.matildaerenius.bookmap.core.getFormattedDistance
 import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
 import kotlinx.coroutines.launch
 
@@ -53,8 +56,9 @@ fun MapScreen(
     val context = LocalContext.current
     val appContext = context.applicationContext
     val fusedLocationClient = remember(appContext) {
-        LocationServices.getFusedLocationProviderClient(appContext)
+        getFusedLocationProviderClient(appContext)
     }
+    var userLocation by remember { mutableStateOf<Location?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
     val cameraPositionState = rememberCameraPositionState {
@@ -76,6 +80,17 @@ fun MapScreen(
                 update = cameraUpdate,
                 durationMs = 1000
             )
+            if (hasLocationPermission) {
+                try {
+                    @SuppressLint("MissingPermission")
+                    val locationTask = fusedLocationClient.lastLocation
+                    locationTask.addOnSuccessListener { location ->
+                        userLocation = location
+                    }
+                } catch (e: SecurityException) {
+                    Log.e("BookMap", "Saknar rättighet för plats", e)
+                }
+            }
         }
     }
 
@@ -165,6 +180,17 @@ fun MapScreen(
         }
 
         if (state.selectedMarker != null) {
+            val distanceToMarker = if (userLocation != null) {
+                getFormattedDistance(
+                    userLat = userLocation!!.latitude,
+                    userLng = userLocation!!.longitude,
+                    markerLat = state.selectedMarker!!.latitude,
+                    markerLng = state.selectedMarker!!.longitude
+                )
+            } else {
+                null
+            }
+
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onEvent(MapEvent.OnDismissBottomSheet) },
                 sheetState = sheetState,
@@ -176,6 +202,7 @@ fun MapScreen(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 BookSummarySheet(
+                    distanceText = distanceToMarker,
                     marker = state.selectedMarker!!,
                     onClose = {
                         coroutineScope.launch {
