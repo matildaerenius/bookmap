@@ -1,7 +1,7 @@
 package com.matildaerenius.bookmap.data.mapper
 
+import com.matildaerenius.bookmap.data.local.dao.FavoriteWithVisit
 import com.matildaerenius.bookmap.data.local.entity.BookWithDetails
-import com.matildaerenius.bookmap.data.local.entity.FavoriteBookRelation
 import com.matildaerenius.bookmap.data.local.entity.MarkerEntity
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.domain.model.FavoriteBook
@@ -15,7 +15,9 @@ fun BookMapMarker.toEntity(): MarkerEntity {
         coverImageUrl = this.bookImageUrl,
         locationDescription = this.locationName,
         latitude = this.latitude,
-        longitude = this.longitude
+        longitude = this.longitude,
+        ebook = this.ebook,
+        audio = this.audio
     )
 }
 
@@ -30,26 +32,30 @@ fun BookWithDetails.toDomain(): BookMapMarker {
         bookAuthor = this.marker.author,
         bookImageUrl = this.marker.coverImageUrl,
         isFavorite = this.favorite != null,
-        isVisited = this.visited != null
+        isVisited = this.visited != null,
+        ebook = this.marker.ebook,
+        audio = this.marker.audio
     )
 }
 
-fun FavoriteBookRelation.toDomain(): FavoriteBook {
+fun FavoriteWithVisit.toDomain(): FavoriteBook {
+    val mappedMarker = BookMapMarker(
+        bookId = this.favorite.bookId,
+        bookTitle = this.favorite.title,
+        bookAuthor = this.favorite.author,
+        description = "",
+        bookImageUrl = this.favorite.imageUrl,
+        locationName = this.favorite.locationName,
+        latitude = 0.0,
+        longitude = 0.0,
+        ebook = this.favorite.ebook,
+        audio = this.favorite.audio,
+        isFavorite = true,
+        isVisited = this.isVisited
+    )
+
     return FavoriteBook(
         bookId = this.favorite.bookId,
-        marker = this.marker?.let { markerEntity ->
-            BookMapMarker(
-                bookId = markerEntity.bookId,
-                locationName = markerEntity.locationDescription,
-                latitude = markerEntity.latitude,
-                longitude = markerEntity.longitude,
-                description = markerEntity.description,
-                bookTitle = markerEntity.title,
-                bookAuthor = markerEntity.author,
-                bookImageUrl = markerEntity.coverImageUrl,
-                isFavorite = true,
-                isVisited = this.visited != null
-            )
-        }
+        marker = mappedMarker
     )
 }

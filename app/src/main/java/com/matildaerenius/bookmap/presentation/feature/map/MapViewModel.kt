@@ -103,6 +103,8 @@ class MapViewModel @Inject constructor(
             }
 
             is MapEvent.OnToggleFavorite -> {
+                val currentMarker = _uiState.value.selectedMarker
+
                 _uiState.update { currentState ->
                     currentState.copy(
                         selectedMarker = currentState.selectedMarker?.copy(
@@ -110,11 +112,14 @@ class MapViewModel @Inject constructor(
                         )
                     )
                 }
+
                 viewModelScope.launch {
                     if (event.isCurrentlyFavorite) {
                         removeFavoriteUseCase(event.bookId)
                     } else {
-                        addFavoriteUseCase(event.bookId)
+                        currentMarker?.let { marker ->
+                            addFavoriteUseCase(marker)
+                        }
                     }
                 }
             }

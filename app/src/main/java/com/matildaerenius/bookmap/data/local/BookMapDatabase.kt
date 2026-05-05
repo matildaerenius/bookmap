@@ -11,7 +11,7 @@ import com.matildaerenius.bookmap.data.local.entity.VisitedEntity
 
 @Database(
     entities = [MarkerEntity::class, FavoriteEntity::class, VisitedEntity::class],
-    version = 3,
+    version = 5,
     exportSchema = true
 )
 abstract class BookMapDatabase : RoomDatabase() {
