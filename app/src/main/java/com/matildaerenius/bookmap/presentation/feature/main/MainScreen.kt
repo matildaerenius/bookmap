@@ -11,8 +11,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -39,10 +39,14 @@ import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.presentation.feature.map.MapViewModel
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
 
+sealed class IconType {
+    data class Vector(val imageVector: ImageVector) : IconType()
+    data class Drawable(val resId: Int) : IconType()
+}
 
-enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageVector) {
-    MAP(R.string.action_map, Icons.Default.Map),
-    FAVORITES(R.string.action_favorites, Icons.Default.Favorite)
+enum class FloatingAction(@StringRes val labelResId: Int, val icon: IconType) {
+    MAP(R.string.action_map, IconType.Drawable(R.drawable.map_icon)),
+    FAVORITES(R.string.action_favorites, IconType.Vector(Icons.Default.FavoriteBorder))
 }
 
 @Composable
@@ -147,27 +151,40 @@ fun MainScreen(
                             selected = selectedTabIndex == index,
                             onClick = { selectedTabIndex = index },
                             icon = {
-                                Icon(
-                                    imageVector = action.icon,
-                                    contentDescription = stringResource(id = action.labelResId),
-                                    tint = Color.Black
-                                )
+                                when (val iconType = action.icon) {
+                                    is IconType.Vector -> {
+                                        Icon(
+                                            imageVector = iconType.imageVector,
+                                            contentDescription = stringResource(id = action.labelResId),
+                                            tint = Color.Black,
+                                        )
+                                    }
+
+                                    is IconType.Drawable -> {
+                                        Icon(
+                                            painter = painterResource(id = iconType.resId),
+                                            contentDescription = stringResource(id = action.labelResId),
+                                            tint = Color.Black,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                }
                             }
                         )
                     }
                 }
             }
         }
-    }
 
-    AnimatedVisibility(
-        visible = showOnboarding,
-        exit = fadeOut(animationSpec = tween(1000)),
-        modifier = Modifier.zIndex(1f)
-    ) {
-        OnboardingScreen(
-            isReady = isEverythingReady,
-            onFinished = { showOnboarding = false }
-        )
+        AnimatedVisibility(
+            visible = showOnboarding,
+            exit = fadeOut(animationSpec = tween(1000)),
+            modifier = Modifier.zIndex(1f)
+        ) {
+            OnboardingScreen(
+                isReady = isEverythingReady,
+                onFinished = { showOnboarding = false }
+            )
+        }
     }
 }
