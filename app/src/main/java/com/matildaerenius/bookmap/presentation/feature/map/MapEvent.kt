@@ -9,4 +9,7 @@ sealed interface MapEvent {
     data class OnToggleFavorite(val bookId: Int, val isCurrentlyFavorite: Boolean) : MapEvent
     data class OnToggleVisited(val bookId: Int, val isCurrentlyVisited: Boolean) : MapEvent
 
+    object OnToggleFilterDialog : MapEvent
+
+    data class OnSetMapFilter(val filter: MapFilter) : MapEvent
 }

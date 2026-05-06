@@ -30,4 +30,8 @@
         <string name="no_saved_fav">Inga sparade favoriter</string>
         <string name="audiobook">Audio book</string>
         <string name="ebook">Ebook</string>
+        <string name="filter_map">Filtrera karta</string>
+        <string name="show_all_books">Visa alla böcker</string>
+        <string name="show_only_favorites">Bara favoriter</string>
+        <string name="show_only_visited">Bara besökta</string>
 </resources>
