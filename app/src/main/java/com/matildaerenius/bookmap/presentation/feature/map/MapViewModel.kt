@@ -137,6 +137,22 @@ class MapViewModel @Inject constructor(
                     toggleVisitedUseCase(event.bookId, !event.isCurrentlyVisited)
                 }
             }
+
+            is MapEvent.OnSetMapFilter -> {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        mapFilter = event.filter,
+                        showFilterDialog = false
+                    )
+                }
+            }
+
+            MapEvent.OnToggleFilterDialog -> {
+                _uiState.update { currentState ->
+                    currentState.copy(showFilterDialog = !currentState.showFilterDialog)
+
+                }
+            }
         }
     }
 

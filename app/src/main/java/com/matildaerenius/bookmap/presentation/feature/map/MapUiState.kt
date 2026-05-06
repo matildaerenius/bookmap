@@ -7,5 +7,7 @@ import com.matildaerenius.bookmap.presentation.common.state.UiState
 data class MapUiState(
     val markersState: UiState<List<BookMapMarker>> = UiState.Loading,
     val selectedMarker: BookMapMarker? = null,
-    val favorites: List<FavoriteBook> = emptyList()
+    val favorites: List<FavoriteBook> = emptyList(),
+    val mapFilter: MapFilter = MapFilter.ALL,
+    val showFilterDialog: Boolean = false
 )
