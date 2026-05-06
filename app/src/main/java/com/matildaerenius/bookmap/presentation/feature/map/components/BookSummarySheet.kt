@@ -17,11 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,6 +29,7 @@ import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -159,10 +156,8 @@ fun BookSummarySheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = if (marker.isVisited) Icons.Default.Check else Icons.Default.Add,
+                        painter = painterResource(id = if (marker.isVisited) R.drawable.check_icon else R.drawable.add_icon),
                         contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
-                        tint = Color.Black,
-                        modifier = Modifier.size(36.dp)
                     )
                 }
 
@@ -177,10 +172,8 @@ fun BookSummarySheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = if (marker.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        painter = painterResource(id = if (marker.isFavorite) R.drawable.filled_heart_icon else R.drawable.bigger_heart_icon),
                         contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
-                        tint = if (marker.isFavorite) Color.Red else Color.Black,
-                        modifier = Modifier.size(36.dp)
                     )
                 }
             }

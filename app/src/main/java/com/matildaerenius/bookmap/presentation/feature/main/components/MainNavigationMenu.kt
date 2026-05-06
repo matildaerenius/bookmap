@@ -4,8 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,7 +23,7 @@ sealed class IconType {
 
 enum class FloatingAction(@StringRes val labelResId: Int, val icon: IconType) {
     MAP(R.string.action_map, IconType.Drawable(R.drawable.map_icon)),
-    FAVORITES(R.string.action_favorites, IconType.Vector(Icons.Default.FavoriteBorder))
+    FAVORITES(R.string.action_favorites, IconType.Drawable(R.drawable.heart_icon))
 }
 
 @Composable
