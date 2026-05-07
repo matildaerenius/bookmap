@@ -7,7 +7,6 @@ import com.matildaerenius.bookmap.domain.repository.BookRepository
 import com.matildaerenius.bookmap.core.DataError
 import com.matildaerenius.bookmap.core.Resource
 import com.matildaerenius.bookmap.core.safeApiCall
-import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -16,7 +15,6 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class BookRepositoryImpl @Inject constructor(
     private val api: BookBeatApi,
-    private val favoriteDao : FavoriteDao
 ) : BookRepository {
 
     override suspend fun getBooksByIds(bookIds: List<Int>): Resource<List<Book>> {
@@ -52,9 +50,5 @@ class BookRepositoryImpl @Inject constructor(
         return safeApiCall {
             api.getBookById(bookId).toDomain()
         }
-    }
-
-    override suspend fun removeAllFavorites() {
-        favoriteDao.clearAllFavorites()
     }
 }

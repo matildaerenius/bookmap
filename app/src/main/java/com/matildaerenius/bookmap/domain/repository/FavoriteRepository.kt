@@ -8,4 +8,6 @@ interface FavoriteRepository {
     fun getFavorites(): Flow<List<FavoriteBook>>
     suspend fun addFavorite(marker: BookMapMarker, savedAt: Long)
     suspend fun removeFavorite(bookId: Int)
+
+    suspend fun removeAllFavorites()
 }

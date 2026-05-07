@@ -17,13 +17,11 @@ class BookRepositoryImplTest {
 
     private lateinit var api: BookBeatApi
     private lateinit var repository: BookRepositoryImpl
-    private lateinit var favoriteDao : FavoriteDao
 
     @Before
     fun setUp() {
         api = mockk()
-        favoriteDao = mockk()
-        repository = BookRepositoryImpl(api, favoriteDao)
+        repository = BookRepositoryImpl(api)
     }
 
     @Test
