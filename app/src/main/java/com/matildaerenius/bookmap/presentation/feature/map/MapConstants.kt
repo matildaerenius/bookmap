@@ -21,4 +21,13 @@ object MapConstants {
         LatLng(59.3080, 18.0000),
         LatLng(59.3520, 18.1050)
     )
+    const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
+
+    fun getNavigationUri(lat: Double, lng: Double): String {
+        return "google.navigation:q=$lat,$lng&mode=w"
+    }
+
+    fun getFallbackWebUrl(lat: Double, lng: Double): String {
+        return "https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=walking"
+    }
 }

@@ -34,4 +34,5 @@
         <string name="show_all_books">Visa alla böcker</string>
         <string name="show_only_favorites">Bara favoriter</string>
         <string name="show_only_visited">Bara besökta</string>
+        <string name="map_directions">Vägbeskrivning</string>
 </resources>
