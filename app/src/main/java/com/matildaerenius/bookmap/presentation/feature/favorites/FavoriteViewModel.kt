@@ -3,6 +3,7 @@ package com.matildaerenius.bookmap.presentation.feature.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matildaerenius.bookmap.domain.usecase.ObserveFavoritesUseCase
+import com.matildaerenius.bookmap.domain.usecase.RemoveAllFavoritesUseCase
 import com.matildaerenius.bookmap.domain.usecase.RemoveFavoriteUseCase
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val observeFavoritesUseCase: ObserveFavoritesUseCase,
-    private val removeFavoriteUseCase: RemoveFavoriteUseCase
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
+    private val removeAllFavoritesUseCase: RemoveAllFavoritesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FavoriteUiState())
@@ -39,6 +41,12 @@ class FavoriteViewModel @Inject constructor(
             is FavoriteEvent.OnRemoveFavorite -> {
                 viewModelScope.launch {
                     removeFavoriteUseCase(event.bookId)
+                }
+            }
+
+            is FavoriteEvent.OnRemoveAllFavorites -> {
+                viewModelScope.launch {
+                    removeAllFavoritesUseCase()
                 }
             }
         }

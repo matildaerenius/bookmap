@@ -7,9 +7,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -84,11 +89,13 @@ fun FavoriteScreen(
                 ) {
                     Spacer(modifier = Modifier.height(60.dp))
 
+                    var showClearDialog by remember { mutableStateOf(false) }
+
                     Text(
                         text = stringResource(id = R.string.action_favorites),
                         style = MaterialTheme.typography.headlineLarge,
                         color = Color.White,
-                        modifier = Modifier.padding(top = 64.dp, bottom = 24.dp, start = 4.dp)
+                        modifier = Modifier.padding(top = 64.dp, bottom = 16.dp, start = 4.dp)
                     )
 
                     if (favorites.isEmpty()) {
@@ -101,6 +108,40 @@ fun FavoriteScreen(
                             EmptyFavoritesState()
                         }
                     } else {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 4.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "${favorites.size} ${stringResource(id = R.string.saved)}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.LightGray
+                            )
+
+                            TextButton(
+                                onClick = { showClearDialog = true },
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = stringResource(id = R.string.clear_all),
+                                    tint = colorResource(id = R.color.purple_location),
+                                    modifier = Modifier.size(16.dp)
+                                )
+
+                                Spacer(modifier = Modifier.width(4.dp))
+
+                                Text(
+                                    text = stringResource(id = R.string.clear_all),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = colorResource(id = R.color.purple_location)
+                                )
+                            }
+                        }
+
                         LazyColumn(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -148,6 +189,34 @@ fun FavoriteScreen(
                                 }
                             }
                         }
+                    }
+
+                    if (showClearDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showClearDialog = false },
+                            title = { Text(stringResource(id = R.string.clear_fav)) },
+                            text = { Text(stringResource(id = R.string.fav_alertdialog)) },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        viewModel.onEvent(FavoriteEvent.OnRemoveAllFavorites)
+                                        showClearDialog = false
+                                    }
+                                ) {
+                                    Text(
+                                        stringResource(id = R.string.delete),
+                                        color = colorResource(id = R.color.red)
+                                    )
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = { showClearDialog = false }
+                                ) {
+                                    Text(stringResource(id = R.string.cancel), color = Color.Black)
+                                }
+                            }
+                        )
                     }
                 }
             }
