@@ -4,6 +4,7 @@ import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import com.matildaerenius.bookmap.data.remote.dto.BookDto
 import com.matildaerenius.bookmap.core.DataError
 import com.matildaerenius.bookmap.core.Resource
+import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -16,11 +17,13 @@ class BookRepositoryImplTest {
 
     private lateinit var api: BookBeatApi
     private lateinit var repository: BookRepositoryImpl
+    private lateinit var favoriteDao : FavoriteDao
 
     @Before
     fun setUp() {
         api = mockk()
-        repository = BookRepositoryImpl(api)
+        favoriteDao = mockk()
+        repository = BookRepositoryImpl(api, favoriteDao)
     }
 
     @Test
