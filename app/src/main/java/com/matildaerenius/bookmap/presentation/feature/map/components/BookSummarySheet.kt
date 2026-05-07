@@ -2,7 +2,6 @@ package com.matildaerenius.bookmap.presentation.feature.map.components
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,13 +16,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Directions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,6 +43,7 @@ import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.presentation.common.components.BookMediaIcons
 import androidx.core.net.toUri
+import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
 import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 
 @Composable
@@ -157,73 +154,64 @@ fun BookSummarySheet(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Box(
-                    modifier = Modifier
-                        .size(68.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .clickable { onToggleVisit() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = if (marker.isVisited) R.drawable.check_icon else R.drawable.add_icon),
-                        contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
-                        tint = Color.Black
-                    )
-                }
+                FloatingActionButtonItem(
+                    selected = false,
+                    buttonSize = 68.dp,
+                    onClick = { onToggleVisit() },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = if (marker.isVisited) R.drawable.check_icon else R.drawable.add_icon),
+                            contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
+                            tint = Color.Black
+                        )
+                    }
+                )
 
                 Spacer(modifier = Modifier.width(20.dp))
 
-                Box(
-                    modifier = Modifier
-                        .size(68.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .clickable { onToggleFavorite() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = if (marker.isFavorite) R.drawable.filled_heart_icon else R.drawable.bigger_heart_icon),
-                        contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
-                        tint = Color.Unspecified
-                    )
-                }
+                FloatingActionButtonItem(
+                    selected = false,
+                    buttonSize = 68.dp,
+                    onClick = { onToggleFavorite() },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = if (marker.isFavorite) R.drawable.filled_heart_icon else R.drawable.bigger_heart_icon),
+                            contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                            tint = Color.Unspecified
+                        )
+                    }
+                )
 
                 Spacer(modifier = Modifier.width(20.dp))
 
-                Box(
-                    modifier = Modifier
-                        .size(68.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .clickable {
-                            val uri =
-                                MapConstants.getNavigationUri(marker.latitude, marker.longitude)
+                FloatingActionButtonItem(
+                    selected = false,
+                    buttonSize = 68.dp,
+                    onClick = {
+                        val uri =
+                            MapConstants.getNavigationUri(marker.latitude, marker.longitude).toUri()
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        intent.setPackage(MapConstants.GOOGLE_MAPS_PACKAGE)
+
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            val fallbackUri =
+                                MapConstants.getFallbackWebUrl(marker.latitude, marker.longitude)
                                     .toUri()
-                            val intent = Intent(Intent.ACTION_VIEW, uri)
-                            intent.setPackage(MapConstants.GOOGLE_MAPS_PACKAGE)
-
-                            try {
-                                context.startActivity(intent)
-                            } catch (e: ActivityNotFoundException) {
-                                val fallbackUri = MapConstants.getFallbackWebUrl(
-                                    marker.latitude,
-                                    marker.longitude
-                                ).toUri()
-                                val webIntent = Intent(Intent.ACTION_VIEW, fallbackUri)
-                                context.startActivity(webIntent)
-                            }
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Directions,
-                        contentDescription = stringResource(id = R.string.map_directions),
-                        tint = Color.Black,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
+                            val webIntent = Intent(Intent.ACTION_VIEW, fallbackUri)
+                            context.startActivity(webIntent)
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Directions,
+                            contentDescription = stringResource(id = R.string.map_directions),
+                            tint = Color.Black,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                )
             }
         }
     }

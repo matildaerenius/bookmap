@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -18,11 +19,12 @@ fun FloatingActionButtonItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    buttonSize: Dp = 56.dp,
 ) {
     Box(
         modifier = modifier
-            .size(56.dp)
+            .size(buttonSize)
             .shadow(4.dp, CircleShape)
             .clip(CircleShape)
             .background(if (selected) Color(0xFFE0E0E0) else Color.White)
