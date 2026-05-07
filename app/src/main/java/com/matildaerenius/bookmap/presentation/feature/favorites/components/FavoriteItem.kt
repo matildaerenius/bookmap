@@ -54,7 +54,7 @@ fun FavoriteItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(id = R.string.delete),
+                    contentDescription = stringResource(id = R.string.remove),
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
                 )

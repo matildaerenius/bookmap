@@ -14,7 +14,7 @@ import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 class BookRepositoryImpl @Inject constructor(
-    private val api: BookBeatApi
+    private val api: BookBeatApi,
 ) : BookRepository {
 
     override suspend fun getBooksByIds(bookIds: List<Int>): Resource<List<Book>> {

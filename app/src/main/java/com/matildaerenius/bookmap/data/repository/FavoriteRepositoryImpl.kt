@@ -40,4 +40,8 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun removeFavorite(bookId: Int) {
         favoriteDao.deleteFavorite(bookId)
     }
+
+    override suspend fun removeAllFavorites() {
+        favoriteDao.clearAllFavorites()
+    }
 }
