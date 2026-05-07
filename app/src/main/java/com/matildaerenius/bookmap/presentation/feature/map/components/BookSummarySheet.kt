@@ -158,6 +158,7 @@ fun BookSummarySheet(
                     Icon(
                         painter = painterResource(id = if (marker.isVisited) R.drawable.check_icon else R.drawable.add_icon),
                         contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
+                        tint = Color.Black
                     )
                 }
 
@@ -174,6 +175,7 @@ fun BookSummarySheet(
                     Icon(
                         painter = painterResource(id = if (marker.isFavorite) R.drawable.filled_heart_icon else R.drawable.bigger_heart_icon),
                         contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                        tint = Color.Unspecified
                     )
                 }
             }
