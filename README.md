@@ -18,15 +18,17 @@
 
 **Bookmap** is a native Android application that connects literature with geography. The app fetches a curated list of book-related locations from a remote JSON source (GitHub Gist), syncs them with detailed book data from the public BookBeat API, and displays them as interactive markers using the Google Maps SDK 📍
 
-<br>
+---
 
 ## ✨ Features
-* 💾 Uses a local Room database as the single source of truth, enabling instant load times and offline accessibility
-* ❤️ Save books to a dedicated list. Favorited books dynamically update on the map with custom heart markers
-* 🖼️ Tap any marker to reveal a detailed bottom sheet containing the book cover, author information, and the unique connection between the real-world spot and the story
-* ✅ Mark specific locations as "visited" once you have been there, allowing you to build a personal footprint of your literary adventures in Stockholm
-* 🚶 Ready to visit a spot? Tap the navigation icon on any book to instantly open walking directions in your phone's native Google Maps app
-* 🎛️ Easily toggle the map view to show all available books, exclusively your saved favorites, or locations you have already explored
+* 💾 **Local Database:** Room-powered single source of truth for instant offline access.
+* ❤️ **Interactive Favorites:** Save books and see them as custom heart markers on the map.
+* 🖼️ **Rich Summaries:** Tap markers to see book covers, authors, and location connections.
+* ✅ **Journey Tracker:** Mark locations as visited to log your literary adventures.
+* 🚶 **Live Navigation:** Direct integration with Google Maps for walking directions.
+* 🎛️ **Dynamic Filters:** Toggle the map between all books, favorites, or visited spots.
+
+---
 
 ## 🛠 Tech Stack
 * **Language:** Kotlin 
@@ -38,6 +40,8 @@
 * **Mapping:** Google Maps SDK for Android 
 * **Image Loading:** Coil
 * **CI/CD:** GitHub Actions
+
+---
 
 ## 📱 Screenshots
 
@@ -51,13 +55,21 @@
   <img src="docs/images/favorite_screen.png" alt="BookMap Favorites Screen" width="230"/>
 </p>
 
+---
+
 ## 🚀 Getting Started
+
+### Prerequisites
+* Android Studio (Koala Feature Drop or newer recommended)
+* Minimum SDK: 24 (Android 7.0)
+* Target SDK: 36 (Android 16)
+  
 To build and run this project locally, you will need a valid Google Maps API key. 
 
 ### 1. Clone the repository
 Open your terminal and run the following command:
-```bash
-git clone [https://github.com/matildaerenius/bookmap.git](https://github.com/matildaerenius/bookmap.git)
+```
+git clone https://github.com/matildaerenius/bookmap.git
 ```
 
 ### 2. Set up the API Key
@@ -73,5 +85,20 @@ git clone [https://github.com/matildaerenius/bookmap.git](https://github.com/mat
 * Let Gradle sync and download all dependencies.
 * Click the **Run** button to deploy the app to your emulator or physical device.
 
+---
+
 ## 📖 Documentation
 Curious about the process? Check out the thesis report detailing the architecture, design choices, and implementation, available in the [Project Wiki](https://github.com/matildaerenius/bookmap/wiki)
+
+---
+
+## 👩‍💻 Author
+**Matilda Erenius**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/matildaerenius)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/matildaerenius)
+
+---
+
+## 📄 License
+This project is licensed under the Apache-2.0 License.
