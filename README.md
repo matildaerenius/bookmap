@@ -23,8 +23,10 @@
 ## ✨ Features
 * 💾 Uses a local Room database as the single source of truth, enabling instant load times and offline accessibility
 * ❤️ Save books to a dedicated list. Favorited books dynamically update on the map with custom heart markers
-*
-*
+* 🖼️ Tap any marker to reveal a detailed bottom sheet containing the book cover, author information, and the unique connection between the real-world spot and the story
+* ✅ Mark specific locations as "visited" once you have been there, allowing you to build a personal footprint of your literary adventures in Stockholm
+* 🚶 Ready to visit a spot? Tap the navigation icon on any book to instantly open walking directions in your phone's native Google Maps app
+* 🎛️ Easily toggle the map view to show all available books, exclusively your saved favorites, or locations you have already explored
 
 ## 🛠 Tech Stack
 * **Language:** Kotlin 
@@ -36,6 +38,18 @@
 * **Mapping:** Google Maps SDK for Android 
 * **Image Loading:** Coil
 * **CI/CD:** GitHub Actions
+
+## 📱 Screenshots
+
+<p align="center">
+  <img src="docs/images/onboarding_screen.png" alt="BookMap Onboarding Screen" width="230"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/images/map_screen.png" alt="BookMap Map Screen" width="230"/>
+  <br><br>
+  <img src="docs/images/detail_sheet.png" alt="BookMap Detail Sheet" width="230"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/images/favorite_screen.png" alt="BookMap Favorites Screen" width="230"/>
+</p>
 
 ## 🚀 Getting Started
 To build and run this project locally, you will need a valid Google Maps API key. 
@@ -57,7 +71,7 @@ git clone [https://github.com/matildaerenius/bookmap.git](https://github.com/mat
 ### 3. Build and Run
 * Open the cloned directory in **Android Studio**.
 * Let Gradle sync and download all dependencies.
-* Click the **Run** button (Shift + F10) to deploy the app to your emulator or physical device.
+* Click the **Run** button to deploy the app to your emulator or physical device.
 
 ## 📖 Documentation
 Curious about the process? Check out the thesis report detailing the architecture, design choices, and implementation, available in the [Project Wiki](https://github.com/matildaerenius/bookmap/wiki)
