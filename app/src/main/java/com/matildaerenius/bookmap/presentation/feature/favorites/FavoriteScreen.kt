@@ -29,8 +29,10 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.core.getFormattedDistance
 import com.matildaerenius.bookmap.presentation.common.state.UiState
+import com.matildaerenius.bookmap.presentation.feature.favorites.components.ClearFavoritesDialog
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.EmptyFavoritesState
 import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteItem
+import com.matildaerenius.bookmap.presentation.feature.favorites.components.FavoriteListHeader
 
 @Composable
 fun FavoriteScreen(
@@ -84,11 +86,13 @@ fun FavoriteScreen(
                 ) {
                     Spacer(modifier = Modifier.height(60.dp))
 
+                    var showClearDialog by remember { mutableStateOf(false) }
+
                     Text(
                         text = stringResource(id = R.string.action_favorites),
                         style = MaterialTheme.typography.headlineLarge,
                         color = Color.White,
-                        modifier = Modifier.padding(top = 64.dp, bottom = 24.dp, start = 4.dp)
+                        modifier = Modifier.padding(top = 64.dp, bottom = 16.dp, start = 4.dp)
                     )
 
                     if (favorites.isEmpty()) {
@@ -101,6 +105,11 @@ fun FavoriteScreen(
                             EmptyFavoritesState()
                         }
                     } else {
+                        FavoriteListHeader(
+                            favoriteCount = favorites.size,
+                            onClearClick = { showClearDialog = true }
+                        )
+
                         LazyColumn(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -148,6 +157,16 @@ fun FavoriteScreen(
                                 }
                             }
                         }
+                    }
+
+                    if (showClearDialog) {
+                        ClearFavoritesDialog(
+                            onConfirm = {
+                                viewModel.onEvent(FavoriteEvent.OnRemoveAllFavorites)
+                                showClearDialog = false
+                            },
+                            onDismiss = { showClearDialog = false }
+                        )
                     }
                 }
             }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHost
@@ -19,14 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
-import com.matildaerenius.bookmap.domain.model.BookMapMarker
-import com.matildaerenius.bookmap.domain.model.MapBoundingBox
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogleMap
@@ -35,13 +30,10 @@ import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
 import android.location.Location
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material3.Icon
-import androidx.compose.ui.res.stringResource
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
-import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.core.getFormattedDistance
-import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
+import com.matildaerenius.bookmap.presentation.feature.map.components.MapActionButtons
+import com.matildaerenius.bookmap.presentation.feature.map.components.MapFilterDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,6 +60,29 @@ fun MapScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
+
+    val currentMarkers = remember(state.markersState, state.mapFilter, state.selectedMarker) {
+        when (val markersState = state.markersState) {
+            is UiState.Success -> {
+                val allVisibleMarkers = markersState.data
+
+                val filtered = when (state.mapFilter) {
+                    MapFilter.ALL -> allVisibleMarkers
+                    MapFilter.FAVORITES_ONLY -> allVisibleMarkers.filter { it.isFavorite }
+                    MapFilter.VISITED_ONLY -> allVisibleMarkers.filter { it.isVisited }
+                }
+
+                val selected = state.selectedMarker
+                if (selected != null && filtered.none { it.bookId == selected.bookId }) {
+                    filtered + selected
+                } else {
+                    filtered
+                }
+            }
+
+            else -> emptyList()
+        }
+    }
 
     LaunchedEffect(state.selectedMarker) {
         state.selectedMarker?.let { marker ->
@@ -121,16 +136,6 @@ fun MapScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        val currentMarkers = mutableListOf<BookMapMarker>()
-        if (state.markersState is UiState.Success) {
-            currentMarkers.addAll((state.markersState as UiState.Success).data)
-        }
-        state.selectedMarker?.let { marker ->
-            if (currentMarkers.none { it.bookId == marker.bookId }) {
-                currentMarkers.add(marker)
-            }
-        }
-
         BookGoogleMap(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
@@ -140,40 +145,34 @@ fun MapScreen(
                 viewModel.onEvent(MapEvent.OnMarkerClick(bookId))
             },
         )
-        if (hasLocationPermission) {
-            FloatingActionButtonItem(
-                selected = false,
-                onClick = {
-                    @SuppressLint("MissingPermission")
-                    val locationTask = fusedLocationClient.lastLocation
 
-                    locationTask.addOnSuccessListener { location ->
-                        if (location != null) {
-                            coroutineScope.launch {
-                                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
-                                    LatLng(location.latitude, location.longitude),
-                                    15f
-                                )
-                                cameraPositionState.animate(
-                                    update = cameraUpdate,
-                                    durationMs = 1000
-                                )
-                            }
+        MapActionButtons(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 192.dp, end = 16.dp),
+            hasLocationPermission = hasLocationPermission,
+            isFilterActive = state.mapFilter != MapFilter.ALL,
+            onFilterClick = { viewModel.onEvent(MapEvent.OnToggleFilterDialog) },
+            onMyLocationClick = {
+                @SuppressLint("MissingPermission")
+                val locationTask = fusedLocationClient.lastLocation
+                locationTask.addOnSuccessListener { location ->
+                    if (location != null) {
+                        coroutineScope.launch {
+                            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                                LatLng(location.latitude, location.longitude),
+                                15f
+                            )
+
+                            cameraPositionState.animate(
+                                update = cameraUpdate,
+                                durationMs = 1000
+                            )
                         }
                     }
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.MyLocation,
-                        contentDescription = stringResource(id = R.string.go_to_my_location),
-                        tint = Color.Black
-                    )
-                },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 192.dp, end = 16.dp)
-            )
-        }
+                }
+            }
+        )
 
         if (state.markersState is UiState.Loading) {
             FullScreenLoadingIndicator()
@@ -230,6 +229,14 @@ fun MapScreen(
             }
         }
 
+        if (state.showFilterDialog) {
+            MapFilterDialog(
+                currentFilter = state.mapFilter,
+                onFilterSelected = { viewModel.onEvent(MapEvent.OnSetMapFilter(it)) },
+                onDismiss = { viewModel.onEvent(MapEvent.OnToggleFilterDialog) }
+            )
+        }
+
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier
@@ -237,24 +244,4 @@ fun MapScreen(
                 .padding(bottom = 16.dp)
         )
     }
-}
-
-fun LatLngBounds.toMapBoundingBox() = MapBoundingBox(
-    southWestLat = this.southwest.latitude,
-    southWestLng = this.southwest.longitude,
-    northEastLat = this.northeast.latitude,
-    northEastLng = this.northeast.longitude
-)
-
-object MapConstants {
-    val STOCKHOLM_CENTER = LatLng(59.3293, 18.0686)
-    val STOCKHOLM_BOUNDS = LatLngBounds(
-        LatLng(59.2700, 17.9000),
-        LatLng(59.4000, 18.2500)
-    )
-    val INNER_CITY_BOUNDS = LatLngBounds(
-        LatLng(59.3080, 18.0000),
-        LatLng(59.3520, 18.1050)
-    )
-
 }

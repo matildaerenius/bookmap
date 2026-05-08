@@ -5,45 +5,31 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.matildaerenius.bookmap.R
-import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
 import com.matildaerenius.bookmap.presentation.common.components.LocationPermissionDialog
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.favorites.FavoriteScreen
+import com.matildaerenius.bookmap.presentation.feature.main.components.FloatingAction
+import com.matildaerenius.bookmap.presentation.feature.main.components.MainNavigationMenu
 import com.matildaerenius.bookmap.presentation.feature.map.MapEvent
 import com.matildaerenius.bookmap.presentation.feature.map.MapScreen
 import com.matildaerenius.bookmap.presentation.feature.map.MapViewModel
 import com.matildaerenius.bookmap.presentation.feature.onboarding.OnboardingScreen
-
-
-enum class FloatingAction(@param:StringRes val labelResId: Int, val icon: ImageVector) {
-    MAP(R.string.action_map, Icons.Default.Map),
-    FAVORITES(R.string.action_favorites, Icons.Default.Favorite)
-}
 
 @Composable
 fun MainScreen(
@@ -135,39 +121,25 @@ fun MainScreen(
                     }
                 }
 
-                Column(
+                MainNavigationMenu(
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = { selectedTabIndex = it },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(top = 48.dp, end = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    FloatingAction.entries.forEachIndexed { index, action ->
-                        FloatingActionButtonItem(
-                            selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index },
-                            icon = {
-                                Icon(
-                                    imageVector = action.icon,
-                                    contentDescription = stringResource(id = action.labelResId),
-                                    tint = Color.Black
-                                )
-                            }
-                        )
-                    }
-                }
+                        .padding(top = 48.dp, end = 16.dp)
+                )
             }
         }
-    }
 
-    AnimatedVisibility(
-        visible = showOnboarding,
-        exit = fadeOut(animationSpec = tween(1000)),
-        modifier = Modifier.zIndex(1f)
-    ) {
-        OnboardingScreen(
-            isReady = isEverythingReady,
-            onFinished = { showOnboarding = false }
-        )
+        AnimatedVisibility(
+            visible = showOnboarding,
+            exit = fadeOut(animationSpec = tween(1000)),
+            modifier = Modifier.zIndex(1f)
+        ) {
+            OnboardingScreen(
+                isReady = isEverythingReady,
+                onFinished = { showOnboarding = false }
+            )
+        }
     }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Place
@@ -13,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -51,14 +48,13 @@ fun FavoriteItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(12.dp))
                     .background(colorResource(id = R.color.red))
                     .padding(end = 24.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(id = R.string.delete),
+                    contentDescription = stringResource(id = R.string.remove),
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
                 )
@@ -67,103 +63,106 @@ fun FavoriteItem(
         content = {
             Surface(
                 color = colorResource(id = R.color.bg_grey),
-                shape = RoundedCornerShape(12.dp),
                 border = BorderStroke(1.dp, Color.White.copy(alpha = 0.05f)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick() }
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Row(
+                Row(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
                         modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                            .size(96.dp)
+                            .background(colorResource(id = R.color.fav_card_bg))
+                            .padding(8.dp)
                     ) {
                         AsyncImage(
                             model = marker.bookImageUrl,
                             contentDescription = stringResource(id = R.string.book_cover),
-                            modifier = Modifier
-                                .width(80.dp)
-                                .height(96.dp)
-                                .shadow(4.dp, RoundedCornerShape(6.dp), clip = false)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.DarkGray),
+                            modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
+                    }
 
-                        Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(16.dp))
 
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 72.dp)
-                        ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(96.dp),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = marker.bookTitle,
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = marker.bookAuthor,
+                            color = Color.LightGray,
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Place,
+                                contentDescription = stringResource(id = R.string.map_marker),
+                                tint = colorResource(id = R.color.purple_location),
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = marker.bookTitle,
-                                color = Color.White,
-                                style = MaterialTheme.typography.titleMedium,
+                                text = marker.locationName,
+                                color = colorResource(id = R.color.purple_location),
+                                style = MaterialTheme.typography.bodySmall,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            Text(
-                                text = marker.bookAuthor,
-                                color = Color.LightGray,
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Default.Place,
-                                    contentDescription = null,
-                                    tint = colorResource(id = R.color.purple_location),
-                                    modifier = Modifier.size(14.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = marker.locationName,
-                                    color = colorResource(id = R.color.purple_location),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
                         }
                     }
 
-                    if (distanceText != null) {
-                        Text(
-                            text = distanceText,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.LightGray,
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(top = 12.dp, end = 12.dp)
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Column(
+                        modifier = Modifier.height(96.dp),
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        if (distanceText != null) {
+                            Text(
+                                text = distanceText,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.LightGray
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.height(1.dp))
+                        }
+
+                        BookMediaIcons(
+                            hasAudio = marker.audio,
+                            hasEbook = marker.ebook,
+                            iconSize = 16.dp,
+                            spacing = 8.dp
                         )
                     }
-
-                    BookMediaIcons(
-                        hasAudio = marker.audio,
-                        hasEbook = marker.ebook,
-                        iconSize = 16.dp,
-                        spacing = 8.dp,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(end = 12.dp, bottom = 12.dp)
-                    )
                 }
             }
         }
     )
 }
-
 
 @Preview(showBackground = true, backgroundColor = 0xFF121212)
 @Composable

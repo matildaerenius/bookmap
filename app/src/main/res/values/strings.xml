@@ -10,7 +10,7 @@
         <string name="add_to_fav">Lägg till i favoriter</string>
         <string name="action_map">Karta</string>
         <string name="action_favorites">Favoriter</string>
-        <string name="delete">Ta bort</string>
+        <string name="remove">Ta bort</string>
         <string name="book_cover">Bokomslag</string>
         <string name="saved_favorites">Du har inga sparade favoriter än</string>
         <string name="fav_could_not_load">Kunde inte ladda favoriter</string>
@@ -30,4 +30,14 @@
         <string name="no_saved_fav">Inga sparade favoriter</string>
         <string name="audiobook">Audio book</string>
         <string name="ebook">Ebook</string>
+        <string name="filter_map">Filtrera karta</string>
+        <string name="show_all_books">Visa alla böcker</string>
+        <string name="show_only_favorites">Bara favoriter</string>
+        <string name="show_only_visited">Bara besökta</string>
+        <string name="map_directions">Vägbeskrivning</string>
+        <string name="clear_all">Rensa alla</string>
+        <string name="delete">Radera</string>
+        <string name="fav_alertdialog">Är du säker på att du vill ta bort alla dina sparade böcker? Detta går inte att ångra</string>
+        <string name="clear_fav">Rensa favoriter</string>
+        <string name="saved">sparade</string>
 </resources>
