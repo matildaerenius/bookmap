@@ -4,7 +4,6 @@ import com.matildaerenius.bookmap.data.remote.api.BookBeatApi
 import com.matildaerenius.bookmap.data.remote.dto.BookDto
 import com.matildaerenius.bookmap.core.DataError
 import com.matildaerenius.bookmap.core.Resource
-import com.matildaerenius.bookmap.data.local.dao.FavoriteDao
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

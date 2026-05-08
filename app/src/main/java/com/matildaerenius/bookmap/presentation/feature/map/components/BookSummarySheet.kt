@@ -161,7 +161,7 @@ fun BookSummarySheet(
                     icon = {
                         Icon(
                             painter = painterResource(id = if (marker.isVisited) R.drawable.check_icon else R.drawable.add_icon),
-                            contentDescription = stringResource(id = if (marker.isVisited) R.string.has_visit else R.string.unmark_visit),
+                            contentDescription = stringResource(id = if (marker.isVisited) R.string.unmark_visit else R.string.has_visit),
                             tint = Color.Black
                         )
                     }

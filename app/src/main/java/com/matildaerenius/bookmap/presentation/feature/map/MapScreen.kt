@@ -22,7 +22,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.presentation.common.components.FullScreenLoadingIndicator
 import com.matildaerenius.bookmap.presentation.common.state.UiState
 import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogleMap
@@ -62,17 +61,27 @@ fun MapScreen(
         skipPartiallyExpanded = true
     )
 
-    val currentMarkers = mutableListOf<BookMapMarker>()
-    if (state.markersState is UiState.Success) {
-        val allVisibleMarkers = (state.markersState as UiState.Success).data
+    val currentMarkers = remember(state.markersState, state.mapFilter, state.selectedMarker) {
+        when (val markersState = state.markersState) {
+            is UiState.Success -> {
+                val allVisibleMarkers = markersState.data
 
-        val filteredMarkers = when (state.mapFilter) {
-            MapFilter.ALL -> allVisibleMarkers
-            MapFilter.FAVORITES_ONLY -> allVisibleMarkers.filter { it.isFavorite }
-            MapFilter.VISITED_ONLY -> allVisibleMarkers.filter { it.isVisited }
+                val filtered = when (state.mapFilter) {
+                    MapFilter.ALL -> allVisibleMarkers
+                    MapFilter.FAVORITES_ONLY -> allVisibleMarkers.filter { it.isFavorite }
+                    MapFilter.VISITED_ONLY -> allVisibleMarkers.filter { it.isVisited }
+                }
+
+                val selected = state.selectedMarker
+                if (selected != null && filtered.none { it.bookId == selected.bookId }) {
+                    filtered + selected
+                } else {
+                    filtered
+                }
+            }
+
+            else -> emptyList()
         }
-
-        currentMarkers.addAll(filteredMarkers)
     }
 
     LaunchedEffect(state.selectedMarker) {
@@ -127,12 +136,6 @@ fun MapScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        state.selectedMarker?.let { marker ->
-            if (currentMarkers.none { it.bookId == marker.bookId }) {
-                currentMarkers.add(marker)
-            }
-        }
-
         BookGoogleMap(
             markers = currentMarkers,
             cameraPositionState = cameraPositionState,
