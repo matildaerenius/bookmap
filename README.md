@@ -21,12 +21,14 @@
 ---
 
 ## ✨ Features
-* 💾 **Local Database:** Room-powered single source of truth for instant offline access.
-* ❤️ **Interactive Favorites:** Save books and see them as custom heart markers on the map.
-* 🖼️ **Rich Summaries:** Tap markers to see book covers, authors, and location connections.
-* ✅ **Journey Tracker:** Mark locations as visited to log your literary adventures.
-* 🚶 **Live Navigation:** Direct integration with Google Maps for walking directions.
-* 🎛️ **Dynamic Filters:** Toggle the map between all books, favorites, or visited spots.
+
+* 🗺️ **Interactive Map:** Explore book-related locations in Stockholm using Google Maps.
+* 🖼️ **Rich Summaries:** Tap markers to view book covers, authors, format availability, and location connection texts.
+* ❤️ **Favourites:** Save book locations locally and view them on a separate favourites screen.
+* ✅ **Visited Locations:** Mark locations as visited and track your literary journey.
+* 🎛️ **Dynamic Filters:** Filter the map by all markers, favourites, or visited locations.
+* 🚶 **Google Maps Navigation:** Open walking directions to selected locations in Google Maps.
+* 💾 **Local Storage:** Room database support for cached markers, favourites, and visited locations.
 
 ---
 
@@ -39,7 +41,20 @@
 * **Local Storage:** Room
 * **Mapping:** Google Maps SDK for Android 
 * **Image Loading:** Coil
+* **Testing:** JUnit, MockK, Turbine, MockWebServer, Room Testing
 * **CI/CD:** GitHub Actions
+
+---
+
+## 🧱 Architecture Overview
+
+BookMap follows an MVVM structure with Clean Architecture-inspired layering:
+
+* **Presentation layer:** Jetpack Compose screens, ViewModels, UI state, and UI events.
+* **Domain layer:** Core models, repository interfaces, and use cases.
+* **Data layer:** Retrofit APIs, Room database, DAOs, repository implementations, DTOs, entities, and mappers.
+
+The app combines a custom location dataset from GitHub Gist with official book metadata from BookBeat’s public API. The merged marker data is cached locally with Room and observed through Kotlin Flow, allowing the UI to update reactively.
 
 ---
 
@@ -63,9 +78,8 @@
 * Android Studio (Koala Feature Drop or newer recommended)
 * Minimum SDK: 24 (Android 7.0)
 * Target SDK: 36 (Android 16)
+* A valid Google Maps API key
   
-To build and run this project locally, you will need a valid Google Maps API key. 
-
 ### 1. Clone the repository
 Open your terminal and run the following command:
 ```
@@ -90,9 +104,9 @@ git clone https://github.com/matildaerenius/bookmap.git
 ## 📖 Documentation
 For a deeper dive into the development process, architectural decisions, and technical details of BookMap, please refer to the resources below:
 
-* 📄 **[Thesis Report (PDF)](docs/report.pdf)**: The formal final report covering the project's background, methodology, and implementation results
+* 📄 **[Thesis Report (PDF)](docs/report.pdf)**: Available in the `docs` folder.
   
-* 🌐 **[Project Wiki](https://github.com/matildaerenius/bookmap/wiki)**: A supplementary knowledge base featuring architectural diagrams, technical specifications, and a roadmap for future features.
+* 🌐 **[Project Wiki](https://github.com/matildaerenius/bookmap/wiki)**: Contains architecture diagrams, technical notes, and future improvement ideas.
 
 ---
 
