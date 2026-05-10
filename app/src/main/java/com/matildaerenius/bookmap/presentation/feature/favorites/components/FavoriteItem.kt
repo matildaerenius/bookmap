@@ -86,6 +86,13 @@ fun FavoriteItem(
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
+                        if (marker.isVisited) {
+                            VisitedBadge(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .offset(x = 10.dp, y = (-6).dp)
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.width(16.dp))
@@ -161,6 +168,20 @@ fun FavoriteItem(
                 }
             }
         }
+    )
+}
+
+@Composable
+private fun VisitedBadge(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = stringResource(id = R.string.visited),
+        color = Color.Black,
+        style = MaterialTheme.typography.labelSmall,
+        modifier = modifier
+            .background(colorResource(id = R.color.purple_location))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     )
 }
 

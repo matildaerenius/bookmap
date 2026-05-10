@@ -40,4 +40,5 @@
         <string name="fav_alertdialog">Är du säker på att du vill ta bort alla dina sparade böcker? Detta går inte att ångra</string>
         <string name="clear_fav">Rensa favoriter</string>
         <string name="saved">sparade</string>
+        <string name="visited">Besökt</string>
 </resources>
