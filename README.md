@@ -88,7 +88,11 @@ git clone https://github.com/matildaerenius/bookmap.git
 ---
 
 ## 📖 Documentation
-Curious about the process? Check out the thesis report detailing the architecture, design choices, and implementation, available in the [Project Wiki](https://github.com/matildaerenius/bookmap/wiki)
+For a deeper dive into the development process, architectural decisions, and technical details of BookMap, please refer to the resources below:
+
+* 📄 **[Thesis Report (PDF)](docs/report.pdf)**: The formal final report covering the project's background, methodology, and implementation results
+  
+* 🌐 **[Project Wiki](https://github.com/matildaerenius/bookmap/wiki)**: A supplementary knowledge base featuring architectural diagrams, technical specifications, and a roadmap for future features.
 
 ---
 
