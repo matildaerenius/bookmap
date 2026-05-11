@@ -94,6 +94,8 @@ git clone https://github.com/matildaerenius/bookmap.git
   ```
 * The project uses the **Secrets Gradle Plugin for Android** to securely inject this key during the build process.
 
+> 💡 **Tip:** See the [Google Maps API Key Setup](../../wiki/Google-Maps-API-Key-Setup) wiki page for instructions.
+
 ### 3. Build and Run
 * Open the cloned directory in **Android Studio**.
 * Let Gradle sync and download all dependencies.
