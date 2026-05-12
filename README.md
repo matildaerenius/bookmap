@@ -26,7 +26,7 @@
 * 🖼️ **Rich Summaries:** Tap markers to view book covers, authors, format availability, and location connection texts.
 * ❤️ **Favourites:** Save book locations locally and view them on a separate favourites screen.
 * ✅ **Visited Locations:** Mark locations as visited and track your literary journey.
-* 🎛️ **Dynamic Filters:** Filter the map by all markers, favourites, or visited locations.
+* 🎛️ **Dynamic Filters:** Filter the map by all markers, favourites, visited, or unvisited locations.
 * 🚶 **Google Maps Navigation:** Open walking directions to selected locations in Google Maps.
 * 💾 **Local Storage:** Room database support for cached markers, favourites, and visited locations.
 
@@ -106,9 +106,9 @@ git clone https://github.com/matildaerenius/bookmap.git
 ## 📖 Documentation
 For a deeper dive into the development process, architectural decisions, and technical details of BookMap, please refer to the resources below:
 
-* 📄 **[Thesis Report (PDF)](docs/report.pdf)**: Available in the `docs` folder.
+* 📄 **[Thesis Report (PDF)](docs/report.pdf)**
   
-* 🌐 **[Project Wiki](https://github.com/matildaerenius/bookmap/wiki)**: Contains architecture diagrams, technical notes, and future improvement ideas.
+* 🌐 **[Project Wiki](https://github.com/matildaerenius/bookmap/wiki)**
 
 ---
 
