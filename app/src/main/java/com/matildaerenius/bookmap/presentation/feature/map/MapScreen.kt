@@ -70,6 +70,7 @@ fun MapScreen(
                     MapFilter.ALL -> allVisibleMarkers
                     MapFilter.FAVORITES_ONLY -> allVisibleMarkers.filter { it.isFavorite }
                     MapFilter.VISITED_ONLY -> allVisibleMarkers.filter { it.isVisited }
+                    MapFilter.UNVISITED_ONLY -> allVisibleMarkers.filter { !it.isVisited }
                 }
 
                 val selected = state.selectedMarker

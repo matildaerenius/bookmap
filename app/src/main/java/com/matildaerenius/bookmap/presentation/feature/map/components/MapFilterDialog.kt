@@ -60,6 +60,11 @@ fun MapFilterDialog(
                     selected = currentFilter == MapFilter.VISITED_ONLY,
                     onClick = { onFilterSelected(MapFilter.VISITED_ONLY) }
                 )
+                FilterOptionRow(
+                    text = stringResource(id = R.string.show_only_unvisited),
+                    selected = currentFilter == MapFilter.UNVISITED_ONLY,
+                    onClick = { onFilterSelected(MapFilter.UNVISITED_ONLY) }
+                )
             }
         },
         confirmButton = {
