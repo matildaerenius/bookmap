@@ -41,4 +41,5 @@
         <string name="clear_fav">Rensa favoriter</string>
         <string name="saved">sparade</string>
         <string name="visited">Besökt</string>
+        <string name="show_only_unvisited">Bara obesökta</string>
 </resources>
