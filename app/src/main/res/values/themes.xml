@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Bookmap" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Bookmap.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_book</item>
+        <item name="postSplashScreenTheme">@style/Theme.Bookmap</item>
+    </style>
 </resources>

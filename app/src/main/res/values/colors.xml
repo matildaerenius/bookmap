@@ -17,4 +17,6 @@
     <color name="purple_location">#FFC084FC</color>
     <color name="bg_black">#FF121212</color>
     <color name="fav_card_bg">#FF3B3B3B</color>
+    <color name="splash_background">#121212</color>
+    <color name="splash_icon_background">#C490FF</color>
 </resources>
