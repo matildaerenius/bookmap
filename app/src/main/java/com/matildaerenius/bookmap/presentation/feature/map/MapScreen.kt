@@ -28,9 +28,12 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.location.Location
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.core.net.toUri
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
+import com.matildaerenius.bookmap.core.BookBeatUrlBuilder
 import com.matildaerenius.bookmap.core.getFormattedDistance
 import com.matildaerenius.bookmap.presentation.feature.map.components.MapActionButtons
 import com.matildaerenius.bookmap.presentation.feature.map.components.MapFilterDialog
@@ -225,6 +228,20 @@ fun MapScreen(
                                 state.selectedMarker!!.isVisited
                             )
                         )
+                    },
+                    onOpenBookBeat = {
+                        val selectedMarker = state.selectedMarker ?: return@BookSummarySheet
+
+                        val bookBeatUrl = BookBeatUrlBuilder.createBookUrl(
+                            bookTitle = selectedMarker.bookTitle,
+                            bookId = selectedMarker.bookId
+                        )
+
+                        val intent = Intent(Intent.ACTION_VIEW, bookBeatUrl.toUri()).apply {
+                            addCategory(Intent.CATEGORY_BROWSABLE)
+                        }
+
+                        context.startActivity(intent)
                     }
                 )
             }

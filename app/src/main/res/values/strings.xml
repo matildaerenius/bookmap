@@ -42,4 +42,5 @@
         <string name="saved">sparade</string>
         <string name="visited">Besökt</string>
         <string name="show_only_unvisited">Bara obesökta</string>
+        <string name="open_in_bookbeat">Öppna i BookBeat</string>
 </resources>

@@ -15,11 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,11 +40,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.matildaerenius.bookmap.R
 import com.matildaerenius.bookmap.domain.model.BookMapMarker
 import com.matildaerenius.bookmap.presentation.common.components.BookMediaIcons
-import androidx.core.net.toUri
 import com.matildaerenius.bookmap.presentation.common.components.FloatingActionButtonItem
 import com.matildaerenius.bookmap.presentation.feature.map.MapConstants
 
@@ -52,9 +54,9 @@ fun BookSummarySheet(
     distanceText: String? = null,
     onClose: () -> Unit,
     onToggleFavorite: () -> Unit,
-    onToggleVisit: () -> Unit
+    onToggleVisit: () -> Unit,
+    onOpenBookBeat: () -> Unit
 ) {
-
     val context = LocalContext.current
 
     Box(
@@ -102,11 +104,10 @@ fun BookSummarySheet(
             if (distanceText != null || marker.audio || marker.ebook) {
                 Row(
                     modifier = Modifier
-                        .width(240.dp)
+                        .fillMaxWidth(0.6f)
                         .padding(bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     if (distanceText != null) {
                         Text(
                             text = distanceText,
@@ -131,12 +132,12 @@ fun BookSummarySheet(
                 contentDescription = marker.bookTitle,
                 modifier = Modifier
                     .size(240.dp, 240.dp)
-                    .clip((RoundedCornerShape(4.dp)))
+                    .clip(RoundedCornerShape(4.dp))
                     .background(Color.Transparent),
                 contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             Text(
                 text = marker.description,
@@ -147,11 +148,41 @@ fun BookSummarySheet(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(28.dp))
+
+            Button(
+                onClick = onOpenBookBeat,
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
+                    contentDescription = stringResource(id = R.string.open_in_bookbeat),
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(modifier = Modifier.size(10.dp))
+
+                Text(
+                    text = stringResource(id = R.string.open_in_bookbeat),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 28.dp,
+                    alignment = Alignment.CenterHorizontally
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FloatingActionButtonItem(
@@ -160,14 +191,24 @@ fun BookSummarySheet(
                     onClick = { onToggleVisit() },
                     icon = {
                         Icon(
-                            painter = painterResource(id = if (marker.isVisited) R.drawable.check_icon else R.drawable.add_icon),
-                            contentDescription = stringResource(id = if (marker.isVisited) R.string.unmark_visit else R.string.has_visit),
+                            painter = painterResource(
+                                id = if (marker.isVisited) {
+                                    R.drawable.check_icon
+                                } else {
+                                    R.drawable.add_icon
+                                }
+                            ),
+                            contentDescription = stringResource(
+                                id = if (marker.isVisited) {
+                                    R.string.unmark_visit
+                                } else {
+                                    R.string.has_visit
+                                }
+                            ),
                             tint = Color.Black
                         )
                     }
                 )
-
-                Spacer(modifier = Modifier.width(20.dp))
 
                 FloatingActionButtonItem(
                     selected = false,
@@ -175,30 +216,44 @@ fun BookSummarySheet(
                     onClick = { onToggleFavorite() },
                     icon = {
                         Icon(
-                            painter = painterResource(id = if (marker.isFavorite) R.drawable.filled_heart_icon else R.drawable.bigger_heart_icon),
-                            contentDescription = stringResource(id = if (marker.isFavorite) R.string.remove_from_fav else R.string.add_to_fav),
+                            painter = painterResource(
+                                id = if (marker.isFavorite) {
+                                    R.drawable.filled_heart_icon
+                                } else {
+                                    R.drawable.bigger_heart_icon
+                                }
+                            ),
+                            contentDescription = stringResource(
+                                id = if (marker.isFavorite) {
+                                    R.string.remove_from_fav
+                                } else {
+                                    R.string.add_to_fav
+                                }
+                            ),
                             tint = Color.Unspecified
                         )
                     }
                 )
 
-                Spacer(modifier = Modifier.width(20.dp))
-
                 FloatingActionButtonItem(
                     selected = false,
                     buttonSize = 68.dp,
                     onClick = {
-                        val uri =
-                            MapConstants.getNavigationUri(marker.latitude, marker.longitude).toUri()
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        intent.setPackage(MapConstants.GOOGLE_MAPS_PACKAGE)
+                        val uri = MapConstants
+                            .getNavigationUri(marker.latitude, marker.longitude)
+                            .toUri()
+
+                        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                            setPackage(MapConstants.GOOGLE_MAPS_PACKAGE)
+                        }
 
                         try {
                             context.startActivity(intent)
                         } catch (e: ActivityNotFoundException) {
-                            val fallbackUri =
-                                MapConstants.getFallbackWebUrl(marker.latitude, marker.longitude)
-                                    .toUri()
+                            val fallbackUri = MapConstants
+                                .getFallbackWebUrl(marker.latitude, marker.longitude)
+                                .toUri()
+
                             val webIntent = Intent(Intent.ACTION_VIEW, fallbackUri)
                             context.startActivity(webIntent)
                         }
@@ -217,19 +272,18 @@ fun BookSummarySheet(
     }
 }
 
-
 @Preview(showBackground = true, backgroundColor = 0xFF121212)
 @Composable
 fun BookSummarySheetPreview() {
     MaterialTheme {
         val dummyMarker = BookMapMarker(
-            bookId = 1,
-            locationName = "Gamla Stan",
+            bookId = 327,
+            locationName = "Johannes kyrka",
             latitude = 59.3257,
             longitude = 18.0709,
-            bookTitle = "Män som hatar kvinnor",
-            bookAuthor = "Stieg Larsson",
-            description = "Den ryska prickskytten Sokol jagar Leila Bolt genom de trånga gränderna i Gamla Stan i en livsfarlig katt och råtta lek.",
+            bookTitle = "Röda rummet",
+            bookAuthor = "August Strindberg",
+            description = "Arvid Stjärnblom och Lydia Stille har flera av sina vemodiga, hemliga och avgörande möten under träden på Johannes kyrkogård.",
             bookImageUrl = "",
             isFavorite = false,
             isVisited = false,
@@ -241,7 +295,8 @@ fun BookSummarySheetPreview() {
             marker = dummyMarker,
             onToggleFavorite = {},
             onClose = {},
-            onToggleVisit = {}
+            onToggleVisit = {},
+            onOpenBookBeat = {}
         )
     }
 }
