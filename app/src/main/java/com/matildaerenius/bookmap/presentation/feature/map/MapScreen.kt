@@ -28,13 +28,18 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.location.Location
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.core.net.toUri
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
+import com.matildaerenius.bookmap.core.BookBeatUrlBuilder
 import com.matildaerenius.bookmap.core.getFormattedDistance
 import com.matildaerenius.bookmap.presentation.feature.map.components.MapActionButtons
 import com.matildaerenius.bookmap.presentation.feature.map.components.MapFilterDialog
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -225,6 +230,28 @@ fun MapScreen(
                                 state.selectedMarker!!.isVisited
                             )
                         )
+                    },
+                    onOpenBookBeat = {
+                        val selectedMarker = state.selectedMarker ?: return@BookSummarySheet
+
+                        val bookBeatUrl = BookBeatUrlBuilder.createBookUrl(
+                            bookTitle = selectedMarker.bookTitle,
+                            bookId = selectedMarker.bookId
+                        )
+
+                        val intent = Intent(Intent.ACTION_VIEW, bookBeatUrl.toUri()).apply {
+                            addCategory(Intent.CATEGORY_BROWSABLE)
+                        }
+
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "Could not open BookBeat link"
+                                )
+                            }
+                        }
                     }
                 )
             }
