@@ -16,7 +16,9 @@
 
 <br>
 
-**Bookmap** is a native Android application that connects literature with geography. The app fetches a curated list of book-related locations from a remote JSON source (GitHub Gist), syncs them with detailed book data from the public BookBeat API, and displays them as interactive markers using the Google Maps SDK 📍
+**BookMap** is a native Android application that connects literature with real-world locations in Stockholm. The app fetches curated book-related places from a remote JSON source, combines them with official metadata from BookBeat’s public API, and displays them as interactive markers using Google Maps 📍
+
+Users can explore locations, view rich book summaries, save favourites, mark places as visited, open walking directions in Google Maps, and continue directly to the selected book in BookBeat.
 
 ---
 
@@ -24,6 +26,7 @@
 
 * 🗺️ **Interactive Map:** Explore book-related locations in Stockholm using Google Maps.
 * 🖼️ **Rich Summaries:** Tap markers to view book covers, authors, format availability, and location connection texts.
+* 📚 **Open in BookBeat:** Continue from a discovered location directly to the selected book in BookBeat.
 * ❤️ **Favourites:** Save book locations locally and view them on a separate favourites screen.
 * ✅ **Visited Locations:** Mark locations as visited and track your literary journey.
 * 🎛️ **Dynamic Filters:** Filter the map by all markers, favourites, visited, or unvisited locations.
@@ -55,6 +58,8 @@ BookMap follows an MVVM structure with Clean Architecture-inspired layering:
 * **Data layer:** Retrofit APIs, Room database, DAOs, repository implementations, DTOs, entities, and mappers.
 
 The app combines a custom location dataset from GitHub Gist with official book metadata from BookBeat’s public API. The merged marker data is cached locally with Room and observed through Kotlin Flow, allowing the UI to update reactively.
+
+The marker summary sheet also supports external actions. Users can open walking directions in Google Maps or open the selected book in BookBeat using a generated BookBeat link based on the book title and BookBeat ID.
 
 ---
 
