@@ -28,6 +28,7 @@ import com.matildaerenius.bookmap.presentation.feature.map.components.BookGoogle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.location.Location
 import androidx.compose.foundation.layout.WindowInsets
@@ -38,6 +39,7 @@ import com.matildaerenius.bookmap.core.getFormattedDistance
 import com.matildaerenius.bookmap.presentation.feature.map.components.MapActionButtons
 import com.matildaerenius.bookmap.presentation.feature.map.components.MapFilterDialog
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -241,7 +243,15 @@ fun MapScreen(
                             addCategory(Intent.CATEGORY_BROWSABLE)
                         }
 
-                        context.startActivity(intent)
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "Could not open BookBeat link"
+                                )
+                            }
+                        }
                     }
                 )
             }
